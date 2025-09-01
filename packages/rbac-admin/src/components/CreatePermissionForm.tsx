@@ -60,7 +60,11 @@ export function CreatePermissionForm({
     },
     React.createElement(
       "select",
-      { value: perfilId, onChange: (e: React.ChangeEvent<HTMLSelectElement>) => setPerfilId(e.target?.value ?? "") },
+      {
+        value: perfilId,
+        onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
+          setPerfilId(e.target?.value ?? ""),
+      },
       React.createElement("option", { value: "" }, "Perfil"),
       ...profiles.map((p) =>
         React.createElement("option", { key: String(p.id), value: String(p.id) }, p.nome)
@@ -69,12 +73,14 @@ export function CreatePermissionForm({
     React.createElement("input", {
       placeholder: "Ação",
       value: acao,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => setAcao(e.target?.value ?? ""),
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        setAcao(e.target?.value ?? ""),
     }),
     React.createElement("input", {
       placeholder: "Recurso",
       value: recurso,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => setRecurso(e.target?.value ?? ""),
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        setRecurso(e.target?.value ?? ""),
     }),
     React.createElement(
       "label",
@@ -82,7 +88,8 @@ export function CreatePermissionForm({
       React.createElement("input", {
         type: "checkbox",
         checked: permitido,
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => setPermitido(!!e.target?.checked),
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+          setPermitido(!!e.target?.checked),
       }),
       "Permitido"
     ),

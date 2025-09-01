@@ -65,7 +65,8 @@ export function PermissionsEditor({
           type: "checkbox",
           checked: !!it.permitido,
           disabled: saving === `${it.acao}:${it.recurso}`,
-          onChange: (e: React.ChangeEvent<HTMLInputElement>) => onToggle(it.acao, it.recurso, !!e.target?.checked),
+          onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+            onToggle(it.acao, it.recurso, !!e.target?.checked),
         })
       )
     )

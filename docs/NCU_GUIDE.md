@@ -75,9 +75,9 @@ ncu --target minor -u --workspaces
 
 ```json
 {
-  "target": "minor",        // Apenas atualizações minor/patch (seguro)
-  "upgrade": false,         // Não aplicar por padrão (apenas mostrar)  
-  "workspaces": true        // Incluir workspaces
+  "target": "minor", // Apenas atualizações minor/patch (seguro)
+  "upgrade": false, // Não aplicar por padrão (apenas mostrar)
+  "workspaces": true // Incluir workspaces
 }
 ```
 
@@ -127,16 +127,19 @@ ncu --target major --workspace
 ## Workflow Recomendado
 
 1. **Verificação semanal:**
+
    ```bash
    npm run ncu:check
    ```
 
 2. **Atualizações seguras (minor/patch):**
+
    ```bash
    npm run ncu:update
    ```
 
 3. **Atualizações major (cuidado):**
+
    ```bash
    npm run ncu:interactive
    # ou

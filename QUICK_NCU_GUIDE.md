@@ -43,7 +43,7 @@ npm run ncu:root
 
 # Modo interativo (RECOMENDADO)
 ./ncu-helper.sh interactive
-# ou  
+# ou
 ./ncu-helper.sh i
 
 # Atualizações seguras (apenas patch)
@@ -63,11 +63,13 @@ npm run ncu:root
 ## 🛠️ Workflow Recomendado
 
 ### 1. Verificação Semanal
+
 ```bash
 ./ncu-helper.sh check
 ```
 
 ### 2. Atualizações Controladas
+
 ```bash
 # Para atualizações seguras (patch versions)
 ./ncu-helper.sh safe
@@ -77,6 +79,7 @@ npm run ncu:root
 ```
 
 ### 3. Após Atualizações
+
 ```bash
 npm run build
 npm run typecheck
@@ -86,21 +89,25 @@ npm run test
 ## 🎯 Casos de Uso Específicos
 
 ### Atualizar apenas TypeScript
+
 ```bash
 ./ncu-helper.sh typescript
 ```
 
 ### Ver dependências específicas
+
 ```bash
 ncu typescript @types/react --workspaces
 ```
 
 ### Atualizar para latest (incluindo betas)
+
 ```bash
 ncu --target latest --workspaces -i
 ```
 
 ### Excluir dependências específicas
+
 ```bash
 ncu --reject "@types/node,eslint" --workspaces
 ```

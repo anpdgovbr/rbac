@@ -95,7 +95,7 @@ export type PermissionDto = {
 export function toPermissionsMap(list?: Array<PermissionDto> | null): PermissionsMap {
   // Prevent prototype-polluting keys
   function isSafeKey(key: string): boolean {
-    return key !== '__proto__' && key !== 'constructor' && key !== 'prototype'
+    return key !== "__proto__" && key !== "constructor" && key !== "prototype"
   }
   const map: PermissionsMap = {}
   if (!Array.isArray(list)) return map

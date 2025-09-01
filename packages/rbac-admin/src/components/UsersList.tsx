@@ -39,7 +39,9 @@ export function UsersList({
     }
   }, [client])
 
-  useEffect(() => { refresh() }, [refresh])
+  useEffect(() => {
+    refresh()
+  }, [refresh])
 
   async function onAssign(userId: string, perfilId: number | null) {
     await client.assignUserProfile(userId, perfilId)

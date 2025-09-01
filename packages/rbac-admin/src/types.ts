@@ -2,7 +2,7 @@ import type {
   PerfilDto,
   PermissaoDto,
   UserDto,
-  AssignUserProfilePayload
+  AssignUserProfilePayload,
 } from "@anpdgovbr/shared-types"
 export type Profile = PerfilDto
 export type Permission = Pick<PermissaoDto, "acao" | "recurso" | "permitido">

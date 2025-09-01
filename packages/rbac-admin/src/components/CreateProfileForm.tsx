@@ -45,7 +45,8 @@ export function CreateProfileForm({
     React.createElement("input", {
       placeholder: "Nome do perfil",
       value: nome,
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => setNome(e.target?.value ?? ""),
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        setNome(e.target?.value ?? ""),
     }),
     React.createElement(
       "button",
