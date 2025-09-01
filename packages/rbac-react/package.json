@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-react",
-  "version": "0.1.0-beta.3",
+  "version": "0.2.0-beta.1",
   "private": false,
   "type": "module",
   "main": "dist/index.js",
@@ -37,11 +37,11 @@
     "@anpdgovbr/rbac-core": "^0.1.0-beta.3"
   },
   "peerDependencies": {
-    "react": ">=18",
+    "react": ">=19",
     "swr": ">=2"
   },
   "devDependencies": {
     "typescript": "^5.4.0",
-    "@types/react": "^18.2.0"
+    "@types/react": "^18.3.24"
   }
 }
