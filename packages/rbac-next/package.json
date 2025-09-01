@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-next",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.1-beta.3",
   "private": false,
   "type": "module",
   "main": "dist/src/index.js",
