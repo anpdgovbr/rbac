@@ -199,10 +199,35 @@ npm run build
 # Execute testes
 npm test
 
-# Lint e formatting
-npm run lint
-npm run prettier
+# Verificar atualizações de dependências
+npm run ncu:check
+
+# Atualizar dependências (modo interativo)
+npm run ncu:interactive
+
+# Usar script helper
+./ncu-helper.sh interactive
 ```
+
+### Gerenciamento de Dependências
+
+O projeto usa `npm-check-updates` (ncu) para gerenciar atualizações:
+
+```bash
+# Verificar atualizações em todo o monorepo
+npm run ncu:check
+
+# Atualizar dependências
+npm run ncu:update
+
+# Modo interativo (recomendado)
+npm run ncu:interactive
+
+# Script helper com comandos adicionais
+./ncu-helper.sh help
+```
+
+Para mais detalhes, veja o [Guia do NCU](./docs/NCU_GUIDE.md).
 
 ## 📄 Licença
 
@@ -210,4 +235,4 @@ MIT © 2024 ANPD (Autoridade Nacional de Proteção de Dados)
 
 ---
 
-**Desenvolvimento**: Superintendência de Sistemas e Produtos (SUPSE) - ANPD
+**Desenvolvimento**: Divisão de Desenvolvimento e Sustentação de Sistemas (DDSS/CGTI/ANPD)

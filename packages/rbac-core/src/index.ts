@@ -1,7 +1,7 @@
 /**
  * @fileoverview Core de RBAC da ANPD - Tipos fundamentais e utilitários para autorização por papéis
  * @version 0.1.0-beta.3
- * @author ANPD/SUPSE
+ * @author ANPD/DDSS/CGTI
  * @license MIT
  *
  * Este módulo fornece os tipos e funções fundamentais para o sistema RBAC:

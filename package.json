@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "typescript": "^5.4.0",
+    "typescript": "^5.9.2",
     "prettier": "^3.6.2",
     "eslint": "^9.34.0",
     "@eslint/js": "^9.34.0",
@@ -25,6 +25,13 @@
     "test": "npm run -ws --if-present test",
     "clean": "npm run -ws --if-present clean",
     "lint": "eslint .",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "ncu": "ncu",
+    "ncu:check": "ncu --workspaces",
+    "ncu:update": "ncu --workspaces -u",
+    "ncu:interactive": "ncu --workspaces -i",
+    "ncu:deep": "ncu --deep",
+    "ncu:root": "ncu -u",
+    "ncu:packages": "npm run -ws --if-present ncu"
   }
 }

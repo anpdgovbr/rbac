@@ -228,4 +228,4 @@ MIT © 2024 ANPD (Autoridade Nacional de Proteção de Dados)
 
 ---
 
-**💡 Interessado em contribuir?** Entre em contato com a equipe SUPSE/ANPD ou abra uma issue para discussão.
+**💡 Interessado em contribuir?** Entre em contato com a equipe DDSS/CGTI/ANPD ou abra uma issue para discussão.

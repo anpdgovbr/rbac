@@ -1,7 +1,7 @@
 /**
  * @fileoverview Interface administrativa React para gerenciamento RBAC
  * @version 0.1.0-beta.3 (WIP)
- * @author ANPD/SUPSE
+ * @author ANPD/DDSS/CGTI
  * @license MIT
  *
  * ⚠️ **WORK IN PROGRESS** ⚠️
