@@ -1,19 +1,24 @@
 {
   "name": "@anpdgovbr/rbac-prisma",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.0-beta.0",
+  "private": false,
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": ["dist"],
+  "sideEffects": false,
+  "description": "Provider Prisma para RBAC (herança de perfis e união por grant verdadeiro).",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/anpdgovbr/rbac" },
+  "publishConfig": { "access": "public", "tag": "beta" },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test dist/test"
   },
   "dependencies": {
-    "@anpdgovbr/rbac-core": "0.1.0",
-    "@anpdgovbr/rbac-provider": "0.1.0"
+    "@anpdgovbr/rbac-core": "^0.1.0-beta.0",
+    "@anpdgovbr/rbac-provider": "^0.1.0-beta.0"
   },
   "devDependencies": {
     "typescript": "^5.4.0"
