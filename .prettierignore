@@ -1,0 +1,5 @@
+CODEOWNERS
+node_modules/
+dist/
+packages/*/dist/
+coverage/

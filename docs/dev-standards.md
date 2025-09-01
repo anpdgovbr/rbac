@@ -8,8 +8,8 @@
 - Versionamento: SemVer por pacote, changelog gerado.
 
 Checklist inicial do novo repo:
+
 - [ ] Adicionar `.editorconfig`, `.prettierrc`, `eslint.config.mjs` (ou `.eslintrc.*`).
 - [ ] Configurar Husky e scripts de `lint`, `format`, `typecheck` nos pacotes.
 - [ ] Configurar workflow do GitHub Actions.
 - [ ] Adicionar examples (Next API + React) consumindo os pacotes.
-

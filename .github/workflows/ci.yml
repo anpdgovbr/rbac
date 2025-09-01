@@ -2,9 +2,13 @@ name: RBAC Monorepo CI
 
 on:
   push:
-    branches: [ main, migrando-rbac ]
+    branches: [main, migrando-rbac]
   pull_request:
-    branches: [ main, migrando-rbac ]
+    branches: [main, migrando-rbac]
+
+# Least-privilege permissions: default to read-only
+permissions:
+  contents: read
 
 jobs:
   build-test:

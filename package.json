@@ -5,7 +5,13 @@
     "packages/*"
   ],
   "devDependencies": {
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "prettier": "^3.6.2",
+    "eslint": "^9.34.0",
+    "@eslint/js": "^9.34.0",
+    "@typescript-eslint/eslint-plugin": "^8.41.0",
+    "@typescript-eslint/parser": "^8.41.0",
+    "eslint-plugin-react-hooks": "^5.2.0"
   },
   "scripts": {
     "build:core": "npm run -w @anpdgovbr/rbac-core build",
@@ -17,6 +23,8 @@
     "build": "npm run build:core && npm run build:provider && npm run build:prisma && npm run build:next && npm run build:react",
     "typecheck": "npm run -ws --if-present typecheck",
     "test": "npm run -ws --if-present test",
-    "clean": "npm run -ws --if-present clean"
+    "clean": "npm run -ws --if-present clean",
+    "lint": "eslint .",
+    "format": "prettier -w ."
   }
 }

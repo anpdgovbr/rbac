@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-provider",
-  "version": "0.1.0-beta.2",
+  "version": "0.1.0-beta.3",
   "private": false,
   "type": "module",
   "main": "dist/src/index.js",
@@ -11,19 +11,27 @@
       "import": "./dist/src/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "description": "Contratos de provider/identidade e cache TTL para RBAC.",
   "license": "MIT",
-  "repository": { "type": "git", "url": "git+https://github.com/anpdgovbr/rbac.git" },
-  "publishConfig": { "access": "public", "tag": "beta" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anpdgovbr/rbac.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "beta"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test dist/test"
   },
   "dependencies": {
-    "@anpdgovbr/rbac-core": "^0.1.0-beta.2"
+    "@anpdgovbr/rbac-core": "^0.1.0-beta.3"
   },
   "devDependencies": {
     "typescript": "^5.4.0"
