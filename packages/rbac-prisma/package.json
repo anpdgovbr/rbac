@@ -7,10 +7,15 @@
   "types": "dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test dist/test"
   },
   "dependencies": {
     "@anpdgovbr/rbac-core": "0.1.0",
     "@anpdgovbr/rbac-provider": "0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
   }
 }

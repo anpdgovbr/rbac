@@ -1,6 +1,6 @@
 {
-  "name": "@anpdgovbr/rbac-provider",
-  "version": "0.1.0",
+  "name": "@anpdgovbr/rbac-admin",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "main": "dist/index.js",
@@ -8,13 +8,13 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --test dist/test"
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {
-    "@anpdgovbr/rbac-core": "0.1.0"
+  "peerDependencies": {
+    "react": ">=18"
   },
   "devDependencies": {
     "typescript": "^5.4.0"
   }
 }
+
