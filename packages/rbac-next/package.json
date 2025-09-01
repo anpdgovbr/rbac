@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-next",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.2",
   "private": false,
   "type": "module",
   "main": "dist/src/index.js",
@@ -23,8 +23,8 @@
     "test": "node --test dist/test"
   },
   "dependencies": {
-    "@anpdgovbr/rbac-core": "^0.1.0-beta.1",
-    "@anpdgovbr/rbac-provider": "^0.1.0-beta.1"
+    "@anpdgovbr/rbac-core": "^0.1.0-beta.2",
+    "@anpdgovbr/rbac-provider": "^0.1.0-beta.2"
   },
   "devDependencies": {
     "typescript": "^5.4.0"
