@@ -17,8 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install workspace deps
-        run: npm install --no-audit --no-fund
+      - name: Install workspace deps (locked)
+        run: npm ci --ignore-scripts
         working-directory: ./
       - name: Build package
         run: npm run build

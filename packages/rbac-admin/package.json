@@ -1,11 +1,16 @@
 {
   "name": "@anpdgovbr/rbac-admin",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.0.1-beta.0",
+  "private": false,
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": ["dist"],
+  "sideEffects": false,
+  "description": "UI administrativa (esqueleto) para RBAC. WIP/experimental.",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/anpdgovbr/rbac.git" },
+  "publishConfig": { "access": "public", "tag": "beta" },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit"
