@@ -1,0 +1,8 @@
+{
+  "name": "rbac-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
+
