@@ -17,8 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install deps (workspace)
-        run: npm ci --ignore-scripts || true
+      - name: Install workspace deps
+        run: npm install --no-audit --no-fund
         working-directory: ./
       - name: Build package
         run: npm run build
