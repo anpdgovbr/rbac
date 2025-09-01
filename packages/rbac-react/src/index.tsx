@@ -36,8 +36,13 @@ export function usePode() {
 }
 
 /** HOC simples de proteção de componente no cliente (UX). */
-export function withPermissao<T>(Component: React.ComponentType<T>, acao: Action, recurso: Resource, { redirect = true }: { redirect?: boolean } = {}) {
-  return function Wrapped(props: T) {
+export function withPermissao<TProps extends object>(
+  Component: React.ComponentType<TProps>,
+  acao: Action,
+  recurso: Resource,
+  { redirect = true }: { redirect?: boolean } = {}
+): React.FC<TProps> {
+  return function Wrapped(props: TProps) {
     const { permissoes, loading } = usePermissions()
     if (loading) return null
     if (!podeFn(permissoes, acao, recurso)) {

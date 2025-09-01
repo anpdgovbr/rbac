@@ -90,7 +90,8 @@ export async function getPermissoesPorPerfil(prisma: PrismaLike, perfilNome: str
 
 /** Cria um PermissionsProvider baseado em Prisma (identity por email ou id). */
 export function createPrismaPermissionsProvider(opts: PrismaRbacOptions): PermissionsProvider {
-  const { prisma, tables = defaultTables, identityField = 'email' } = opts
+  const { prisma, tables: partialTables, identityField = 'email' } = opts
+  const tables = { ...defaultTables, ...partialTables }
   const User = prisma[tables.user]
   const Perfil = prisma[tables.perfil]
   return {

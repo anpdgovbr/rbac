@@ -6,5 +6,17 @@
   ],
   "devDependencies": {
     "typescript": "^5.4.0"
+  },
+  "scripts": {
+    "build:core": "npm run -w @anpdgovbr/rbac-core build",
+    "build:provider": "npm run -w @anpdgovbr/rbac-provider build",
+    "build:prisma": "npm run -w @anpdgovbr/rbac-prisma build",
+    "build:next": "npm run -w @anpdgovbr/rbac-next build",
+    "build:react": "npm run -w @anpdgovbr/rbac-react build",
+    "build:admin": "npm run -w @anpdgovbr/rbac-admin build",
+    "build": "npm run build:core && npm run build:provider && npm run build:prisma && npm run build:next && npm run build:react",
+    "typecheck": "npm run -ws --if-present typecheck",
+    "test": "npm run -ws --if-present test",
+    "clean": "npm run -ws --if-present clean"
   }
 }
