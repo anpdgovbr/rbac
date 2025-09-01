@@ -7,8 +7,8 @@ Este guia resume como usar o esqueleto RBAC dentro deste repositório antes de d
 1) Provider Prisma + Cache TTL
 ```ts
 // exemplo: src/rbac-server.ts
-import { createPrismaPermissionsProvider } from '../rbac/packages/rbac-prisma/src'
-import { withTTLCache } from '../rbac/packages/rbac-provider/src'
+import { createPrismaPermissionsProvider } from '@anpdgovbr/rbac-prisma'
+import { withTTLCache } from '@anpdgovbr/rbac-provider'
 import { prisma } from '@/lib/prisma'
 
 export const rbacProvider = withTTLCache(createPrismaPermissionsProvider({ prisma }), 60_000)
@@ -16,7 +16,7 @@ export const rbacProvider = withTTLCache(createPrismaPermissionsProvider({ prism
 
 2) Next Adapter nas rotas
 ```ts
-import { withApi } from '../rbac/packages/rbac-next/src'
+import { withApi } from '@anpdgovbr/rbac-next'
 import { rbacProvider } from '@/rbac-server'
 
 const getIdentity = { resolve: async (req: Request) => ({ id: 'user-id', email: 'user@example.com' }) }
@@ -28,7 +28,7 @@ export const GET = withApi(async ({ email }) => {
 
 3) Cliente React (UX)
 ```tsx
-import { usePode } from '../rbac/packages/rbac-react/src'
+import { usePode } from '@anpdgovbr/rbac-react'
 
 function Botao() {
   const { pode } = usePode()
