@@ -21,9 +21,16 @@ export type PermissionDto = { acao: Action; recurso: Resource; permitido: boolea
  * Converte uma lista de permissões em PermissionsMap.
  */
 export function toPermissionsMap(list?: Array<PermissionDto> | null): PermissionsMap {
+  // Prevent prototype-polluting keys
+  function isSafeKey(key: string): boolean {
+    return key !== '__proto__' && key !== 'constructor' && key !== 'prototype'
+  }
   const map: PermissionsMap = {}
   if (!Array.isArray(list)) return map
   for (const p of list) {
+    if (!isSafeKey(p.acao) || !isSafeKey(p.recurso)) {
+      continue // skip dangerous keys
+    }
     map[p.acao] ??= {}
     map[p.acao]![p.recurso] = !!p.permitido
   }
