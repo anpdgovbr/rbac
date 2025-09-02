@@ -44,14 +44,15 @@ interface PermissionsMap {
 Função principal de verificação de permissões.
 
 ```typescript
-import { pode } from '@anpdgovbr/rbac-core'
+import { pode } from "@anpdgovbr/rbac-core"
 
 // Verificação simples
 const canView = pode(userPermissions, "Exibir", "Relatorios")
 
 // Verificação com fallback
-const canEdit = pode(userPermissions, "Editar", "Usuario") || 
-                pode(userPermissions, "Administrar", "Usuarios")
+const canEdit =
+  pode(userPermissions, "Editar", "Usuario") ||
+  pode(userPermissions, "Administrar", "Usuarios")
 
 // Uso em guards
 if (!pode(permissions, "Criar", "Processo")) {
@@ -60,6 +61,7 @@ if (!pode(permissions, "Criar", "Processo")) {
 ```
 
 **Parâmetros:**
+
 - `permissoes: PermissionsMap` — Mapa de permissões do usuário
 - `acao: Action` — Ação a ser verificada
 - `recurso: Resource` — Recurso alvo
@@ -86,6 +88,7 @@ if (!hasAny(permissions, requiredPermissions)) {
 ```
 
 **Parâmetros:**
+
 - `permissoes: PermissionsMap` — Mapa de permissões
 - `permissoesRequeridas: Permissao[]` — Array de permissões (OR)
 - **Retorna**: `boolean` — `true` se possui qualquer uma
@@ -95,13 +98,13 @@ if (!hasAny(permissions, requiredPermissions)) {
 Converte array de permissões para mapa otimizado.
 
 ```typescript
-import { toPermissionsMap } from '@anpdgovbr/rbac-core'
+import { toPermissionsMap } from "@anpdgovbr/rbac-core"
 
 // Conversão de lista para mapa
 const rawPermissions = [
   { acao: "Exibir", recurso: "Relatorios", grant: true },
   { acao: "Criar", recurso: "Usuario", grant: false },
-  { acao: "Editar", recurso: "Usuario", grant: true }
+  { acao: "Editar", recurso: "Usuario", grant: true },
 ]
 
 const permissionsMap = toPermissionsMap(rawPermissions)
@@ -113,7 +116,7 @@ const permissionsMap = toPermissionsMap(rawPermissions)
 Gera chave única para indexação.
 
 ```typescript
-import { flatKey } from '@anpdgovbr/rbac-core'
+import { flatKey } from "@anpdgovbr/rbac-core"
 
 const key = flatKey("Exibir", "Relatorios") // "Exibir:Relatorios"
 ```
@@ -138,7 +141,7 @@ class CustomPermissionsProvider implements PermissionsProvider {
   async getUserPermissions(identity: string): Promise<PermissionsMap> {
     const user = await this.userService.findByEmail(identity)
     const roles = await this.roleService.getUserRoles(user.id)
-    
+
     return this.buildPermissionsMap(roles)
   }
 }
@@ -158,18 +161,18 @@ const nextAuthResolver: IdentityResolver<NextRequest> = {
   async getIdentity(req) {
     const session = await getServerSession(req)
     return session?.user?.email || null
-  }
+  },
 }
 
 // Resolver custom JWT
 const jwtResolver: IdentityResolver<NextRequest> = {
   async getIdentity(req) {
-    const token = req.headers.get('authorization')?.replace('Bearer ', '')
+    const token = req.headers.get("authorization")?.replace("Bearer ", "")
     if (!token) return null
-    
+
     const decoded = jwt.verify(token, JWT_SECRET)
     return decoded.sub
-  }
+  },
 }
 ```
 
@@ -178,7 +181,7 @@ const jwtResolver: IdentityResolver<NextRequest> = {
 Decorator de cache com TTL configurável.
 
 ```typescript
-import { withTTLCache } from '@anpdgovbr/rbac-provider'
+import { withTTLCache } from "@anpdgovbr/rbac-provider"
 
 // Cache básico
 const cachedProvider = withTTLCache(
@@ -192,16 +195,16 @@ const advancedCachedProvider = withTTLCache(
   300_000, // 5 minutos
   {
     metrics: {
-      onHit: (identity) => metrics.increment('rbac.cache.hit'),
-      onMiss: (identity) => metrics.increment('rbac.cache.miss')
+      onHit: (identity) => metrics.increment("rbac.cache.hit"),
+      onMiss: (identity) => metrics.increment("rbac.cache.miss"),
     },
-    invalidateOn: ['role-updated', 'permission-changed'],
-    maxSize: 1000 // Limite de entradas em cache
+    invalidateOn: ["role-updated", "permission-changed"],
+    maxSize: 1000, // Limite de entradas em cache
   }
 )
 
 // Invalidação manual
-await cachedProvider.invalidate('user@example.com')
+await cachedProvider.invalidate("user@example.com")
 await cachedProvider.invalidateAll()
 ```
 
@@ -216,41 +219,41 @@ await cachedProvider.invalidateAll()
 Cria provider Prisma com hierarquia de perfis.
 
 ```typescript
-import { createPrismaPermissionsProvider } from '@anpdgovbr/rbac-prisma'
+import { createPrismaPermissionsProvider } from "@anpdgovbr/rbac-prisma"
 
 // Configuração básica
 const provider = createPrismaPermissionsProvider({
   prisma: prismaClient,
-  identityField: "email"
+  identityField: "email",
 })
 
 // Configuração avançada
 const advancedProvider = createPrismaPermissionsProvider({
   prisma: prismaClient,
   identityField: "email",
-  
+
   // Schema customizado
   schema: {
     userTable: "Usuario",
-    roleTable: "Perfil", 
+    roleTable: "Perfil",
     permissionTable: "Permissao",
     userRoleTable: "UsuarioPerfil",
     rolePermissionTable: "PerfilPermissao",
-    roleHierarchyTable: "PerfilHierarquia"
+    roleHierarchyTable: "PerfilHierarquia",
   },
-  
+
   // Filtros adicionais
   whereClause: (identity) => ({
     ativo: true,
-    tenant_id: getTenantFromEmail(identity)
+    tenant_id: getTenantFromEmail(identity),
   }),
-  
+
   // Configuração de hierarquia
   hierarchy: {
     enableInheritance: true,
     maxDepth: 10,
-    strategy: "union" // ou "override"
-  }
+    strategy: "union", // ou "override"
+  },
 })
 ```
 
@@ -268,6 +271,7 @@ const permissions = await provider.getUserPermissions("admin@anpd.gov.br")
 ```
 
 **Características:**
+
 - ✅ **BFS Traversal**: Busca em largura para hierarquias DAG
 - ✅ **Union Strategy**: `true` grants override `false` grants
 - ✅ **Cycle Detection**: Prevenção automática de loops infinitos
@@ -285,8 +289,8 @@ const permissions = await provider.getUserPermissions("admin@anpd.gov.br")
 Protege rotas de API com verificação de permissões.
 
 ```typescript
-import { withApi } from '@anpdgovbr/rbac-next'
-import { NextResponse } from 'next/server'
+import { withApi } from "@anpdgovbr/rbac-next"
+import { NextResponse } from "next/server"
 
 // Proteção básica
 export const GET = withApi(
@@ -298,7 +302,7 @@ export const GET = withApi(
   {
     provider: cachedPrismaProvider,
     getIdentity: nextAuthResolver,
-    permissao: { acao: "Exibir", recurso: "Relatorios" }
+    permissao: { acao: "Exibir", recurso: "Relatorios" },
   }
 )
 
@@ -307,7 +311,7 @@ export const POST = withApi(
   async (context) => {
     const body = await context.req.json()
     const result = await createUser(body)
-    
+
     // Auditoria automática registrada
     return NextResponse.json(result, { status: 201 })
   },
@@ -315,7 +319,7 @@ export const POST = withApi(
     provider: cachedPrismaProvider,
     getIdentity: nextAuthResolver,
     permissao: { acao: "Criar", recurso: "Usuario" },
-    audit: auditLogger
+    audit: auditLogger,
   }
 )
 ```
@@ -325,7 +329,7 @@ export const POST = withApi(
 Proteção de rotas dinâmicas com extração de ID tipada.
 
 ```typescript
-import { withApiForId } from '@anpdgovbr/rbac-next'
+import { withApiForId } from "@anpdgovbr/rbac-next"
 
 // Rota dinâmica: /api/users/[id]
 export const GET = withApiForId<number>(
@@ -337,12 +341,12 @@ export const GET = withApiForId<number>(
   {
     extractId: (req) => {
       const url = new URL(req.url)
-      const id = url.pathname.split('/').pop()
-      return parseInt(id || '0')
+      const id = url.pathname.split("/").pop()
+      return parseInt(id || "0")
     },
     provider: cachedProvider,
     getIdentity: nextAuthResolver,
-    permissao: { acao: "Exibir", recurso: "Usuario" }
+    permissao: { acao: "Exibir", recurso: "Usuario" },
   }
 )
 
@@ -358,7 +362,7 @@ export const PUT = withApiForId<string>(
     extractId: (req) => getLastPathSegment(req.url),
     provider: cachedProvider,
     getIdentity: nextAuthResolver,
-    permissao: { acao: "Editar", recurso: "Processo" }
+    permissao: { acao: "Editar", recurso: "Processo" },
   }
 )
 ```
@@ -367,31 +371,31 @@ export const PUT = withApiForId<string>(
 
 ```typescript
 // middleware.ts
-import { withMiddleware } from '@anpdgovbr/rbac-next'
+import { withMiddleware } from "@anpdgovbr/rbac-next"
 
 export default withMiddleware({
   provider: cachedProvider,
   getIdentity: nextAuthResolver,
-  
+
   // Rotas protegidas com suas permissões
   protectedRoutes: [
     {
       pattern: /^\/admin/,
-      permissao: { acao: "Acessar", recurso: "PainelAdmin" }
+      permissao: { acao: "Acessar", recurso: "PainelAdmin" },
     },
     {
       pattern: /^\/relatorios/,
-      permissao: { acao: "Exibir", recurso: "Relatorios" }
-    }
+      permissao: { acao: "Exibir", recurso: "Relatorios" },
+    },
   ],
-  
+
   // Rotas públicas (bypass)
-  publicRoutes: ['/login', '/api/health', '/api/public/*'],
-  
+  publicRoutes: ["/login", "/api/health", "/api/public/*"],
+
   // Redirecionamento em caso de negação
   onUnauthorized: (req) => {
-    return NextResponse.redirect('/access-denied')
-  }
+    return NextResponse.redirect("/access-denied")
+  },
 })
 ```
 
@@ -410,10 +414,10 @@ import { usePermissions } from '@anpdgovbr/rbac-react'
 
 function Dashboard() {
   const { permissions, loading, error, mutate } = usePermissions()
-  
+
   if (loading) return <DashboardSkeleton />
   if (error) return <ErrorBoundary error={error} />
-  
+
   return (
     <div>
       {pode(permissions, "Exibir", "Relatorios") && (
@@ -436,13 +440,13 @@ import { usePode } from '@anpdgovbr/rbac-react'
 
 function UserActions({ userId }: { userId: string }) {
   const { pode, loading } = usePode()
-  
+
   const canEdit = pode("Editar", "Usuario")
   const canDelete = pode("Excluir", "Usuario")
   const canView = pode("Exibir", "Usuario")
-  
+
   if (loading) return <ActionsLoadingSkeleton />
-  
+
   return (
     <div>
       {canView && <ViewButton userId={userId} />}
@@ -506,14 +510,14 @@ function App() {
         const response = await fetch('/api/me/permissions')
         return response.json()
       }}
-      
+
       // Configuração SWR
       swrConfig={{
         refreshInterval: 300_000, // 5 minutos
         revalidateOnFocus: true,
         revalidateOnReconnect: true
       }}
-      
+
       // Estados customizados
       loadingComponent={<AppLoadingSkeleton />}
       errorComponent={({ error, retry }) => (
@@ -573,7 +577,7 @@ export default function RootLayout({
 ### Componentes Principais
 
 ```typescript
-import { 
+import {
   RoleManager,
   PermissionEditor,
   UserRoleAssignment,
@@ -590,7 +594,7 @@ function AdminDashboard() {
         onRoleCreated={handleRoleCreated}
         onRoleUpdated={handleRoleUpdated}
       />
-      
+
       {/* Editor de permissões */}
       <PermissionEditor
         roleId={selectedRoleId}
@@ -598,14 +602,14 @@ function AdminDashboard() {
         availableActions={["Criar", "Exibir", "Editar", "Excluir"]}
         availableResources={["Usuario", "Processo", "Relatorio"]}
       />
-      
+
       {/* Atribuição de perfis */}
       <UserRoleAssignment
         userId={selectedUserId}
         provider={prismaProvider}
         onAssignmentChanged={handleAssignmentChanged}
       />
-      
+
       {/* Visualizador de hierarquia */}
       <HierarchyVisualizer
         provider={prismaProvider}
@@ -625,18 +629,18 @@ const roleAPI = {
   async createRole(data: CreateRoleData) {
     // Criação de novo perfil
   },
-  
+
   async updateRole(id: string, data: UpdateRoleData) {
     // Atualização de perfil
   },
-  
+
   async deleteRole(id: string) {
     // Exclusão com verificação de dependências
   },
-  
+
   async getRoleHierarchy() {
     // Recuperação da árvore de hierarquia
-  }
+  },
 }
 
 // Gestão de permissões
@@ -644,14 +648,14 @@ const permissionAPI = {
   async setRolePermissions(roleId: string, permissions: Permissao[]) {
     // Definição de permissões do perfil
   },
-  
+
   async getRolePermissions(roleId: string) {
     // Recuperação de permissões
   },
-  
+
   async calculateEffectivePermissions(userId: string) {
     // Cálculo das permissões efetivas (com herança)
-  }
+  },
 }
 ```
 
@@ -662,35 +666,35 @@ const permissionAPI = {
 ### Debugging e Desenvolvimento
 
 ```typescript
-import { debugPermissions, validatePermissionsMap } from '@anpdgovbr/rbac-core'
+import { debugPermissions, validatePermissionsMap } from "@anpdgovbr/rbac-core"
 
 // Debug de permissões
 debugPermissions(userPermissions, {
   showInherited: true,
   showDenied: true,
-  groupByResource: true
+  groupByResource: true,
 })
 
 // Validação de estrutura
 const validation = validatePermissionsMap(permissions)
 if (!validation.valid) {
-  console.error('Permissões inválidas:', validation.errors)
+  console.error("Permissões inválidas:", validation.errors)
 }
 ```
 
 ### Performance Monitoring
 
 ```typescript
-import { withMetrics } from '@anpdgovbr/rbac-provider'
+import { withMetrics } from "@anpdgovbr/rbac-provider"
 
 const monitoredProvider = withMetrics(cachedProvider, {
   onPermissionCheck: (identity, action, resource, result, duration) => {
-    metrics.histogram('rbac.check.duration', duration)
+    metrics.histogram("rbac.check.duration", duration)
     metrics.increment(`rbac.check.result.${result}`)
   },
   onCacheHit: (identity) => {
-    metrics.increment('rbac.cache.hit')
-  }
+    metrics.increment("rbac.cache.hit")
+  },
 })
 ```
 
@@ -705,9 +709,9 @@ const monitoredProvider = withMetrics(cachedProvider, {
 const legacyCompatProvider = createLegacyWrapper({
   existingAuthSystem: legacyAuth,
   mappingRules: {
-    "ADMIN": [{ acao: "Administrar", recurso: "*" }],
-    "USER": [{ acao: "Exibir", recurso: "Dashboard" }]
-  }
+    ADMIN: [{ acao: "Administrar", recurso: "*" }],
+    USER: [{ acao: "Exibir", recurso: "Dashboard" }],
+  },
 })
 ```
 
@@ -718,7 +722,7 @@ const legacyCompatProvider = createLegacyWrapper({
 const tenantProvider = createTenantAwareProvider({
   baseProvider: prismaProvider,
   tenantResolver: (identity) => extractTenantFromEmail(identity),
-  isolation: "strict" // ou "shared"
+  isolation: "strict", // ou "shared"
 })
 ```
 

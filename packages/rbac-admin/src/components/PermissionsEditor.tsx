@@ -94,4 +94,3 @@ export function PermissionsEditor({
     )
   )
 }
-;("use client")

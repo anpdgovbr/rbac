@@ -27,12 +27,12 @@ npm install @anpdgovbr/rbac-core
 ```
 
 ```typescript
-import { pode, toPermissionsMap } from '@anpdgovbr/rbac-core'
+import { pode, toPermissionsMap } from "@anpdgovbr/rbac-core"
 
 // Verificação simples
 const userPermissions = toPermissionsMap([
   { acao: "Exibir", recurso: "Dashboard", grant: true },
-  { acao: "Criar", recurso: "Usuario", grant: false }
+  { acao: "Criar", recurso: "Usuario", grant: false },
 ])
 
 const canView = pode(userPermissions, "Exibir", "Dashboard") // true
@@ -54,13 +54,13 @@ npm install @anpdgovbr/rbac-core @anpdgovbr/rbac-provider @anpdgovbr/rbac-prisma
 
 ```typescript
 // lib/rbac-config.ts
-import { createPrismaPermissionsProvider } from '@anpdgovbr/rbac-prisma'
-import { withTTLCache } from '@anpdgovbr/rbac-provider'
-import { prisma } from '@/lib/prisma'
+import { createPrismaPermissionsProvider } from "@anpdgovbr/rbac-prisma"
+import { withTTLCache } from "@anpdgovbr/rbac-provider"
+import { prisma } from "@/lib/prisma"
 
 export const prismaProvider = createPrismaPermissionsProvider({
   prisma,
-  identityField: "email"
+  identityField: "email",
 })
 
 // Cache de 5 minutos para produção
@@ -71,16 +71,16 @@ export const cachedProvider = withTTLCache(prismaProvider, 300_000)
 
 ```typescript
 // lib/identity-resolver.ts
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import type { IdentityResolver } from '@anpdgovbr/rbac-provider'
-import type { NextRequest } from 'next/server'
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import type { IdentityResolver } from "@anpdgovbr/rbac-provider"
+import type { NextRequest } from "next/server"
 
 export const nextAuthResolver: IdentityResolver<NextRequest> = {
   async getIdentity(req) {
     const session = await getServerSession(authOptions)
     return session?.user?.email || null
-  }
+  },
 }
 ```
 
@@ -88,10 +88,10 @@ export const nextAuthResolver: IdentityResolver<NextRequest> = {
 
 ```typescript
 // app/api/users/route.ts
-import { withApi } from '@anpdgovbr/rbac-next'
-import { NextResponse } from 'next/server'
-import { cachedProvider } from '@/lib/rbac-config'
-import { nextAuthResolver } from '@/lib/identity-resolver'
+import { withApi } from "@anpdgovbr/rbac-next"
+import { NextResponse } from "next/server"
+import { cachedProvider } from "@/lib/rbac-config"
+import { nextAuthResolver } from "@/lib/identity-resolver"
 
 export const GET = withApi(
   async (context) => {
@@ -102,7 +102,7 @@ export const GET = withApi(
   {
     provider: cachedProvider,
     getIdentity: nextAuthResolver,
-    permissao: { acao: "Exibir", recurso: "Usuarios" }
+    permissao: { acao: "Exibir", recurso: "Usuarios" },
   }
 )
 
@@ -115,7 +115,7 @@ export const POST = withApi(
   {
     provider: cachedProvider,
     getIdentity: nextAuthResolver,
-    permissao: { acao: "Criar", recurso: "Usuario" }
+    permissao: { acao: "Criar", recurso: "Usuario" },
   }
 )
 ```
@@ -124,7 +124,7 @@ export const POST = withApi(
 
 ```typescript
 // app/api/users/[id]/route.ts
-import { withApiForId } from '@anpdgovbr/rbac-next'
+import { withApiForId } from "@anpdgovbr/rbac-next"
 
 export const GET = withApiForId<number>(
   async (context) => {
@@ -135,12 +135,12 @@ export const GET = withApiForId<number>(
   {
     extractId: (req) => {
       const url = new URL(req.url)
-      const id = url.pathname.split('/').pop()
-      return parseInt(id || '0')
+      const id = url.pathname.split("/").pop()
+      return parseInt(id || "0")
     },
     provider: cachedProvider,
     getIdentity: nextAuthResolver,
-    permissao: { acao: "Exibir", recurso: "Usuario" }
+    permissao: { acao: "Exibir", recurso: "Usuario" },
   }
 )
 ```
@@ -149,36 +149,36 @@ export const GET = withApiForId<number>(
 
 ```typescript
 // middleware.ts
-import { withMiddleware } from '@anpdgovbr/rbac-next'
-import { cachedProvider } from '@/lib/rbac-config'
-import { nextAuthResolver } from '@/lib/identity-resolver'
+import { withMiddleware } from "@anpdgovbr/rbac-next"
+import { cachedProvider } from "@/lib/rbac-config"
+import { nextAuthResolver } from "@/lib/identity-resolver"
 
 export default withMiddleware({
   provider: cachedProvider,
   getIdentity: nextAuthResolver,
-  
+
   protectedRoutes: [
     {
       pattern: /^\/admin/,
-      permissao: { acao: "Acessar", recurso: "PainelAdmin" }
+      permissao: { acao: "Acessar", recurso: "PainelAdmin" },
     },
     {
       pattern: /^\/relatorios/,
-      permissao: { acao: "Exibir", recurso: "Relatorios" }
-    }
+      permissao: { acao: "Exibir", recurso: "Relatorios" },
+    },
   ],
-  
-  publicRoutes: ['/login', '/api/health'],
-  
+
+  publicRoutes: ["/login", "/api/health"],
+
   onUnauthorized: (req) => {
     const url = req.nextUrl.clone()
-    url.pathname = '/access-denied'
+    url.pathname = "/access-denied"
     return NextResponse.redirect(url)
-  }
+  },
 })
 
 export const config = {
-  matcher: ['/((?!api/public|_next/static|_next/image|favicon.ico).*)']
+  matcher: ["/((?!api/public|_next/static|_next/image|favicon.ico).*)"],
 }
 ```
 
@@ -236,7 +236,7 @@ export default async function RootLayout({
 }) {
   // Server-side permissions hydration
   const session = await getServerSession(authOptions)
-  const initialPermissions = session?.user?.email 
+  const initialPermissions = session?.user?.email
     ? await cachedProvider.getUserPermissions(session.user.email)
     : undefined
 
@@ -262,38 +262,38 @@ import { hasAny } from '@anpdgovbr/rbac-core'
 export default function Dashboard() {
   const { pode, loading } = usePode()
   const { permissions, error, mutate } = usePermissions()
-  
+
   // Loading state
   if (loading) return <DashboardSkeleton />
-  
+
   // Error state
   if (error) return <ErrorDisplay error={error} onRetry={() => mutate()} />
-  
+
   // Multiple permissions check
   const canAccessAnyAdmin = hasAny(permissions, [
     { acao: "Acessar", recurso: "PainelAdmin" },
     { acao: "Gerenciar", recurso: "Usuarios" },
     { acao: "Administrar", recurso: "Sistema" }
   ])
-  
+
   return (
     <div className="dashboard">
       <h1>Dashboard</h1>
-      
+
       {pode("Exibir", "Relatorios") && (
         <section>
           <h2>Relatórios</h2>
           <RelatoriosList />
         </section>
       )}
-      
+
       {pode("Criar", "Usuario") && (
         <section>
           <h2>Criar Usuário</h2>
           <CreateUserForm />
         </section>
       )}
-      
+
       {canAccessAnyAdmin && (
         <section>
           <h2>Administração</h2>
@@ -344,13 +344,13 @@ interface UserActionsProps {
 
 export default function UserActions({ userId, onEdit, onDelete }: UserActionsProps) {
   const { pode } = usePode()
-  
+
   const canEdit = pode("Editar", "Usuario")
   const canDelete = pode("Excluir", "Usuario")
-  
+
   // No actions available
   if (!canEdit && !canDelete) return null
-  
+
   return (
     <div className="user-actions">
       {canEdit && (
@@ -362,7 +362,7 @@ export default function UserActions({ userId, onEdit, onDelete }: UserActionsPro
           Editar
         </Button>
       )}
-      
+
       {canDelete && (
         <Button
           variant="outlined"
@@ -393,10 +393,10 @@ model Usuario {
   ativo     Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   // Relação com perfis
   usuarioPerfis UsuarioPerfil[]
-  
+
   @@map("usuarios")
 }
 
@@ -407,16 +407,16 @@ model Perfil {
   ativo     Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   // Relações
   usuarioPerfis    UsuarioPerfil[]
   perfilPermissoes PerfilPermissao[]
-  
+
   // Hierarquia (self-referencing)
   perfilPai     Perfil?          @relation("PerfilHierarquia", fields: [perfilPaiId], references: [id])
   perfilPaiId   String?
   perfisFilhos  Perfil[]         @relation("PerfilHierarquia")
-  
+
   @@map("perfis")
 }
 
@@ -424,42 +424,42 @@ model Permissao {
   id       String @id @default(cuid())
   acao     String
   recurso  String
-  
+
   // Relações
   perfilPermissoes PerfilPermissao[]
-  
+
   @@unique([acao, recurso])
   @@map("permissoes")
 }
 
 model UsuarioPerfil {
   id       String @id @default(cuid())
-  
+
   usuario   Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   usuarioId String
-  
+
   perfil   Perfil @relation(fields: [perfilId], references: [id], onDelete: Cascade)
   perfilId String
-  
+
   ativo     Boolean  @default(true)
   createdAt DateTime @default(now())
-  
+
   @@unique([usuarioId, perfilId])
   @@map("usuario_perfis")
 }
 
 model PerfilPermissao {
   id       String @id @default(cuid())
-  
+
   perfil      Perfil     @relation(fields: [perfilId], references: [id], onDelete: Cascade)
   perfilId    String
-  
+
   permissao   Permissao  @relation(fields: [permissaoId], references: [id], onDelete: Cascade)
   permissaoId String
-  
+
   grant     Boolean  @default(true)
   createdAt DateTime @default(now())
-  
+
   @@unique([perfilId, permissaoId])
   @@map("perfil_permissoes")
 }
@@ -469,33 +469,33 @@ model PerfilPermissao {
 
 ```typescript
 // lib/rbac-prisma.ts
-import { createPrismaPermissionsProvider } from '@anpdgovbr/rbac-prisma'
-import { prisma } from '@/lib/prisma'
+import { createPrismaPermissionsProvider } from "@anpdgovbr/rbac-prisma"
+import { prisma } from "@/lib/prisma"
 
 export const prismaProvider = createPrismaPermissionsProvider({
   prisma,
   identityField: "email",
-  
+
   // Configuração de schema (opcional se seguir convenções)
   schema: {
     userTable: "Usuario",
     roleTable: "Perfil",
     permissionTable: "Permissao",
     userRoleTable: "UsuarioPerfil",
-    rolePermissionTable: "PerfilPermissao"
+    rolePermissionTable: "PerfilPermissao",
   },
-  
+
   // Configuração de hierarquia
   hierarchy: {
     enableInheritance: true,
     maxDepth: 10,
-    strategy: "union" // true grants override false grants
+    strategy: "union", // true grants override false grants
   },
-  
+
   // Filtros adicionais
   whereClause: (identity) => ({
-    ativo: true
-  })
+    ativo: true,
+  }),
 })
 ```
 
@@ -503,7 +503,7 @@ export const prismaProvider = createPrismaPermissionsProvider({
 
 ```typescript
 // prisma/seed.ts
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -513,78 +513,82 @@ async function main() {
     prisma.permissao.upsert({
       where: { acao_recurso: { acao: "Exibir", recurso: "Dashboard" } },
       update: {},
-      create: { acao: "Exibir", recurso: "Dashboard" }
+      create: { acao: "Exibir", recurso: "Dashboard" },
     }),
     prisma.permissao.upsert({
       where: { acao_recurso: { acao: "Criar", recurso: "Usuario" } },
       update: {},
-      create: { acao: "Criar", recurso: "Usuario" }
+      create: { acao: "Criar", recurso: "Usuario" },
     }),
     prisma.permissao.upsert({
       where: { acao_recurso: { acao: "Administrar", recurso: "Sistema" } },
       update: {},
-      create: { acao: "Administrar", recurso: "Sistema" }
-    })
+      create: { acao: "Administrar", recurso: "Sistema" },
+    }),
   ])
-  
+
   // Criação de perfis
   const adminProfile = await prisma.perfil.upsert({
     where: { nome: "Administrador" },
     update: {},
     create: {
       nome: "Administrador",
-      descricao: "Acesso total ao sistema"
-    }
+      descricao: "Acesso total ao sistema",
+    },
   })
-  
+
   const userProfile = await prisma.perfil.upsert({
     where: { nome: "Usuario" },
     update: {},
     create: {
       nome: "Usuario",
       descricao: "Acesso básico",
-      perfilPaiId: adminProfile.id // Hierarquia
-    }
+      perfilPaiId: adminProfile.id, // Hierarquia
+    },
   })
-  
+
   // Atribuição de permissões
   await Promise.all([
     // Admin tem todas as permissões
-    ...permissions.map(permission => 
+    ...permissions.map((permission) =>
       prisma.perfilPermissao.upsert({
         where: {
           perfilId_permissaoId: {
             perfilId: adminProfile.id,
-            permissaoId: permission.id
-          }
+            permissaoId: permission.id,
+          },
         },
         update: {},
         create: {
           perfilId: adminProfile.id,
           permissaoId: permission.id,
-          grant: true
-        }
+          grant: true,
+        },
       })
     ),
-    
+
     // Usuario só pode ver dashboard
     prisma.perfilPermissao.upsert({
       where: {
         perfilId_permissaoId: {
           perfilId: userProfile.id,
-          permissaoId: permissions.find(p => p.acao === "Exibir" && p.recurso === "Dashboard")!.id
-        }
+          permissaoId: permissions.find(
+            (p) => p.acao === "Exibir" && p.recurso === "Dashboard"
+          )!.id,
+        },
       },
       update: {},
       create: {
         perfilId: userProfile.id,
-        permissaoId: permissions.find(p => p.acao === "Exibir" && p.recurso === "Dashboard")!.id,
-        grant: true
-      }
-    })
+        permissaoId: permissions.find(
+          (p) => p.acao === "Exibir" && p.recurso === "Dashboard"
+        )!.id,
+        grant: true,
+      },
+    }),
   ])
-  
-  console.log('Seed completed successfully')
+
+  console.log("Seed completed successfully")
 }
 
 main()
@@ -618,22 +622,22 @@ npx prisma migrate deploy
 
 ```typescript
 // lib/auth.ts
-import { NextAuthOptions } from 'next-auth'
-import AzureADProvider from 'next-auth/providers/azure-ad'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { prisma } from '@/lib/prisma'
+import { NextAuthOptions } from "next-auth"
+import AzureADProvider from "next-auth/providers/azure-ad"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { prisma } from "@/lib/prisma"
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  
+
   providers: [
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID!,
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
       tenantId: process.env.AZURE_AD_TENANT_ID,
-    })
+    }),
   ],
-  
+
   callbacks: {
     async session({ session, token }) {
       // Adicionar informações de permissões à sessão
@@ -642,29 +646,29 @@ export const authOptions: NextAuthOptions = {
           const permissions = await cachedProvider.getUserPermissions(session.user.email)
           session.user.permissions = permissions
         } catch (error) {
-          console.error('Failed to load permissions:', error)
+          console.error("Failed to load permissions:", error)
           session.user.permissions = {}
         }
       }
-      
+
       return session
     },
-    
+
     async signIn({ user, account, profile }) {
       // Verificar se usuário tem acesso ao sistema
       if (user.email) {
         const hasAccess = await checkUserAccess(user.email)
         return hasAccess
       }
-      
+
       return false
-    }
+    },
   },
-  
+
   pages: {
-    signIn: '/auth/signin',
-    error: '/auth/error'
-  }
+    signIn: "/auth/signin",
+    error: "/auth/error",
+  },
 }
 
 async function checkUserAccess(email: string): Promise<boolean> {
@@ -682,8 +686,8 @@ async function checkUserAccess(email: string): Promise<boolean> {
 
 ```typescript
 // app/api/auth/[...nextauth]/route.ts
-import NextAuth from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import NextAuth from "next-auth"
+import { authOptions } from "@/lib/auth"
 
 const handler = NextAuth(authOptions)
 
@@ -694,9 +698,9 @@ export { handler as GET, handler as POST }
 
 ```typescript
 // types/next-auth.d.ts
-import { PermissionsMap } from '@anpdgovbr/rbac-core'
+import { PermissionsMap } from "@anpdgovbr/rbac-core"
 
-declare module 'next-auth' {
+declare module "next-auth" {
   interface Session {
     user: {
       id: string
@@ -720,9 +724,9 @@ import Button from '@mui/material/Button'
 
 export default function AuthButton() {
   const { data: session, status } = useSession()
-  
+
   if (status === 'loading') return <p>Loading...</p>
-  
+
   if (session) {
     return (
       <div>
@@ -731,7 +735,7 @@ export default function AuthButton() {
       </div>
     )
   }
-  
+
   return (
     <div>
       <p>Not signed in</p>
@@ -749,34 +753,34 @@ export default function AuthButton() {
 
 ```typescript
 // theme/rbac-theme.ts
-import { createTheme } from '@mui/material/styles'
+import { createTheme } from "@mui/material/styles"
 
 export const rbacTheme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2'
+      main: "#1976d2",
     },
     secondary: {
-      main: '#dc004e'
-    }
+      main: "#dc004e",
+    },
   },
   components: {
     // Componentes RBAC customizados
     MuiButton: {
       variants: [
         {
-          props: { variant: 'rbac-protected' },
+          props: { variant: "rbac-protected" },
           style: {
-            backgroundColor: '#f5f5f5',
-            '&:disabled': {
-              backgroundColor: '#e0e0e0',
-              color: '#9e9e9e'
-            }
-          }
-        }
-      ]
-    }
-  }
+            backgroundColor: "#f5f5f5",
+            "&:disabled": {
+              backgroundColor: "#e0e0e0",
+              color: "#9e9e9e",
+            },
+          },
+        },
+      ],
+    },
+  },
 })
 ```
 
@@ -795,18 +799,18 @@ interface RBACButtonProps extends Omit<ButtonProps, 'disabled'> {
   fallbackDisabled?: boolean
 }
 
-export default function RBACButton({ 
-  action, 
-  resource, 
+export default function RBACButton({
+  action,
+  resource,
   fallbackDisabled = true,
   children,
-  ...buttonProps 
+  ...buttonProps
 }: RBACButtonProps) {
   const { pode, loading } = usePode()
-  
+
   const canPerform = pode(action, resource)
   const isDisabled = loading || (!canPerform && fallbackDisabled)
-  
+
   return (
     <Button
       {...buttonProps}
@@ -818,8 +822,8 @@ export default function RBACButton({
 }
 
 // Uso
-<RBACButton 
-  action="Criar" 
+<RBACButton
+  action="Criar"
   resource="Usuario"
   variant="contained"
   color="primary"
@@ -833,7 +837,7 @@ export default function RBACButton({
 ```typescript
 // components/rbac-menu.tsx
 import { usePode } from '@anpdgovbr/rbac-react'
-import { 
+import {
   Drawer,
   List,
   ListItem,
@@ -884,11 +888,11 @@ interface RBACMenuProps {
 
 export default function RBACMenu({ open, onNavigate }: RBACMenuProps) {
   const { pode } = usePode()
-  
-  const visibleItems = menuItems.filter(item => 
+
+  const visibleItems = menuItems.filter(item =>
     pode(item.action, item.resource)
   )
-  
+
   return (
     <Drawer open={open} variant="persistent">
       <List>
@@ -916,14 +920,14 @@ export default function RBACMenu({ open, onNavigate }: RBACMenuProps) {
 
 ```typescript
 // __tests__/utils/rbac-mocks.ts
-import type { PermissionsProvider } from '@anpdgovbr/rbac-provider'
-import type { PermissionsMap } from '@anpdgovbr/rbac-core'
+import type { PermissionsProvider } from "@anpdgovbr/rbac-provider"
+import type { PermissionsMap } from "@anpdgovbr/rbac-core"
 
 export function createMockProvider(permissions: PermissionsMap): PermissionsProvider {
   return {
     async getUserPermissions() {
       return permissions
-    }
+    },
   }
 }
 
@@ -932,14 +936,14 @@ export const adminPermissions: PermissionsMap = {
   "Criar:Usuario": true,
   "Editar:Usuario": true,
   "Excluir:Usuario": true,
-  "Administrar:Sistema": true
+  "Administrar:Sistema": true,
 }
 
 export const userPermissions: PermissionsMap = {
   "Exibir:Dashboard": true,
   "Criar:Usuario": false,
   "Editar:Usuario": false,
-  "Excluir:Usuario": false
+  "Excluir:Usuario": false,
 }
 ```
 
@@ -966,15 +970,15 @@ const renderWithPermissions = (permissions: any) => {
 describe('Dashboard', () => {
   it('shows admin features for admin users', () => {
     renderWithPermissions(adminPermissions)
-    
+
     expect(screen.getByText('Relatórios')).toBeInTheDocument()
     expect(screen.getByText('Criar Usuário')).toBeInTheDocument()
     expect(screen.getByText('Administração')).toBeInTheDocument()
   })
-  
+
   it('hides admin features for regular users', () => {
     renderWithPermissions(userPermissions)
-    
+
     expect(screen.getByText('Relatórios')).toBeInTheDocument()
     expect(screen.queryByText('Criar Usuário')).not.toBeInTheDocument()
     expect(screen.queryByText('Administração')).not.toBeInTheDocument()
@@ -986,40 +990,45 @@ describe('Dashboard', () => {
 
 ```typescript
 // __tests__/api/users.test.ts
-import { GET, POST } from '@/app/api/users/route'
-import { NextRequest } from 'next/server'
-import { createMockProvider, adminPermissions, userPermissions } from '../utils/rbac-mocks'
+import { GET, POST } from "@/app/api/users/route"
+import { NextRequest } from "next/server"
+import {
+  createMockProvider,
+  adminPermissions,
+  userPermissions,
+} from "../utils/rbac-mocks"
 
 // Mock the provider
-jest.mock('@/lib/rbac-config', () => ({
-  cachedProvider: createMockProvider(adminPermissions)
+jest.mock("@/lib/rbac-config", () => ({
+  cachedProvider: createMockProvider(adminPermissions),
 }))
 
 // Mock NextAuth
-jest.mock('next-auth', () => ({
-  getServerSession: jest.fn(() => 
-    Promise.resolve({ user: { email: 'admin@anpd.gov.br' } })
-  )
+jest.mock("next-auth", () => ({
+  getServerSession: jest.fn(() =>
+    Promise.resolve({ user: { email: "admin@anpd.gov.br" } })
+  ),
 }))
 
-describe('/api/users', () => {
-  it('allows admin to list users', async () => {
-    const request = new NextRequest('http://localhost:3000/api/users')
+describe("/api/users", () => {
+  it("allows admin to list users", async () => {
+    const request = new NextRequest("http://localhost:3000/api/users")
     const response = await GET(request)
-    
+
     expect(response.status).toBe(200)
   })
-  
-  it('denies regular user to create users', async () => {
+
+  it("denies regular user to create users", async () => {
     // Switch to user permissions
-    jest.mocked(require('@/lib/rbac-config').cachedProvider).getUserPermissions
-      .mockResolvedValue(userPermissions)
-    
-    const request = new NextRequest('http://localhost:3000/api/users', {
-      method: 'POST',
-      body: JSON.stringify({ name: 'Test User' })
+    jest
+      .mocked(require("@/lib/rbac-config").cachedProvider)
+      .getUserPermissions.mockResolvedValue(userPermissions)
+
+    const request = new NextRequest("http://localhost:3000/api/users", {
+      method: "POST",
+      body: JSON.stringify({ name: "Test User" }),
     })
-    
+
     const response = await POST(request)
     expect(response.status).toBe(403)
   })
@@ -1034,20 +1043,20 @@ describe('/api/users', () => {
 
 ```typescript
 // lib/rbac-metrics.ts
-import { withMetrics } from '@anpdgovbr/rbac-provider'
+import { withMetrics } from "@anpdgovbr/rbac-provider"
 
 class MetricsCollector {
   private metrics = new Map<string, number>()
-  
+
   increment(key: string, value = 1) {
     this.metrics.set(key, (this.metrics.get(key) || 0) + value)
   }
-  
+
   histogram(key: string, value: number) {
     // Implementar histograma conforme sua solução de métricas
     console.log(`${key}: ${value}ms`)
   }
-  
+
   getMetrics() {
     return Object.fromEntries(this.metrics)
   }
@@ -1057,23 +1066,25 @@ export const metricsCollector = new MetricsCollector()
 
 export const monitoredProvider = withMetrics(cachedProvider, {
   onPermissionCheck: (identity, action, resource, result, duration) => {
-    metricsCollector.histogram('rbac.check.duration', duration)
+    metricsCollector.histogram("rbac.check.duration", duration)
     metricsCollector.increment(`rbac.check.result.${result}`)
-    metricsCollector.increment('rbac.checks.total')
-    
+    metricsCollector.increment("rbac.checks.total")
+
     if (duration > 100) {
-      metricsCollector.increment('rbac.checks.slow')
-      console.warn(`Slow permission check: ${action}:${resource} for ${identity} took ${duration}ms`)
+      metricsCollector.increment("rbac.checks.slow")
+      console.warn(
+        `Slow permission check: ${action}:${resource} for ${identity} took ${duration}ms`
+      )
     }
   },
-  
+
   onCacheHit: (identity) => {
-    metricsCollector.increment('rbac.cache.hits')
+    metricsCollector.increment("rbac.cache.hits")
   },
-  
+
   onCacheMiss: (identity) => {
-    metricsCollector.increment('rbac.cache.misses')
-  }
+    metricsCollector.increment("rbac.cache.misses")
+  },
 })
 ```
 
@@ -1081,45 +1092,50 @@ export const monitoredProvider = withMetrics(cachedProvider, {
 
 ```typescript
 // app/api/health/rbac/route.ts
-import { NextResponse } from 'next/server'
-import { cachedProvider } from '@/lib/rbac-config'
-import { metricsCollector } from '@/lib/rbac-metrics'
+import { NextResponse } from "next/server"
+import { cachedProvider } from "@/lib/rbac-config"
+import { metricsCollector } from "@/lib/rbac-metrics"
 
 export async function GET() {
   try {
     // Test provider connectivity
-    const testEmail = 'health-check@test.com'
+    const testEmail = "health-check@test.com"
     const start = Date.now()
-    
+
     try {
       await cachedProvider.getUserPermissions(testEmail)
     } catch (error) {
       // Expected for non-existent user
     }
-    
+
     const duration = Date.now() - start
     const metrics = metricsCollector.getMetrics()
-    
+
     return NextResponse.json({
-      status: 'healthy',
+      status: "healthy",
       timestamp: new Date().toISOString(),
       provider: {
         responseTime: `${duration}ms`,
-        healthy: duration < 1000
+        healthy: duration < 1000,
       },
       cache: {
-        hitRatio: metrics['rbac.cache.hits'] / (metrics['rbac.cache.hits'] + metrics['rbac.cache.misses']) || 0,
-        totalChecks: metrics['rbac.checks.total'] || 0,
-        slowChecks: metrics['rbac.checks.slow'] || 0
+        hitRatio:
+          metrics["rbac.cache.hits"] /
+            (metrics["rbac.cache.hits"] + metrics["rbac.cache.misses"]) || 0,
+        totalChecks: metrics["rbac.checks.total"] || 0,
+        slowChecks: metrics["rbac.checks.slow"] || 0,
       },
-      metrics
+      metrics,
     })
   } catch (error) {
-    return NextResponse.json({
-      status: 'unhealthy',
-      timestamp: new Date().toISOString(),
-      error: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
+    return NextResponse.json(
+      {
+        status: "unhealthy",
+        timestamp: new Date().toISOString(),
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    )
   }
 }
 ```
@@ -1145,7 +1161,7 @@ interface Metrics {
 
 export default function RBACMetricsDashboard() {
   const [metrics, setMetrics] = useState<Metrics | null>(null)
-  
+
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
@@ -1156,15 +1172,15 @@ export default function RBACMetricsDashboard() {
         console.error('Failed to fetch RBAC metrics:', error)
       }
     }
-    
+
     fetchMetrics()
     const interval = setInterval(fetchMetrics, 30000) // 30s
-    
+
     return () => clearInterval(interval)
   }, [])
-  
+
   if (!metrics) return <div>Loading metrics...</div>
-  
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={3}>
@@ -1182,7 +1198,7 @@ export default function RBACMetricsDashboard() {
           </CardContent>
         </Card>
       </Grid>
-      
+
       <Grid item xs={12} md={3}>
         <Card>
           <CardContent>
@@ -1195,7 +1211,7 @@ export default function RBACMetricsDashboard() {
           </CardContent>
         </Card>
       </Grid>
-      
+
       <Grid item xs={12} md={3}>
         <Card>
           <CardContent>
@@ -1208,7 +1224,7 @@ export default function RBACMetricsDashboard() {
           </CardContent>
         </Card>
       </Grid>
-      
+
       <Grid item xs={12} md={3}>
         <Card>
           <CardContent>

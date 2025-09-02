@@ -23,21 +23,25 @@
 ### Objetivos dos Padrões
 
 #### 1. **Consistência** 🎯
+
 - Mesmo estilo de código em todos os pacotes
 - Convenções padronizadas de nomenclatura
 - Estrutura de arquivos uniforme
 
 #### 2. **Qualidade** ✨
+
 - Type safety completo com TypeScript
 - Cobertura de testes adequada
 - Documentação abrangente
 
 #### 3. **Produtividade** 🚀
+
 - Ferramentas automatizadas
 - Feedback rápido no desenvolvimento
 - CI/CD eficiente
 
 #### 4. **Manutenibilidade** 🔧
+
 - Código auto-documentado
 - Refatorações seguras
 - Dependências atualizadas
@@ -60,7 +64,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-    
+
     // Modules e Resolution
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -68,7 +72,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    
+
     // Output
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
@@ -77,7 +81,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    
+
     // Quality
     "skipLibCheck": false,
     "forceConsistentCasingInFileNames": true
@@ -135,7 +139,7 @@ type PermissionProvider = {
 enum Permission {
   Read = "Read",
   Write = "Write",
-  Admin = "Admin"
+  Admin = "Admin",
 }
 
 // ✅ Classes: PascalCase
@@ -146,7 +150,7 @@ export class PrismaPermissionsProvider implements PermissionsProvider {
     const userProfiles = await this.fetchUserProfiles(identity)
     return this.computePermissions(userProfiles)
   }
-  
+
   // ✅ Métodos privados: camelCase com prefix _
   private async _fetchFromCache(key: string): Promise<any> {
     // implementação
@@ -175,17 +179,17 @@ type UserCardProps = Readonly<{
 ```typescript
 // ✅ Imports: ordem específica
 // 1. External libraries
-import React from 'react'
-import { PrismaClient } from '@prisma/client'
+import React from "react"
+import { PrismaClient } from "@prisma/client"
 
 // 2. Internal packages (org)
-import { PermissionsProvider } from '@anpdgovbr/rbac-core'
-import { withPermission } from '@anpdgovbr/rbac-react'
+import { PermissionsProvider } from "@anpdgovbr/rbac-core"
+import { withPermission } from "@anpdgovbr/rbac-react"
 
 // 3. Relative imports (grouped)
-import { UserService } from '../services/UserService'
-import { validatePermission } from '../utils/validation'
-import type { UserPermissions } from '../types/user-types'
+import { UserService } from "../services/UserService"
+import { validatePermission } from "../utils/validation"
+import type { UserPermissions } from "../types/user-types"
 
 // ✅ Exports: named exports preferidos
 export { PrismaPermissionsProvider }
@@ -199,11 +203,11 @@ export default function UserCard({ userId, onEdit }: UserCardProps) {
 
 ### TSDoc Obrigatório
 
-```typescript
+````typescript
 /**
  * @fileoverview Provider Prisma para sistema RBAC - implementa busca e cache
  * de permissões usando banco de dados Prisma com hierarquia de perfis.
- * 
+ *
  * @author Divisão de Desenvolvimento e Sustentação de Sistemas (DDSS/CGTI/ANPD)
  * @since 2025-09
  */
@@ -211,17 +215,17 @@ export default function UserCard({ userId, onEdit }: UserCardProps) {
 /**
  * Provider de permissões que utiliza Prisma ORM para buscar e resolver
  * permissões de usuários considerando hierarquia de perfis.
- * 
+ *
  * @example
  * ```typescript
  * const provider = new PrismaPermissionsProvider(prisma, cache)
  * const permissions = await provider.getUserPermissions('user@example.com')
- * 
+ *
  * if (permissions['Editar:Usuario']) {
  *   // Usuário pode editar usuários
  * }
  * ```
- * 
+ *
  * @see {@link PermissionsProvider} Interface base
  * @see {@link PermissionsMap} Formato do retorno
  */
@@ -229,17 +233,17 @@ export class PrismaPermissionsProvider implements PermissionsProvider {
   /**
    * Busca e computa as permissões efetivas de um usuário, considerando
    * hierarquia de perfis e cache para otimização de performance.
-   * 
+   *
    * @param identity - Email ou identificador único do usuário
    * @returns Promise com mapa de permissões no formato "Acao:Recurso": boolean
-   * 
+   *
    * @throws {Error} Quando falha ao acessar banco de dados
    * @throws {ValidationError} Quando identity é inválido
-   * 
+   *
    * @example
    * ```typescript
    * const permissions = await provider.getUserPermissions('admin@anpd.gov.br')
-   * 
+   *
    * // Verificar permissão específica
    * if (permissions['Administrar:Sistema']) {
    *   console.log('Usuário é administrador')
@@ -249,12 +253,12 @@ export class PrismaPermissionsProvider implements PermissionsProvider {
   async getUserPermissions(identity: string): Promise<PermissionsMap> {
     // implementação
   }
-  
+
   /**
    * @internal
    * Método interno para resolver hierarquia de perfis usando algoritmo
    * de travessia DAG (Directed Acyclic Graph).
-   * 
+   *
    * @param profileIds - IDs dos perfis base do usuário
    * @returns Array com todos os perfis incluindo herança
    */
@@ -262,7 +266,7 @@ export class PrismaPermissionsProvider implements PermissionsProvider {
     // implementação
   }
 }
-```
+````
 
 ---
 
@@ -273,7 +277,7 @@ export class PrismaPermissionsProvider implements PermissionsProvider {
 ```
 rbac/
 ├── package.json                    # Root workspace config
-├── tsconfig.json                   # Base TypeScript config  
+├── tsconfig.json                   # Base TypeScript config
 ├── eslint.config.mjs              # ESLint flat config
 ├── prettier.config.js             # Prettier config
 ├── vitest.workspace.ts            # Vitest workspace
@@ -312,9 +316,7 @@ rbac/
 {
   "name": "@anpdgovbr/rbac",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -365,7 +367,7 @@ rbac/
   },
   "homepage": "https://github.com/anpd-gov-br/rbac/tree/main/packages/rbac-{PACKAGE}#readme",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs", 
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -397,70 +399,66 @@ rbac/
 
 ```javascript
 // eslint.config.mjs
-import { defineConfig } from 'eslint-define-config'
-import tseslint from '@typescript-eslint/eslint-plugin'
-import tsparser from '@typescript-eslint/parser'
+import { defineConfig } from "eslint-define-config"
+import tseslint from "@typescript-eslint/eslint-plugin"
+import tsparser from "@typescript-eslint/parser"
 
 export default defineConfig([
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       parser: tsparser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        project: './tsconfig.json'
-      }
+        ecmaVersion: "latest",
+        sourceType: "module",
+        project: "./tsconfig.json",
+      },
     },
     plugins: {
-      '@typescript-eslint': tseslint
+      "@typescript-eslint": tseslint,
     },
     rules: {
       // TypeScript specific
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/prefer-nullish-coalescing': 'error',
-      '@typescript-eslint/prefer-optional-chain': 'error',
-      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
-      '@typescript-eslint/strict-boolean-expressions': 'error',
-      
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/prefer-nullish-coalescing": "error",
+      "@typescript-eslint/prefer-optional-chain": "error",
+      "@typescript-eslint/no-unnecessary-type-assertion": "error",
+      "@typescript-eslint/strict-boolean-expressions": "error",
+
       // Import organization
-      'import/order': ['error', {
-        'groups': [
-          'builtin',
-          'external', 
-          'internal',
-          'parent',
-          'sibling',
-          'index'
-        ],
-        'newlines-between': 'always',
-        'alphabetize': { order: 'asc' }
-      }],
-      
-      // Code quality
-      'prefer-const': 'error',
-      'no-var': 'error',
-      'object-shorthand': 'error',
-      'prefer-template': 'error',
-      
-      // React specific (when applicable)
-      'react/function-component-definition': [
-        'error',
-        { namedComponents: 'function-declaration' }
+      "import/order": [
+        "error",
+        {
+          groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
+          "newlines-between": "always",
+          alphabetize: { order: "asc" },
+        },
       ],
-      'react/prop-types': 'off', // Using TypeScript
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn'
-    }
+
+      // Code quality
+      "prefer-const": "error",
+      "no-var": "error",
+      "object-shorthand": "error",
+      "prefer-template": "error",
+
+      // React specific (when applicable)
+      "react/function-component-definition": [
+        "error",
+        { namedComponents: "function-declaration" },
+      ],
+      "react/prop-types": "off", // Using TypeScript
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+    },
   },
   {
-    files: ['**/*.test.ts', '**/*.spec.ts'],
+    files: ["**/*.test.ts", "**/*.spec.ts"],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-non-null-assertion': 'off'
-    }
-  }
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+    },
+  },
 ])
 ```
 
@@ -473,40 +471,40 @@ export default {
   // Base formatting
   semi: false,
   singleQuote: true,
-  quoteProps: 'as-needed',
-  trailingComma: 'es5',
-  
+  quoteProps: "as-needed",
+  trailingComma: "es5",
+
   // Indentation
   tabWidth: 2,
   useTabs: false,
-  
+
   // Line wrapping
   printWidth: 100,
-  proseWrap: 'preserve',
-  
+  proseWrap: "preserve",
+
   // Bracket spacing
   bracketSpacing: true,
   bracketSameLine: false,
-  
+
   // Arrow functions
-  arrowParens: 'avoid',
-  
+  arrowParens: "avoid",
+
   // File-specific overrides
   overrides: [
     {
-      files: '*.json',
+      files: "*.json",
       options: {
-        printWidth: 80
-      }
+        printWidth: 80,
+      },
     },
     {
-      files: '*.md',
+      files: "*.md",
       options: {
-        proseWrap: 'always',
-        printWidth: 80
-      }
-    }
-  ]
+        proseWrap: "always",
+        printWidth: 80,
+      },
+    },
+  ],
 }
 ```
 
@@ -586,13 +584,8 @@ echo "✅ Commit message is valid!"
 // lint-staged configuration in package.json
 {
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{js,jsx,json,md}": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{js,jsx,json,md}": ["prettier --write"]
   }
 }
 ```
@@ -604,12 +597,14 @@ echo "✅ Commit message is valid!"
 ### Métricas de Qualidade
 
 #### 1. **Coverage Mínimo**
+
 - **Packages Core**: 90%+ coverage
-- **Providers**: 85%+ coverage  
+- **Providers**: 85%+ coverage
 - **UI Components**: 70%+ coverage
 - **Utils/Helpers**: 95%+ coverage
 
 #### 2. **TypeScript Strict**
+
 ```json
 // tsconfig.json - configuração obrigatória
 {
@@ -624,11 +619,12 @@ echo "✅ Commit message is valid!"
 ```
 
 #### 3. **ESLint Rules**
+
 ```javascript
 // Regras obrigatórias
 {
   "@typescript-eslint/no-explicit-any": "error",
-  "@typescript-eslint/no-unused-vars": "error", 
+  "@typescript-eslint/no-unused-vars": "error",
   "@typescript-eslint/prefer-nullish-coalescing": "error",
   "@typescript-eslint/strict-boolean-expressions": "error",
   "prefer-const": "error",
@@ -639,6 +635,7 @@ echo "✅ Commit message is valid!"
 ### Code Review Checklist
 
 #### ✅ **Antes do PR**
+
 - [ ] Todos os testes passando
 - [ ] Coverage mantido ou melhorado
 - [ ] Lint sem erros
@@ -647,6 +644,7 @@ echo "✅ Commit message is valid!"
 - [ ] CHANGELOG.md atualizado
 
 #### ✅ **Durante Review**
+
 - [ ] Lógica de negócio correta
 - [ ] Performance adequada
 - [ ] Segurança verificada
@@ -655,6 +653,7 @@ echo "✅ Commit message is valid!"
 - [ ] API design consistente
 
 #### ✅ **Antes do Merge**
+
 - [ ] Squash commits se necessário
 - [ ] Message do commit seguindo padrão
 - [ ] CI/CD pipeline verde
@@ -677,7 +676,7 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: "20"
 
 jobs:
   quality:
@@ -687,25 +686,25 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Type check
         run: npm run typecheck
-      
+
       - name: Lint
         run: npm run lint
-      
+
       - name: Format check
         run: npm run format:check
-  
+
   test:
     name: Test Suite
     runs-on: ubuntu-latest
@@ -714,46 +713,46 @@ jobs:
         package: [rbac-core, rbac-provider, rbac-prisma, rbac-next, rbac-react]
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run tests
         run: npm run test --workspace=@anpdgovbr/${{ matrix.package }}
         env:
           CI: true
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
           files: ./packages/${{ matrix.package }}/coverage/lcov.info
           flags: ${{ matrix.package }}
-  
+
   build:
     name: Build Packages
     runs-on: ubuntu-latest
     needs: [quality, test]
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Build packages
         run: npm run build
-      
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -769,23 +768,23 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
-      
+          cache: "npm"
+          registry-url: "https://registry.npmjs.org"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: dist-packages
           path: packages/
-      
+
       - name: Create Release
         run: |
           npm run changeset -- version
@@ -803,7 +802,7 @@ name: Security Scan
 
 on:
   schedule:
-    - cron: '0 2 * * 1' # Weekly on Monday
+    - cron: "0 2 * * 1" # Weekly on Monday
   push:
     branches: [main]
 
@@ -813,22 +812,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      
+          node-version: "20"
+          cache: "npm"
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run security audit
         run: npm audit --audit-level high
-      
+
       - name: Check for vulnerabilities
         run: npx better-npm-audit audit
-      
+
       - name: CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
@@ -920,94 +919,96 @@ npm run changeset -- publish
 ### Tipos de Teste por Package
 
 #### **rbac-core** (Unitários Extensivos)
+
 ```typescript
 // packages/rbac-core/src/__tests__/permissions.test.ts
-import { describe, it, expect } from 'vitest'
-import { toPermissionsMap, hasPermission } from '../permissions'
+import { describe, it, expect } from "vitest"
+import { toPermissionsMap, hasPermission } from "../permissions"
 
-describe('Permission Utils', () => {
-  describe('toPermissionsMap', () => {
-    it('should convert permissions array to map', () => {
+describe("Permission Utils", () => {
+  describe("toPermissionsMap", () => {
+    it("should convert permissions array to map", () => {
       const permissions = [
-        { acao: 'Editar', recurso: 'Usuario', grant: true },
-        { acao: 'Excluir', recurso: 'Usuario', grant: false }
+        { acao: "Editar", recurso: "Usuario", grant: true },
+        { acao: "Excluir", recurso: "Usuario", grant: false },
       ]
-      
+
       const map = toPermissionsMap(permissions)
-      
-      expect(map['Editar:Usuario']).toBe(true)
-      expect(map['Excluir:Usuario']).toBe(false)
+
+      expect(map["Editar:Usuario"]).toBe(true)
+      expect(map["Excluir:Usuario"]).toBe(false)
     })
-    
-    it('should handle empty permissions array', () => {
+
+    it("should handle empty permissions array", () => {
       expect(toPermissionsMap([])).toEqual({})
     })
-    
-    it('should override permissions with same key', () => {
+
+    it("should override permissions with same key", () => {
       const permissions = [
-        { acao: 'Editar', recurso: 'Usuario', grant: false },
-        { acao: 'Editar', recurso: 'Usuario', grant: true }
+        { acao: "Editar", recurso: "Usuario", grant: false },
+        { acao: "Editar", recurso: "Usuario", grant: true },
       ]
-      
+
       const map = toPermissionsMap(permissions)
-      expect(map['Editar:Usuario']).toBe(true)
+      expect(map["Editar:Usuario"]).toBe(true)
     })
   })
-  
-  describe('hasPermission', () => {
-    it('should return true for granted permissions', () => {
-      const map = { 'Editar:Usuario': true }
-      expect(hasPermission(map, 'Editar', 'Usuario')).toBe(true)
+
+  describe("hasPermission", () => {
+    it("should return true for granted permissions", () => {
+      const map = { "Editar:Usuario": true }
+      expect(hasPermission(map, "Editar", "Usuario")).toBe(true)
     })
-    
-    it('should return false for missing permissions', () => {
+
+    it("should return false for missing permissions", () => {
       const map = {}
-      expect(hasPermission(map, 'Editar', 'Usuario')).toBe(false)
+      expect(hasPermission(map, "Editar", "Usuario")).toBe(false)
     })
   })
 })
 ```
 
 #### **rbac-prisma** (Integração + Unit)
+
 ```typescript
 // packages/rbac-prisma/src/__tests__/provider.integration.test.ts
-import { describe, beforeEach, afterEach, it, expect } from 'vitest'
-import { PrismaClient } from '@prisma/client'
-import { PrismaPermissionsProvider } from '../PrismaPermissionsProvider'
+import { describe, beforeEach, afterEach, it, expect } from "vitest"
+import { PrismaClient } from "@prisma/client"
+import { PrismaPermissionsProvider } from "../PrismaPermissionsProvider"
 
-describe('PrismaPermissionsProvider Integration', () => {
+describe("PrismaPermissionsProvider Integration", () => {
   let prisma: PrismaClient
   let provider: PrismaPermissionsProvider
-  
+
   beforeEach(async () => {
     prisma = new PrismaClient({
-      datasources: { db: { url: process.env.TEST_DATABASE_URL } }
+      datasources: { db: { url: process.env.TEST_DATABASE_URL } },
     })
-    
+
     provider = new PrismaPermissionsProvider(prisma)
-    
+
     // Setup test data
     await seedTestData(prisma)
   })
-  
+
   afterEach(async () => {
     await cleanupTestData(prisma)
     await prisma.$disconnect()
   })
-  
-  it('should resolve user permissions with profile hierarchy', async () => {
-    const permissions = await provider.getUserPermissions('test@example.com')
-    
-    expect(permissions['Editar:Usuario']).toBe(true)
-    expect(permissions['Administrar:Sistema']).toBe(false)
+
+  it("should resolve user permissions with profile hierarchy", async () => {
+    const permissions = await provider.getUserPermissions("test@example.com")
+
+    expect(permissions["Editar:Usuario"]).toBe(true)
+    expect(permissions["Administrar:Sistema"]).toBe(false)
   })
-  
-  it('should handle circular hierarchy gracefully', async () => {
+
+  it("should handle circular hierarchy gracefully", async () => {
     // Create circular reference
     await createCircularHierarchy(prisma)
-    
-    const permissions = await provider.getUserPermissions('circular@example.com')
-    
+
+    const permissions = await provider.getUserPermissions("circular@example.com")
+
     // Should not throw and return reasonable permissions
     expect(permissions).toBeDefined()
   })
@@ -1015,6 +1016,7 @@ describe('PrismaPermissionsProvider Integration', () => {
 ```
 
 #### **rbac-react** (Component Testing)
+
 ```typescript
 // packages/rbac-react/src/__tests__/PermissionGate.test.tsx
 import { describe, it, expect, vi } from 'vitest'
@@ -1028,7 +1030,7 @@ const mockProvider = {
 
 function TestWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <PermissionsProvider 
+    <PermissionsProvider
       provider={mockProvider}
       getIdentity={() => Promise.resolve('test@example.com')}
     >
@@ -1042,7 +1044,7 @@ describe('PermissionGate', () => {
     mockProvider.getUserPermissions.mockResolvedValue({
       'Editar:Usuario': true
     })
-    
+
     render(
       <TestWrapper>
         <PermissionGate action="Editar" resource="Usuario">
@@ -1050,17 +1052,17 @@ describe('PermissionGate', () => {
         </PermissionGate>
       </TestWrapper>
     )
-    
+
     expect(await screen.findByText('Protected Content')).toBeInTheDocument()
   })
-  
+
   it('should render fallback when permission is denied', async () => {
     mockProvider.getUserPermissions.mockResolvedValue({})
-    
+
     render(
       <TestWrapper>
-        <PermissionGate 
-          action="Editar" 
+        <PermissionGate
+          action="Editar"
           resource="Usuario"
           fallback={<div>Access Denied</div>}
         >
@@ -1068,7 +1070,7 @@ describe('PermissionGate', () => {
         </PermissionGate>
       </TestWrapper>
     )
-    
+
     expect(await screen.findByText('Access Denied')).toBeInTheDocument()
     expect(screen.queryByText('Protected Content')).not.toBeInTheDocument()
   })
@@ -1079,43 +1081,43 @@ describe('PermissionGate', () => {
 
 ```typescript
 // vitest.workspace.ts
-import { defineWorkspace } from 'vitest/config'
+import { defineWorkspace } from "vitest/config"
 
 export default defineWorkspace([
   {
     test: {
-      name: 'unit',
-      include: ['packages/*/src/**/*.{test,spec}.ts'],
-      environment: 'node',
+      name: "unit",
+      include: ["packages/*/src/**/*.{test,spec}.ts"],
+      environment: "node",
       coverage: {
-        reporter: ['text', 'lcov', 'html'],
+        reporter: ["text", "lcov", "html"],
         thresholds: {
           global: {
             branches: 80,
             functions: 80,
             lines: 80,
-            statements: 80
-          }
-        }
-      }
-    }
+            statements: 80,
+          },
+        },
+      },
+    },
   },
   {
     test: {
-      name: 'integration',
-      include: ['packages/*/src/**/*.integration.{test,spec}.ts'],
-      environment: 'node',
-      setupFiles: ['./tests/setup-integration.ts']
-    }
+      name: "integration",
+      include: ["packages/*/src/**/*.integration.{test,spec}.ts"],
+      environment: "node",
+      setupFiles: ["./tests/setup-integration.ts"],
+    },
   },
   {
     test: {
-      name: 'react',
-      include: ['packages/rbac-react/src/**/*.{test,spec}.tsx'],
-      environment: 'jsdom',
-      setupFiles: ['./tests/setup-react.ts']
-    }
-  }
+      name: "react",
+      include: ["packages/rbac-react/src/**/*.{test,spec}.tsx"],
+      environment: "jsdom",
+      setupFiles: ["./tests/setup-react.ts"],
+    },
+  },
 ])
 ```
 
@@ -1196,26 +1198,26 @@ MIT © [ANPD](LICENSE)
 
 ### JSDoc Standards
 
-```typescript
+````typescript
 /**
  * @fileoverview Utilitários para manipulação de permissões RBAC.
- * 
+ *
  * Este módulo fornece funções auxiliares para conversão e verificação
  * de permissões no formato usado pelo sistema RBAC da ANPD.
- * 
+ *
  * @example
  * ```typescript
  * import { toPermissionsMap, hasPermission } from '@anpdgovbr/rbac-core'
- * 
+ *
  * const permissions = toPermissionsMap([
  *   { acao: 'Editar', recurso: 'Usuario', grant: true }
  * ])
- * 
+ *
  * if (hasPermission(permissions, 'Editar', 'Usuario')) {
  *   console.log('Permission granted!')
  * }
  * ```
- * 
+ *
  * @author Divisão de Desenvolvimento e Sustentação de Sistemas (DDSS/CGTI/ANPD)
  * @since 2025-09
  * @version 1.0.0
@@ -1223,33 +1225,33 @@ MIT © [ANPD](LICENSE)
 
 /**
  * Converte um array de permissões para o formato de mapa usado internamente.
- * 
+ *
  * @param permissions - Array de permissões com ação, recurso e grant
  * @returns Mapa de permissões no formato "Acao:Recurso": boolean
- * 
+ *
  * @example
  * ```typescript
  * const permissions = [
  *   { acao: 'Editar', recurso: 'Usuario', grant: true },
  *   { acao: 'Excluir', recurso: 'Usuario', grant: false }
  * ]
- * 
+ *
  * const map = toPermissionsMap(permissions)
  * // Result: { "Editar:Usuario": true, "Excluir:Usuario": false }
  * ```
- * 
+ *
  * @throws {TypeError} Quando permissions não é um array
  * @throws {ValidationError} Quando alguma permissão tem formato inválido
- * 
+ *
  * @see {@link hasPermission} Para verificar permissões no mapa
  * @see {@link Permissao} Interface da permissão
- * 
+ *
  * @public
  */
 export function toPermissionsMap(permissions: PermissionGrant[]): PermissionsMap {
   // implementação
 }
-```
+````
 
 ---
 

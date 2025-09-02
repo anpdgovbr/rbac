@@ -26,19 +26,19 @@ graph LR
     A[Sistema Legado] --> B[Wrapper Híbrido]
     B --> C[RBAC Gradual]
     C --> D[Sistema Novo]
-    
+
     subgraph "Fase 1: Preparação"
         E[Análise do Sistema]
         F[Mapeamento de Permissões]
         G[Setup Infraestrutura]
     end
-    
+
     subgraph "Fase 2: Integração"
         H[Provider Híbrido]
         I[Feature Flags]
         J[Migração de Rotas]
     end
-    
+
     subgraph "Fase 3: Consolidação"
         K[Validação Completa]
         L[Deprecação Legacy]
@@ -49,18 +49,21 @@ graph LR
 ### Tipos de Migração Suportados
 
 #### 1. **Big Bang** (Não Recomendado)
+
 - ❌ **Risco Alto**: Mudança total de uma vez
 - ❌ **Rollback Difícil**: Difícil de reverter
 - ✅ **Velocidade**: Migração rápida
 - 🎯 **Uso**: Apenas para sistemas muito simples
 
 #### 2. **Strangler Fig** (Recomendado)
+
 - ✅ **Risco Baixo**: Substituição gradual
 - ✅ **Rollback Fácil**: Cada feature pode ser revertida
 - ✅ **Validação**: Teste contínuo durante migração
 - 🎯 **Uso**: Sistemas complexos em produção
 
 #### 3. **Feature Flags** (Híbrido)
+
 - ✅ **Controle Granular**: Por usuário/feature
 - ✅ **A/B Testing**: Comparação lado a lado
 - ✅ **Rollback Instantâneo**: Flip de flag
@@ -76,7 +79,7 @@ graph LR
 
 ```typescript
 // scripts/audit-current-permissions.ts
-import { existingAuthSystem } from '@/lib/legacy-auth'
+import { existingAuthSystem } from "@/lib/legacy-auth"
 
 interface LegacyPermissionAudit {
   roles: string[]
@@ -89,10 +92,10 @@ async function auditCurrentSystem(): Promise<LegacyPermissionAudit> {
   const roles = await existingAuthSystem.getAllRoles()
   const permissions = await existingAuthSystem.getAllPermissions()
   const users = await existingAuthSystem.getAllUsersWithRoles()
-  
+
   // Detectar inconsistências
   const inconsistencies: string[] = []
-  
+
   // Verificar papéis órfãos
   for (const user of users) {
     for (const role of user.roles) {
@@ -101,65 +104,61 @@ async function auditCurrentSystem(): Promise<LegacyPermissionAudit> {
       }
     }
   }
-  
+
   return { roles, permissions, users, inconsistencies }
 }
 
 // Execução
 const audit = await auditCurrentSystem()
-console.log('Legacy System Audit:', audit)
+console.log("Legacy System Audit:", audit)
 ```
 
 #### 1.2 Mapeamento de Permissões
 
 ```typescript
 // config/permission-mapping.ts
-import type { Permissao } from '@anpdgovbr/rbac-core'
+import type { Permissao } from "@anpdgovbr/rbac-core"
 
 export const legacyToRbacMapping: Record<string, Permissao[]> = {
   // Papéis legados -> Permissões RBAC
-  "ADMIN": [
+  ADMIN: [
     { acao: "Administrar", recurso: "Sistema" },
     { acao: "Gerenciar", recurso: "Usuarios" },
-    { acao: "Exibir", recurso: "Dashboard" }
+    { acao: "Exibir", recurso: "Dashboard" },
   ],
-  
-  "MANAGER": [
+
+  MANAGER: [
     { acao: "Gerenciar", recurso: "Usuarios" },
     { acao: "Exibir", recurso: "Relatorios" },
-    { acao: "Criar", recurso: "Processo" }
+    { acao: "Criar", recurso: "Processo" },
   ],
-  
-  "USER": [
+
+  USER: [
     { acao: "Exibir", recurso: "Dashboard" },
-    { acao: "Criar", recurso: "Solicitacao" }
+    { acao: "Criar", recurso: "Solicitacao" },
   ],
-  
+
   // Permissões específicas legadas
-  "CAN_EDIT_USERS": [
-    { acao: "Editar", recurso: "Usuario" }
-  ],
-  
-  "CAN_VIEW_REPORTS": [
-    { acao: "Exibir", recurso: "Relatorios" }
-  ]
+  CAN_EDIT_USERS: [{ acao: "Editar", recurso: "Usuario" }],
+
+  CAN_VIEW_REPORTS: [{ acao: "Exibir", recurso: "Relatorios" }],
 }
 
 export const actionMapping: Record<string, string> = {
-  "CREATE": "Criar",
-  "READ": "Exibir", 
-  "UPDATE": "Editar",
-  "DELETE": "Excluir",
-  "MANAGE": "Gerenciar",
-  "ADMIN": "Administrar"
+  CREATE: "Criar",
+  READ: "Exibir",
+  UPDATE: "Editar",
+  DELETE: "Excluir",
+  MANAGE: "Gerenciar",
+  ADMIN: "Administrar",
 }
 
 export const resourceMapping: Record<string, string> = {
-  "USERS": "Usuarios",
-  "REPORTS": "Relatorios", 
-  "PROCESSES": "Processos",
-  "DASHBOARD": "Dashboard",
-  "SYSTEM": "Sistema"
+  USERS: "Usuarios",
+  REPORTS: "Relatorios",
+  PROCESSES: "Processos",
+  DASHBOARD: "Dashboard",
+  SYSTEM: "Sistema",
 }
 ```
 
@@ -169,9 +168,9 @@ export const resourceMapping: Record<string, string> = {
 
 ```typescript
 // lib/hybrid-permissions-provider.ts
-import type { PermissionsProvider, PermissionsMap } from '@anpdgovbr/rbac-core'
-import { toPermissionsMap } from '@anpdgovbr/rbac-core'
-import { legacyToRbacMapping } from '@/config/permission-mapping'
+import type { PermissionsProvider, PermissionsMap } from "@anpdgovbr/rbac-core"
+import { toPermissionsMap } from "@anpdgovbr/rbac-core"
+import { legacyToRbacMapping } from "@/config/permission-mapping"
 
 interface MigrationConfig {
   enabledUsers: string[]
@@ -185,11 +184,11 @@ export class HybridPermissionsProvider implements PermissionsProvider {
     private newRbacProvider: PermissionsProvider,
     private migrationConfig: MigrationConfig
   ) {}
-  
+
   async getUserPermissions(identity: string): Promise<PermissionsMap> {
     // Feature flag: verificar se usuário deve usar novo sistema
     const shouldUseNewSystem = await this.shouldUseNewSystem(identity)
-    
+
     if (shouldUseNewSystem) {
       try {
         // Tentar sistema novo primeiro
@@ -200,56 +199,56 @@ export class HybridPermissionsProvider implements PermissionsProvider {
         return await this.getLegacyPermissions(identity)
       }
     }
-    
+
     // Usar sistema legado
     return await this.getLegacyPermissions(identity)
   }
-  
+
   private async shouldUseNewSystem(identity: string): Promise<boolean> {
     // Verificação por usuário específico
     if (this.migrationConfig.enabledUsers.includes(identity)) {
       return true
     }
-    
+
     // Verificação por percentual
     const hash = this.hashString(identity)
     const userPercentile = hash % 100
-    
+
     return userPercentile < this.migrationConfig.rolloutPercentage
   }
-  
+
   private async getLegacyPermissions(identity: string): Promise<PermissionsMap> {
     try {
       const legacyRoles = await this.legacyAuthSystem.getUserRoles(identity)
       const legacyPermissions = await this.legacyAuthSystem.getUserPermissions(identity)
-      
+
       // Mapear para formato RBAC
       const rbacPermissions: Permissao[] = []
-      
+
       // Mapear papéis
       for (const role of legacyRoles) {
         const mappedPermissions = legacyToRbacMapping[role] || []
         rbacPermissions.push(...mappedPermissions)
       }
-      
+
       // Mapear permissões específicas
       for (const permission of legacyPermissions) {
         const mappedPermissions = legacyToRbacMapping[permission] || []
         rbacPermissions.push(...mappedPermissions)
       }
-      
-      return toPermissionsMap(rbacPermissions.map(p => ({ ...p, grant: true })))
+
+      return toPermissionsMap(rbacPermissions.map((p) => ({ ...p, grant: true })))
     } catch (error) {
       console.error(`Failed to get legacy permissions for ${identity}:`, error)
       return {} // Permissões vazias em caso de erro
     }
   }
-  
+
   private hashString(str: string): number {
     let hash = 0
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i)
-      hash = ((hash << 5) - hash) + char
+      hash = (hash << 5) - hash + char
       hash = hash & hash // Convert to 32-bit integer
     }
     return Math.abs(hash)
@@ -271,49 +270,49 @@ interface FeatureFlags {
 
 export class MigrationFeatureFlags {
   private flags: FeatureFlags
-  
+
   constructor() {
     this.flags = this.loadFlags()
   }
-  
+
   private loadFlags(): FeatureFlags {
     return {
-      rbacEnabled: process.env.RBAC_ENABLED === 'true',
-      rbacUsers: (process.env.RBAC_ENABLED_USERS || '').split(',').filter(Boolean),
-      rbacFeatures: (process.env.RBAC_ENABLED_FEATURES || '').split(',').filter(Boolean),
-      rolloutPercentage: parseInt(process.env.RBAC_ROLLOUT_PERCENTAGE || '0'),
-      debugMode: process.env.RBAC_DEBUG === 'true'
+      rbacEnabled: process.env.RBAC_ENABLED === "true",
+      rbacUsers: (process.env.RBAC_ENABLED_USERS || "").split(",").filter(Boolean),
+      rbacFeatures: (process.env.RBAC_ENABLED_FEATURES || "").split(",").filter(Boolean),
+      rolloutPercentage: parseInt(process.env.RBAC_ROLLOUT_PERCENTAGE || "0"),
+      debugMode: process.env.RBAC_DEBUG === "true",
     }
   }
-  
+
   shouldUseRbac(identity: string, feature?: string): boolean {
     if (!this.flags.rbacEnabled) return false
-    
+
     // Feature específica habilitada?
     if (feature && !this.flags.rbacFeatures.includes(feature)) return false
-    
+
     // Usuário específico habilitado?
     if (this.flags.rbacUsers.includes(identity)) return true
-    
+
     // Percentual de rollout
     const hash = this.hashIdentity(identity)
-    return (hash % 100) < this.flags.rolloutPercentage
+    return hash % 100 < this.flags.rolloutPercentage
   }
-  
+
   private hashIdentity(identity: string): number {
     // Implementação de hash consistente
     let hash = 0
     for (let i = 0; i < identity.length; i++) {
-      hash = ((hash << 5) - hash) + identity.charCodeAt(i)
+      hash = (hash << 5) - hash + identity.charCodeAt(i)
       hash = hash & hash
     }
     return Math.abs(hash)
   }
-  
+
   getFlags(): FeatureFlags {
     return { ...this.flags }
   }
-  
+
   updateFlags(newFlags: Partial<FeatureFlags>): void {
     this.flags = { ...this.flags, ...newFlags }
   }
@@ -328,36 +327,36 @@ export const migrationFlags = new MigrationFeatureFlags()
 
 ```typescript
 // middleware/rbac-migration.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { migrationFlags } from '@/lib/migration-flags'
+import { NextRequest, NextResponse } from "next/server"
+import { migrationFlags } from "@/lib/migration-flags"
 
 export async function rbacMigrationMiddleware(request: NextRequest) {
   const identity = await getIdentityFromRequest(request)
   if (!identity) return NextResponse.next()
-  
+
   const pathname = request.nextUrl.pathname
-  
+
   // Definir features por rota
   const featureMap: Record<string, string> = {
-    '/admin': 'admin-panel',
-    '/users': 'user-management',
-    '/reports': 'reports',
-    '/api/users': 'user-api',
-    '/api/reports': 'reports-api'
+    "/admin": "admin-panel",
+    "/users": "user-management",
+    "/reports": "reports",
+    "/api/users": "user-api",
+    "/api/reports": "reports-api",
   }
-  
+
   const feature = featureMap[pathname]
   const shouldUseRbac = migrationFlags.shouldUseRbac(identity, feature)
-  
+
   // Adicionar header para indicar qual sistema usar
   const headers = new Headers(request.headers)
-  headers.set('x-rbac-enabled', shouldUseRbac.toString())
-  headers.set('x-rbac-feature', feature || 'default')
-  
+  headers.set("x-rbac-enabled", shouldUseRbac.toString())
+  headers.set("x-rbac-feature", feature || "default")
+
   return NextResponse.next({
     request: {
-      headers
-    }
+      headers,
+    },
   })
 }
 ```
@@ -366,9 +365,9 @@ export async function rbacMigrationMiddleware(request: NextRequest) {
 
 ```typescript
 // app/api/users/route.ts
-import { NextRequest } from 'next/server'
-import { withApi } from '@anpdgovbr/rbac-next'
-import { hybridProvider } from '@/lib/hybrid-provider'
+import { NextRequest } from "next/server"
+import { withApi } from "@anpdgovbr/rbac-next"
+import { hybridProvider } from "@/lib/hybrid-provider"
 
 // Versão RBAC da rota
 const rbacHandler = withApi(
@@ -379,27 +378,27 @@ const rbacHandler = withApi(
   {
     provider: hybridProvider,
     getIdentity: nextAuthResolver,
-    permissao: { acao: "Exibir", recurso: "Usuarios" }
+    permissao: { acao: "Exibir", recurso: "Usuarios" },
   }
 )
 
 // Versão legada da rota
 async function legacyHandler(request: NextRequest) {
   const identity = await getIdentityFromRequest(request)
-  const hasPermission = await legacyAuthSystem.checkPermission(identity, 'CAN_VIEW_USERS')
-  
+  const hasPermission = await legacyAuthSystem.checkPermission(identity, "CAN_VIEW_USERS")
+
   if (!hasPermission) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
-  
+
   const users = await getUsersWithLegacy(identity)
   return NextResponse.json(users)
 }
 
 // Router híbrido
 export async function GET(request: NextRequest) {
-  const useRbac = request.headers.get('x-rbac-enabled') === 'true'
-  
+  const useRbac = request.headers.get("x-rbac-enabled") === "true"
+
   if (useRbac) {
     return rbacHandler(request)
   } else {
@@ -422,21 +421,21 @@ export class SimpleRoleMigration {
   async migrateFromSimpleRoles(legacyRoles: Record<string, string[]>): Promise<void> {
     for (const [userId, roles] of Object.entries(legacyRoles)) {
       // Mapear roles simples para perfis RBAC
-      const rbacProfiles = roles.map(role => this.mapLegacyRole(role))
-      
+      const rbacProfiles = roles.map((role) => this.mapLegacyRole(role))
+
       await this.createUserWithProfiles(userId, rbacProfiles)
     }
   }
-  
+
   private mapLegacyRole(legacyRole: string): string {
     const roleMapping: Record<string, string> = {
-      'admin': 'Administrador',
-      'user': 'Usuario',
-      'manager': 'Gerente',
-      'viewer': 'Visualizador'
+      admin: "Administrador",
+      user: "Usuario",
+      manager: "Gerente",
+      viewer: "Visualizador",
     }
-    
-    return roleMapping[legacyRole.toLowerCase()] || 'Usuario'
+
+    return roleMapping[legacyRole.toLowerCase()] || "Usuario"
   }
 }
 ```
@@ -446,40 +445,41 @@ export class SimpleRoleMigration {
 ```typescript
 // migration/acl-migration.ts
 export class ACLMigration {
-  async migrateFromACL(aclData: Array<{
-    userId: string
-    resource: string
-    actions: string[]
-  }>): Promise<void> {
-    
+  async migrateFromACL(
+    aclData: Array<{
+      userId: string
+      resource: string
+      actions: string[]
+    }>
+  ): Promise<void> {
     // Agrupar por usuário
     const userPermissions = new Map<string, Permissao[]>()
-    
+
     for (const acl of aclData) {
-      const permissions = acl.actions.map(action => ({
+      const permissions = acl.actions.map((action) => ({
         acao: this.mapAction(action),
-        recurso: this.mapResource(acl.resource)
+        recurso: this.mapResource(acl.resource),
       }))
-      
+
       const existing = userPermissions.get(acl.userId) || []
       userPermissions.set(acl.userId, [...existing, ...permissions])
     }
-    
+
     // Criar perfis customizados para cada usuário ou encontrar perfis existentes
     for (const [userId, permissions] of userPermissions.entries()) {
       await this.createOrAssignProfile(userId, permissions)
     }
   }
-  
+
   private mapAction(action: string): string {
     const actionMap: Record<string, string> = {
-      'create': 'Criar',
-      'read': 'Exibir',
-      'update': 'Editar', 
-      'delete': 'Excluir',
-      'manage': 'Gerenciar'
+      create: "Criar",
+      read: "Exibir",
+      update: "Editar",
+      delete: "Excluir",
+      manage: "Gerenciar",
     }
-    
+
     return actionMap[action.toLowerCase()] || action
   }
 }
@@ -490,41 +490,42 @@ export class ACLMigration {
 ```typescript
 // migration/claims-migration.ts
 export class ClaimsMigration {
-  async migrateFromClaims(userClaims: Array<{
-    userId: string
-    claims: Record<string, any>
-  }>): Promise<void> {
-    
+  async migrateFromClaims(
+    userClaims: Array<{
+      userId: string
+      claims: Record<string, any>
+    }>
+  ): Promise<void> {
     for (const user of userClaims) {
       const permissions = this.extractPermissionsFromClaims(user.claims)
       await this.assignPermissionsToUser(user.userId, permissions)
     }
   }
-  
+
   private extractPermissionsFromClaims(claims: Record<string, any>): Permissao[] {
     const permissions: Permissao[] = []
-    
+
     // Processar claims específicos
-    if (claims.role === 'admin') {
-      permissions.push({ acao: 'Administrar', recurso: 'Sistema' })
+    if (claims.role === "admin") {
+      permissions.push({ acao: "Administrar", recurso: "Sistema" })
     }
-    
+
     if (claims.permissions) {
       for (const perm of claims.permissions) {
-        const [action, resource] = perm.split(':')
+        const [action, resource] = perm.split(":")
         permissions.push({
           acao: this.mapAction(action),
-          recurso: this.mapResource(resource)
+          recurso: this.mapResource(resource),
         })
       }
     }
-    
+
     // Processar department-based permissions
     if (claims.department) {
       const deptPermissions = this.getDepartmentPermissions(claims.department)
       permissions.push(...deptPermissions)
     }
-    
+
     return permissions
   }
 }
@@ -602,8 +603,8 @@ CREATE INDEX idx_perfil_permissoes_perfil ON perfil_permissoes(perfil_id);
 
 ```typescript
 // scripts/migrate-users.ts
-import { PrismaClient } from '@prisma/client'
-import { v4 as uuidv4 } from 'uuid'
+import { PrismaClient } from "@prisma/client"
+import { v4 as uuidv4 } from "uuid"
 
 const prisma = new PrismaClient()
 
@@ -617,7 +618,7 @@ interface LegacyUser {
 
 export async function migrateUsers(legacyUsers: LegacyUser[]) {
   console.log(`Migrating ${legacyUsers.length} users...`)
-  
+
   for (const legacyUser of legacyUsers) {
     try {
       // Criar ou atualizar usuário
@@ -625,20 +626,20 @@ export async function migrateUsers(legacyUsers: LegacyUser[]) {
         where: { email: legacyUser.email },
         update: {
           nome: legacyUser.name,
-          ativo: legacyUser.active
+          ativo: legacyUser.active,
         },
         create: {
           id: uuidv4(),
           email: legacyUser.email,
           nome: legacyUser.name,
-          ativo: legacyUser.active
-        }
+          ativo: legacyUser.active,
+        },
       })
-      
+
       // Mapear e atribuir perfis
       for (const roleName of legacyUser.roles) {
         const mappedProfileName = mapLegacyRoleToProfile(roleName)
-        
+
         // Encontrar ou criar perfil
         const profile = await prisma.perfil.upsert({
           where: { nome: mappedProfileName },
@@ -646,46 +647,46 @@ export async function migrateUsers(legacyUsers: LegacyUser[]) {
           create: {
             id: uuidv4(),
             nome: mappedProfileName,
-            descricao: `Migrado de: ${roleName}`
-          }
+            descricao: `Migrado de: ${roleName}`,
+          },
         })
-        
+
         // Atribuir perfil ao usuário
         await prisma.usuarioPerfil.upsert({
           where: {
             usuarioId_perfilId: {
               usuarioId: user.id,
-              perfilId: profile.id
-            }
+              perfilId: profile.id,
+            },
           },
           update: {},
           create: {
             id: uuidv4(),
             usuarioId: user.id,
             perfilId: profile.id,
-            ativo: true
-          }
+            ativo: true,
+          },
         })
       }
-      
+
       console.log(`✅ Migrated user: ${legacyUser.email}`)
     } catch (error) {
       console.error(`❌ Failed to migrate user ${legacyUser.email}:`, error)
     }
   }
-  
-  console.log('User migration completed!')
+
+  console.log("User migration completed!")
 }
 
 function mapLegacyRoleToProfile(legacyRole: string): string {
   const mapping: Record<string, string> = {
-    'admin': 'Administrador',
-    'manager': 'Gerente',
-    'user': 'Usuario',
-    'guest': 'Convidado'
+    admin: "Administrador",
+    manager: "Gerente",
+    user: "Usuario",
+    guest: "Convidado",
   }
-  
-  return mapping[legacyRole.toLowerCase()] || 'Usuario'
+
+  return mapping[legacyRole.toLowerCase()] || "Usuario"
 }
 ```
 
@@ -698,54 +699,51 @@ export async function validateMigration() {
     usersCount: 0,
     profilesCount: 0,
     permissionsCount: 0,
-    inconsistencies: [] as string[]
+    inconsistencies: [] as string[],
   }
-  
+
   // Contagem básica
   validationResults.usersCount = await prisma.usuario.count()
   validationResults.profilesCount = await prisma.perfil.count()
   validationResults.permissionsCount = await prisma.permissao.count()
-  
+
   // Validar integridade referencial
   const orphanedUserProfiles = await prisma.usuarioPerfil.findMany({
     where: {
-      OR: [
-        { usuario: null },
-        { perfil: null }
-      ]
-    }
+      OR: [{ usuario: null }, { perfil: null }],
+    },
   })
-  
+
   if (orphanedUserProfiles.length > 0) {
     validationResults.inconsistencies.push(
       `Found ${orphanedUserProfiles.length} orphaned user-profile associations`
     )
   }
-  
+
   // Validar hierarquia de perfis
   const circularHierarchy = await checkCircularHierarchy()
   if (circularHierarchy.length > 0) {
     validationResults.inconsistencies.push(
-      `Found circular hierarchy in profiles: ${circularHierarchy.join(', ')}`
+      `Found circular hierarchy in profiles: ${circularHierarchy.join(", ")}`
     )
   }
-  
+
   return validationResults
 }
 
 async function checkCircularHierarchy(): Promise<string[]> {
   const profiles = await prisma.perfil.findMany({
-    select: { id: true, nome: true, perfilPaiId: true }
+    select: { id: true, nome: true, perfilPaiId: true },
   })
-  
+
   const circularProfiles: string[] = []
-  
+
   for (const profile of profiles) {
     if (await hasCircularReference(profile.id, profiles)) {
       circularProfiles.push(profile.nome)
     }
   }
-  
+
   return circularProfiles
 }
 ```
@@ -779,13 +777,13 @@ export function LegacyWrapper({
 }: LegacyWrapperProps) {
   const { user } = useUser()
   const { pode } = usePode()
-  
+
   if (!user) return null
-  
+
   const shouldUseRbac = migrationFlags.shouldUseRbac(user.email, feature)
-  
+
   let hasPermission = false
-  
+
   if (shouldUseRbac && rbacAction && rbacResource) {
     // Usar sistema RBAC
     hasPermission = pode(rbacAction, rbacResource)
@@ -793,7 +791,7 @@ export function LegacyWrapper({
     // Usar sistema legado
     hasPermission = user.legacyPermissions?.includes(legacyPermission) || false
   }
-  
+
   return hasPermission ? <>{children}</> : null
 }
 
@@ -831,12 +829,12 @@ export function usePermissionMigration({
 }: UsePermissionMigrationOptions) {
   const { user } = useUser()
   const { pode, loading: rbacLoading } = usePode()
-  
+
   const shouldUseRbac = user ? migrationFlags.shouldUseRbac(user.email, feature) : false
-  
+
   let hasPermission = false
   let loading = false
-  
+
   if (shouldUseRbac && rbacAction && rbacResource) {
     hasPermission = pode(rbacAction, rbacResource)
     loading = rbacLoading
@@ -844,7 +842,7 @@ export function usePermissionMigration({
     hasPermission = user.legacyPermissions?.includes(legacyPermission) || false
     loading = false
   }
-  
+
   return {
     hasPermission,
     loading,
@@ -861,11 +859,11 @@ function EditUserButton() {
     rbacAction: 'Editar',
     rbacResource: 'Usuario'
   })
-  
+
   if (loading) return <ButtonSkeleton />
-  
+
   return (
-    <Button 
+    <Button
       disabled={!hasPermission}
       title={usingRbac ? 'RBAC System' : 'Legacy System'}
     >
@@ -883,8 +881,8 @@ function EditUserButton() {
 
 ```typescript
 // lib/api-migration.ts
-import { NextRequest, NextResponse } from 'next/server'
-import { withApi } from '@anpdgovbr/rbac-next'
+import { NextRequest, NextResponse } from "next/server"
+import { withApi } from "@anpdgovbr/rbac-next"
 
 export function createMigrationRoute<T = any>(
   legacyHandler: (req: NextRequest) => Promise<NextResponse<T>>,
@@ -895,27 +893,24 @@ export function createMigrationRoute<T = any>(
     permissao: { acao: string; recurso: string }
   }
 ) {
-  const rbacHandler = withApi(
-    rbacConfig.handler,
-    {
-      provider: rbacConfig.provider,
-      getIdentity: rbacConfig.getIdentity,
-      permissao: rbacConfig.permissao
-    }
-  )
-  
-  return async function(request: NextRequest) {
-    const useRbac = request.headers.get('x-rbac-enabled') === 'true'
-    
+  const rbacHandler = withApi(rbacConfig.handler, {
+    provider: rbacConfig.provider,
+    getIdentity: rbacConfig.getIdentity,
+    permissao: rbacConfig.permissao,
+  })
+
+  return async function (request: NextRequest) {
+    const useRbac = request.headers.get("x-rbac-enabled") === "true"
+
     if (useRbac) {
       try {
         return await rbacHandler(request)
       } catch (error) {
-        console.error('RBAC handler failed, falling back to legacy:', error)
+        console.error("RBAC handler failed, falling back to legacy:", error)
         return await legacyHandler(request)
       }
     }
-    
+
     return await legacyHandler(request)
   }
 }
@@ -925,14 +920,14 @@ export const GET = createMigrationRoute(
   // Legacy handler
   async (request) => {
     const identity = await getLegacyIdentity(request)
-    if (!await legacyAuth.checkPermission(identity, 'VIEW_USERS')) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (!(await legacyAuth.checkPermission(identity, "VIEW_USERS"))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
-    
+
     const users = await getLegacyUsers()
     return NextResponse.json(users)
   },
-  
+
   // RBAC config
   {
     handler: async (context) => {
@@ -941,7 +936,7 @@ export const GET = createMigrationRoute(
     },
     provider: hybridProvider,
     getIdentity: nextAuthResolver,
-    permissao: { acao: "Exibir", recurso: "Usuarios" }
+    permissao: { acao: "Exibir", recurso: "Usuarios" },
   }
 )
 ```
@@ -954,59 +949,59 @@ export const GET = createMigrationRoute(
 
 ```typescript
 // __tests__/migration.test.ts
-import { migrateUsers } from '@/scripts/migrate-users'
-import { validateMigration } from '@/scripts/validate-migration'
+import { migrateUsers } from "@/scripts/migrate-users"
+import { validateMigration } from "@/scripts/validate-migration"
 
-describe('Migration Tests', () => {
+describe("Migration Tests", () => {
   beforeEach(async () => {
     // Setup test database
     await setupTestDb()
   })
-  
+
   afterEach(async () => {
     // Cleanup
     await cleanupTestDb()
   })
-  
-  it('should migrate users correctly', async () => {
+
+  it("should migrate users correctly", async () => {
     const legacyUsers = [
       {
-        id: '1',
-        email: 'admin@test.com',
-        name: 'Admin User',
+        id: "1",
+        email: "admin@test.com",
+        name: "Admin User",
         active: true,
-        roles: ['admin', 'user']
+        roles: ["admin", "user"],
       },
       {
-        id: '2', 
-        email: 'user@test.com',
-        name: 'Regular User',
+        id: "2",
+        email: "user@test.com",
+        name: "Regular User",
         active: true,
-        roles: ['user']
-      }
+        roles: ["user"],
+      },
     ]
-    
+
     await migrateUsers(legacyUsers)
-    
+
     const validation = await validateMigration()
     expect(validation.usersCount).toBe(2)
     expect(validation.inconsistencies).toHaveLength(0)
   })
-  
-  it('should handle permission mapping correctly', async () => {
+
+  it("should handle permission mapping correctly", async () => {
     const legacyUser = {
-      id: '1',
-      email: 'test@test.com', 
-      name: 'Test User',
+      id: "1",
+      email: "test@test.com",
+      name: "Test User",
       active: true,
-      roles: ['admin']
+      roles: ["admin"],
     }
-    
+
     await migrateUsers([legacyUser])
-    
+
     // Verificar se as permissões foram mapeadas corretamente
-    const permissions = await hybridProvider.getUserPermissions('test@test.com')
-    expect(permissions['Administrar:Sistema']).toBe(true)
+    const permissions = await hybridProvider.getUserPermissions("test@test.com")
+    expect(permissions["Administrar:Sistema"]).toBe(true)
   })
 })
 ```
@@ -1017,61 +1012,63 @@ describe('Migration Tests', () => {
 // lib/ab-testing.ts
 export class RBACAbTesting {
   private metrics = new Map<string, number>()
-  
+
   async comparePerformance(identity: string, action: string, resource: string) {
     const startTime = Date.now()
-    
+
     // Testar sistema legado
     const legacyStart = Date.now()
     const legacyResult = await this.testLegacyPermission(identity, action, resource)
     const legacyDuration = Date.now() - legacyStart
-    
+
     // Testar sistema RBAC
     const rbacStart = Date.now()
     const rbacResult = await this.testRbacPermission(identity, action, resource)
     const rbacDuration = Date.now() - rbacStart
-    
+
     // Registrar métricas
     this.metrics.set(`legacy.${action}.${resource}`, legacyDuration)
     this.metrics.set(`rbac.${action}.${resource}`, rbacDuration)
-    
+
     // Verificar consistência
     if (legacyResult !== rbacResult) {
-      console.warn(`Inconsistent results for ${identity}: legacy=${legacyResult}, rbac=${rbacResult}`)
+      console.warn(
+        `Inconsistent results for ${identity}: legacy=${legacyResult}, rbac=${rbacResult}`
+      )
     }
-    
+
     return {
       legacy: { result: legacyResult, duration: legacyDuration },
       rbac: { result: rbacResult, duration: rbacDuration },
-      consistent: legacyResult === rbacResult
+      consistent: legacyResult === rbacResult,
     }
   }
-  
+
   getPerformanceReport() {
     const report = {
       legacy: { avg: 0, count: 0 },
-      rbac: { avg: 0, count: 0 }
+      rbac: { avg: 0, count: 0 },
     }
-    
+
     // Calcular médias
     for (const [key, duration] of this.metrics.entries()) {
-      if (key.startsWith('legacy.')) {
+      if (key.startsWith("legacy.")) {
         report.legacy.avg += duration
         report.legacy.count++
-      } else if (key.startsWith('rbac.')) {
+      } else if (key.startsWith("rbac.")) {
         report.rbac.avg += duration
         report.rbac.count++
       }
     }
-    
+
     if (report.legacy.count > 0) {
       report.legacy.avg /= report.legacy.count
     }
-    
+
     if (report.rbac.count > 0) {
       report.rbac.avg /= report.rbac.count
     }
-    
+
     return report
   }
 }
@@ -1086,64 +1083,64 @@ export class RBACAbTesting {
 ```typescript
 // lib/rollback-strategy.ts
 export class RollbackStrategy {
-  async executeRollback(rollbackLevel: 'user' | 'feature' | 'global') {
+  async executeRollback(rollbackLevel: "user" | "feature" | "global") {
     switch (rollbackLevel) {
-      case 'user':
+      case "user":
         await this.rollbackUser()
         break
-      case 'feature':
+      case "feature":
         await this.rollbackFeature()
         break
-      case 'global':
+      case "global":
         await this.rollbackGlobal()
         break
     }
   }
-  
+
   private async rollbackUser(userId?: string) {
     if (userId) {
       // Rollback usuário específico
       migrationFlags.updateFlags({
-        rbacUsers: migrationFlags.getFlags().rbacUsers.filter(u => u !== userId)
+        rbacUsers: migrationFlags.getFlags().rbacUsers.filter((u) => u !== userId),
       })
     } else {
       // Rollback todos os usuários específicos
       migrationFlags.updateFlags({ rbacUsers: [] })
     }
   }
-  
+
   private async rollbackFeature(feature?: string) {
     if (feature) {
       // Rollback feature específica
       const flags = migrationFlags.getFlags()
       migrationFlags.updateFlags({
-        rbacFeatures: flags.rbacFeatures.filter(f => f !== feature)
+        rbacFeatures: flags.rbacFeatures.filter((f) => f !== feature),
       })
     } else {
       // Rollback todas as features
       migrationFlags.updateFlags({ rbacFeatures: [] })
     }
   }
-  
+
   private async rollbackGlobal() {
     // Rollback completo - voltar ao sistema legado
     migrationFlags.updateFlags({
       rbacEnabled: false,
       rbacUsers: [],
       rbacFeatures: [],
-      rolloutPercentage: 0
+      rolloutPercentage: 0,
     })
   }
 }
 
 // Comando de emergência
 export async function emergencyRollback() {
-  console.log('🚨 Executing emergency rollback...')
-  
+  console.log("🚨 Executing emergency rollback...")
+
   const rollback = new RollbackStrategy()
-  await rollback.executeRollback('global')
-  
-  console.log('✅ Emergency rollback completed')
+  await rollback.executeRollback("global")
+
+  console.log("✅ Emergency rollback completed")
 }
 ```
 
@@ -1154,58 +1151,58 @@ export async function emergencyRollback() {
 export class MigrationHealthMonitor {
   private errors = new Map<string, number>()
   private successRate = new Map<string, { success: number; total: number }>()
-  
-  reportError(system: 'legacy' | 'rbac', error: Error, context: string) {
+
+  reportError(system: "legacy" | "rbac", error: Error, context: string) {
     const key = `${system}.${context}`
     this.errors.set(key, (this.errors.get(key) || 0) + 1)
-    
+
     // Auto-rollback se muitos erros
     if (this.errors.get(key)! > 10) {
       console.error(`Too many errors in ${system} system, triggering rollback`)
       this.triggerAutoRollback(system, context)
     }
   }
-  
-  reportSuccess(system: 'legacy' | 'rbac', context: string) {
+
+  reportSuccess(system: "legacy" | "rbac", context: string) {
     const key = `${system}.${context}`
     const current = this.successRate.get(key) || { success: 0, total: 0 }
-    
+
     this.successRate.set(key, {
       success: current.success + 1,
-      total: current.total + 1
+      total: current.total + 1,
     })
   }
-  
+
   getHealthStatus() {
     const health = {
       legacy: { errorRate: 0, successRate: 0 },
-      rbac: { errorRate: 0, successRate: 0 }
+      rbac: { errorRate: 0, successRate: 0 },
     }
-    
+
     // Calcular taxas de erro e sucesso
     for (const [key, errorCount] of this.errors.entries()) {
-      const [system] = key.split('.')
-      if (system === 'legacy' || system === 'rbac') {
+      const [system] = key.split(".")
+      if (system === "legacy" || system === "rbac") {
         health[system].errorRate += errorCount
       }
     }
-    
+
     for (const [key, rates] of this.successRate.entries()) {
-      const [system] = key.split('.')
-      if (system === 'legacy' || system === 'rbac') {
+      const [system] = key.split(".")
+      if (system === "legacy" || system === "rbac") {
         health[system].successRate = rates.success / rates.total
       }
     }
-    
+
     return health
   }
-  
+
   private async triggerAutoRollback(system: string, context: string) {
     const rollback = new RollbackStrategy()
-    
-    if (system === 'rbac') {
+
+    if (system === "rbac") {
       // Se RBAC está falhando, fazer rollback para legacy
-      await rollback.executeRollback('global')
+      await rollback.executeRollback("global")
     }
   }
 }
@@ -1227,17 +1224,17 @@ gantt
     Análise Sistema Legado    :prep1, 2025-10-01, 1w
     Mapeamento Permissões     :prep2, after prep1, 1w
     Setup Infraestrutura      :prep3, after prep2, 1w
-    
+
     section Desenvolvimento
     Provider Híbrido          :dev1, after prep3, 2w
     Migração de Dados         :dev2, after dev1, 1w
     Testes Integração         :dev3, after dev2, 1w
-    
+
     section Rollout
     Pilot Users (5%)          :pilot, after dev3, 1w
     Beta Release (25%)        :beta, after pilot, 2w
     Full Rollout (100%)       :full, after beta, 2w
-    
+
     section Consolidação
     Monitoramento             :monitor, after full, 2w
     Otimizações              :optimize, after monitor, 1w
@@ -1247,12 +1244,14 @@ gantt
 ### Critérios de Go/No-Go
 
 **Go Criteria:**
+
 - ✅ Taxa de sucesso > 99%
 - ✅ Performance similar ou melhor
 - ✅ Zero inconsistências críticas
 - ✅ Rollback testado e funcional
 
 **No-Go Criteria:**
+
 - ❌ Taxa de erro > 1%
 - ❌ Performance degradada > 50%
 - ❌ Inconsistências de permissão

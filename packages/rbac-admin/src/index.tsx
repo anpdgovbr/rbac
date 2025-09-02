@@ -1,3 +1,5 @@
+"use client"
+
 /**
  * @fileoverview Interface administrativa React para gerenciamento RBAC
  * @version 0.1.0-beta.3 (WIP)
@@ -32,7 +34,6 @@
  * ```
  */
 
-"use client"
 import React, { useMemo, useState, useEffect } from "react"
 import { createRbacAdminClient, type AdminClientConfig, type Profile } from "./types"
 import { ProfilesList } from "./components/ProfilesList"
