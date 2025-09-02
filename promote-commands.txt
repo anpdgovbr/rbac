@@ -1,0 +1,27 @@
+# Comandos individuais para promover cada pacote para latest
+
+# rbac-core
+npm dist-tag add @anpdgovbr/rbac-core@0.1.1-beta.4 latest
+
+# rbac-provider  
+npm dist-tag add @anpdgovbr/rbac-provider@0.1.1-beta.4 latest
+
+# rbac-prisma
+npm dist-tag add @anpdgovbr/rbac-prisma@0.1.1-beta.4 latest
+
+# rbac-next
+npm dist-tag add @anpdgovbr/rbac-next@0.1.1-beta.4 latest
+
+# rbac-react
+npm dist-tag add @anpdgovbr/rbac-react@0.2.0-beta.2 latest
+
+# rbac-admin
+npm dist-tag add @anpdgovbr/rbac-admin@0.2.0-beta.3 latest
+
+# Verificar tags após promoção
+npm dist-tag ls @anpdgovbr/rbac-core
+npm dist-tag ls @anpdgovbr/rbac-provider
+npm dist-tag ls @anpdgovbr/rbac-prisma
+npm dist-tag ls @anpdgovbr/rbac-next
+npm dist-tag ls @anpdgovbr/rbac-react
+npm dist-tag ls @anpdgovbr/rbac-admin
