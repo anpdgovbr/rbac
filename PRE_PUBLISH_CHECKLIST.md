@@ -17,11 +17,17 @@
 
 #### 3. **Testes React falhando** ✅
 
-- **Problema**: Testes falhando por falta de ambiente DOM
+- **Problema**: Testes falhando por falta de ambiente DOM e estrutura incorreta de testes aninhados
 - **Solução**:
   - Configurado `happy-dom` no setup de testes
+  - **CORRIGIDO**: Removido testes aninhados que causavam `cancelledByParent` no CI
   - Simplificado testes para focar na funcionalidade básica
   - Removido dependência de `@testing-library/react` que não estava configurada
+
+#### 4. **Problema CI - Testes aninhados** ✅
+
+- **Problema**: Erro `cancelledByParent` no CI causado por testes aninhados
+- **Solução**: Reestruturação dos testes para usar `test()` independentes ao invés de aninhados
 
 #### 4. **Arquivo de teste desnecessário** ✅
 
@@ -62,7 +68,7 @@
 ### ✅ **Verificações Completas**
 
 - [x] Build funcionando em todos os pacotes
-- [x] Testes passando (18/18)
+- [x] Testes passando (17/17) - **CORRIGIDO CI**
 - [x] Lint sem warnings/errors
 - [x] TypeScript compilando sem erros
 - [x] Dependências entre pacotes funcionando
