@@ -22,7 +22,7 @@
     "build:next": "npm run -w @anpdgovbr/rbac-next build",
     "build:react": "npm run -w @anpdgovbr/rbac-react build",
     "build:admin": "npm run -w @anpdgovbr/rbac-admin build",
-    "build": "npm run -ws --if-present build",
+    "build": "npm run build:core && npm run build:provider && npm run build:prisma && npm run build:next && npm run build:react && npm run build:admin",
     "typecheck": "npm run -ws --if-present typecheck",
     "test": "npm run build && npm run -ws --if-present test",
     "clean": "npm run -ws --if-present clean",
