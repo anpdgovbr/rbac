@@ -131,7 +131,7 @@ export interface IdentityResolver<Req = unknown> {
    * }
    * ```
    */
-  resolve(req: Req): Promise<Identity>
+  resolve(req?: Req): Promise<Identity>
 }
 
 /**

@@ -34,31 +34,24 @@ export function ProfilesList({
     }
   }, [client])
 
-  if (loading) return React.createElement("div", null, "Carregando perfis...")
-  if (error)
-    return React.createElement("div", { style: { color: "red" } }, `Erro: ${error}`)
+  if (loading) return <div>Carregando perfis...</div>
+  if (error) return <div style={{ color: "red" }}>{`Erro: ${error}`}</div>
 
-  return React.createElement(
-    "div",
-    null,
-    React.createElement("h2", null, "Perfis"),
-    React.createElement(
-      "ul",
-      { style: { listStyle: "none", padding: 0 } },
-      ...profiles.map((p) =>
-        React.createElement(
-          "li",
-          { key: String(p.id), style: { marginBottom: 8 } },
-          React.createElement(
-            "button",
-            {
-              onClick: () => onSelect(p),
-              style: { padding: "6px 10px", cursor: "pointer" },
-            },
-            p.nome
-          )
-        )
-      )
-    )
+  return (
+    <div>
+      <h2>Perfis</h2>
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {profiles.map((p) => (
+          <li key={String(p.id)} style={{ marginBottom: 8 }}>
+            <button
+              onClick={() => onSelect(p)}
+              style={{ padding: "6px 10px", cursor: "pointer" }}
+            >
+              {p.nome}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }

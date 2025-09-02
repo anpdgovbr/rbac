@@ -18,7 +18,6 @@ export function CreatePermissionForm({
   const [permitido, setPermitido] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
   const [success, setSuccess] = useState<string | null>(null)
 
   async function onSubmit(e: React.FormEvent) {
@@ -27,19 +26,14 @@ export function CreatePermissionForm({
     setSuccess(null)
     setLoading(true)
     try {
-      // Criar permissão explicitamente via endpoint genérico (mantém retrocompat com toggle)
       const body: TogglePermissionPayload = {
         perfilId: Number(perfilId),
         acao,
         recurso,
         permitido,
       }
-      const r = await fetch("/api/permissoes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      })
-      if (!r.ok) throw new Error("Falha ao criar permissão")
+      const { ok } = await client.createPermission(body)
+      if (!ok) throw new Error("Falha ao criar permissão")
       setAcao("")
       setRecurso("")
       setPermitido(true)
@@ -52,53 +46,45 @@ export function CreatePermissionForm({
     }
   }
 
-  return React.createElement(
-    "form",
-    {
-      onSubmit,
-      style: { display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" },
-    },
-    React.createElement(
-      "select",
-      {
-        value: perfilId,
-        onChange: (e: React.ChangeEvent<HTMLSelectElement>) =>
-          setPerfilId(e.target?.value ?? ""),
-      },
-      React.createElement("option", { value: "" }, "Perfil"),
-      ...profiles.map((p) =>
-        React.createElement("option", { key: String(p.id), value: String(p.id) }, p.nome)
-      )
-    ),
-    React.createElement("input", {
-      placeholder: "Ação",
-      value: acao,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setAcao(e.target?.value ?? ""),
-    }),
-    React.createElement("input", {
-      placeholder: "Recurso",
-      value: recurso,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setRecurso(e.target?.value ?? ""),
-    }),
-    React.createElement(
-      "label",
-      { style: { display: "inline-flex", alignItems: "center", gap: 4 } },
-      React.createElement("input", {
-        type: "checkbox",
-        checked: permitido,
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          setPermitido(!!e.target?.checked),
-      }),
-      "Permitido"
-    ),
-    React.createElement(
-      "button",
-      { type: "submit", disabled: loading || !perfilId || !acao || !recurso },
-      "Criar"
-    ),
-    error ? React.createElement("span", { style: { color: "red" } }, error) : null,
-    success ? React.createElement("span", { style: { color: "green" } }, success) : null
+  return (
+    <form
+      onSubmit={onSubmit}
+      style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}
+    >
+      <select
+        value={perfilId}
+        onChange={(e) => setPerfilId(e.target?.value ?? "")}
+      >
+        <option value="">Perfil</option>
+        {profiles.map((p) => (
+          <option key={String(p.id)} value={String(p.id)}>
+            {p.nome}
+          </option>
+        ))}
+      </select>
+      <input
+        placeholder="Ação"
+        value={acao}
+        onChange={(e) => setAcao(e.target?.value ?? "")}
+      />
+      <input
+        placeholder="Recurso"
+        value={recurso}
+        onChange={(e) => setRecurso(e.target?.value ?? "")}
+      />
+      <label style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+        <input
+          type="checkbox"
+          checked={permitido}
+          onChange={(e) => setPermitido(!!e.target?.checked)}
+        />
+        Permitido
+      </label>
+      <button type="submit" disabled={loading || !perfilId || !acao || !recurso}>
+        Criar
+      </button>
+      {error && <span style={{ color: "red" }}>{error}</span>}
+      {success && <span style={{ color: "green" }}>{success}</span>}
+    </form>
   )
 }

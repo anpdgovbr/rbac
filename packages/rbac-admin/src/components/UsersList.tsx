@@ -20,10 +20,6 @@ export function UsersList({
   const [users, setUsers] = useState<UserRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const profilesById = useMemo(
-    () => new Map(availableProfiles.map((p) => [Number(p.id), p])),
-    [availableProfiles]
-  )
 
   const refresh = useCallback(async () => {
     setLoading(true)
@@ -48,59 +44,45 @@ export function UsersList({
     await refresh()
   }
 
-  if (loading) return React.createElement("div", null, "Carregando usuários...")
-  if (error)
-    return React.createElement("div", { style: { color: "red" } }, `Erro: ${error}`)
+  if (loading) return <div>Carregando usuários...</div>
+  if (error) return <div style={{ color: "red" }}>{`Erro: ${error}`}</div>
 
-  const header = React.createElement(
-    "tr",
-    null,
-    React.createElement("th", { style: { textAlign: "left" } }, "E-mail"),
-    React.createElement("th", { style: { textAlign: "left" } }, "Nome"),
-    React.createElement("th", { style: { textAlign: "left" } }, "Perfil")
-  )
-
-  const rows = users.map((u) =>
-    React.createElement(
-      "tr",
-      { key: u.id },
-      React.createElement("td", null, u.email),
-      React.createElement("td", null, u.nome ?? ""),
-      React.createElement(
-        "td",
-        null,
-        React.createElement(
-          "select",
-          {
-            value: u.perfilId ?? "",
-            onChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
-              const val = e.target?.value
-              onAssign(u.id, val === "" ? null : Number(val))
-            },
-          },
-          React.createElement("option", { value: "" }, "— sem perfil —"),
-          ...availableProfiles.map((p) =>
-            React.createElement(
-              "option",
-              { key: String(p.id), value: Number(p.id) },
-              p.nome
-            )
-          )
-        ),
-        profilesById.get(Number(u.perfilId)) ? null : null
-      )
-    )
-  )
-
-  return React.createElement(
-    "div",
-    null,
-    React.createElement("h2", null, "Usuários"),
-    React.createElement(
-      "table",
-      { cellPadding: 6, style: { borderCollapse: "collapse", width: "100%" } },
-      React.createElement("thead", null, header),
-      React.createElement("tbody", null, ...rows)
-    )
+  return (
+    <div>
+      <h2>Usuários</h2>
+      <table cellPadding={6} style={{ borderCollapse: "collapse", width: "100%" }}>
+        <thead>
+          <tr>
+            <th style={{ textAlign: "left" }}>E-mail</th>
+            <th style={{ textAlign: "left" }}>Nome</th>
+            <th style={{ textAlign: "left" }}>Perfil</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((u) => (
+            <tr key={u.id}>
+              <td>{u.email}</td>
+              <td>{u.nome ?? ""}</td>
+              <td>
+                <select
+                  value={u.perfilId ?? ""}
+                  onChange={(e) => {
+                    const val = e.target?.value
+                    onAssign(u.id, val === "" ? null : Number(val))
+                  }}
+                >
+                  <option value="">— sem perfil —</option>
+                  {availableProfiles.map((p) => (
+                    <option key={String(p.id)} value={Number(p.id)}>
+                      {p.nome}
+                    </option>
+                  ))}
+                </select>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }

@@ -21,11 +21,11 @@ case "${1:-check}" in
     ;;
     
   "update"|"u")
-    echo -e "${GREEN}⬆️ Atualizando dependências...${NC}"
+    echo -e "${GREEN}⬆️  Atualizando todas as dependências (latest)...${NC}"
     npm run ncu:update
     echo -e "${BLUE}🔨 Executando build para verificar compatibilidade...${NC}"
     npm run build
-    echo -e "${GREEN}✅ Atualização concluída!${NC}"
+    echo -e "${GREEN}✅ Atualização concluída! Rode 'npm test' para verificação completa.${NC}"
     ;;
     
   "interactive"|"i")

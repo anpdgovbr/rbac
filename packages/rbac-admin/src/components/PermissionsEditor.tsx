@@ -48,49 +48,39 @@ export function PermissionsEditor({
     }
   }
 
-  if (loading) return React.createElement("div", null, "Carregando permissões...")
-  if (error)
-    return React.createElement("div", { style: { color: "red" } }, `Erro: ${error}`)
+  if (loading) return <div>Carregando permissões...</div>
+  if (error) return <div style={{ color: "red" }}>{`Erro: ${error}`}</div>
 
-  const rows = items.map((it, idx) =>
-    React.createElement(
-      "tr",
-      { key: idx },
-      React.createElement("td", null, it.acao),
-      React.createElement("td", null, it.recurso),
-      React.createElement(
-        "td",
-        null,
-        React.createElement("input", {
-          type: "checkbox",
-          checked: !!it.permitido,
-          disabled: saving === `${it.acao}:${it.recurso}`,
-          onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-            onToggle(it.acao, it.recurso, !!e.target?.checked),
-        })
-      )
-    )
-  )
-
-  return React.createElement(
-    "div",
-    null,
-    React.createElement("h2", null, "Permissões"),
-    React.createElement(
-      "table",
-      { cellPadding: 6, style: { borderCollapse: "collapse" } },
-      React.createElement(
-        "thead",
-        null,
-        React.createElement(
-          "tr",
-          null,
-          React.createElement("th", { style: { textAlign: "left" } }, "Ação"),
-          React.createElement("th", { style: { textAlign: "left" } }, "Recurso"),
-          React.createElement("th", { style: { textAlign: "left" } }, "Permitido")
-        )
-      ),
-      React.createElement("tbody", null, ...rows)
-    )
+  return (
+    <div>
+      <h2>Permissões</h2>
+      <table cellPadding={6} style={{ borderCollapse: "collapse" }}>
+        <thead>
+          <tr>
+            <th style={{ textAlign: "left" }}>Ação</th>
+            <th style={{ textAlign: "left" }}>Recurso</th>
+            <th style={{ textAlign: "left" }}>Permitido</th>
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((it, idx) => (
+            <tr key={idx}>
+              <td>{it.acao}</td>
+              <td>{it.recurso}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={!!it.permitido}
+                  disabled={saving === `${it.acao}:${it.recurso}`}
+                  onChange={(e) =>
+                    onToggle(it.acao, it.recurso, !!e.target?.checked)
+                  }
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }

@@ -5,7 +5,7 @@ import type { PrismaLike } from "../src/index.js"
 
 test("createPrismaPermissionsProvider aggregates permissions with grant precedence", async () => {
   const prisma: PrismaLike = {
-    usuario: {
+    user: {
       findUnique: async ({ where }: { where: { email?: string; id?: string } }) => ({
         email: where.email,
         perfil: { nome: "Admin", active: true },

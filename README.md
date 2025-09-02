@@ -229,6 +229,22 @@ npm run ncu:interactive
 
 Para mais detalhes, veja o [Guia do NCU](./docs/NCU_GUIDE.md).
 
+---
+
+## ⚠️ Desenvolvimento com Submódulos (nota temporária)
+
+Durante trabalho local com este repositório como submódulo (por exemplo em `backlog-dim`), alguns pacotes podem ser ajustados para apontar para implementações locais via `file:` no `package.json` e conter fallbacks temporários no código para facilitar testes. Essas mudanças são intencionais para o fluxo de desenvolvimento local.
+
+Marcas a serem observadas:
+
+- Campo `__local_dev_note__` nos `package.json` indica que o pacote está usando `file:` para dependências locais.
+- Comentários `TODO: (TEMP)` em código indicam pontos que devem ser revisados e revertidos antes da publicação.
+
+Recomendação:
+
+- Antes de publicar qualquer pacote, reverta os `file:` para as versões publicadas e remova/ajuste os fallbacks marcados com `TODO: (TEMP)`.
+- Use a branch/PR com a alteração clara e inclua uma nota no changelog sobre a reversão.
+
 ## 📄 Licença
 
 MIT © 2024 ANPD (Autoridade Nacional de Proteção de Dados)

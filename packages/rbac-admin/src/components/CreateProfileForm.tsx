@@ -12,7 +12,6 @@ export function CreateProfileForm({
   const [nome, setNome] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
   const [success, setSuccess] = useState<string | null>(null)
 
   async function onSubmit(e: React.FormEvent) {
@@ -21,13 +20,8 @@ export function CreateProfileForm({
     setSuccess(null)
     setLoading(true)
     try {
-      // client genérico: usar fetch direto (mantemos via endpoints criando no client futuramente)
-      const r = await fetch("/api/perfis", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome }),
-      })
-      if (!r.ok) throw new Error("Falha ao criar perfil")
+      const { ok } = await client.createProfile({ nome })
+      if (!ok) throw new Error("Falha ao criar perfil")
       setNome("")
       onCreated?.()
       setSuccess("Perfil criado com sucesso")
@@ -39,21 +33,18 @@ export function CreateProfileForm({
     }
   }
 
-  return React.createElement(
-    "form",
-    { onSubmit, style: { display: "flex", gap: 8, alignItems: "center" } },
-    React.createElement("input", {
-      placeholder: "Nome do perfil",
-      value: nome,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setNome(e.target?.value ?? ""),
-    }),
-    React.createElement(
-      "button",
-      { type: "submit", disabled: loading || !nome.trim() },
-      "Criar"
-    ),
-    error ? React.createElement("span", { style: { color: "red" } }, error) : null,
-    success ? React.createElement("span", { style: { color: "green" } }, success) : null
+  return (
+    <form onSubmit={onSubmit} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <input
+        placeholder="Nome do perfil"
+        value={nome}
+        onChange={(e) => setNome(e.target?.value ?? "")}
+      />
+      <button type="submit" disabled={loading || !nome.trim()}>
+        Criar
+      </button>
+      {error && <span style={{ color: "red" }}>{error}</span>}
+      {success && <span style={{ color: "green" }}>{success}</span>}
+    </form>
   )
 }

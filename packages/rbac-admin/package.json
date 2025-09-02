@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-admin",
-  "version": "0.2.0-beta.2",
+  "version": "0.2.0-beta.3",
   "private": false,
   "type": "module",
   "main": "dist/index.js",
@@ -22,6 +22,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --require ./dist/test/setup.js --test 'dist/**/*.test.js'",
     "ncu": "ncu",
     "ncu:check": "ncu",
     "ncu:update": "ncu -u"
@@ -33,7 +34,8 @@
     "@anpdgovbr/shared-types": "^0.1.6-beta-0"
   },
   "devDependencies": {
-    "typescript": "^5.4.0",
+    "typescript": "^5.9.2",
     "@types/react": "^18.3.24"
-  }
+  },
+  
 }

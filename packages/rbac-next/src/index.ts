@@ -12,6 +12,7 @@
  * - Context typing para TypeScript intellisense
  */
 
+import React from "react"
 import type { Action, Resource } from "@anpdgovbr/rbac-core"
 import { pode } from "@anpdgovbr/rbac-core"
 import type { PermissionsProvider, IdentityResolver } from "@anpdgovbr/rbac-provider"
@@ -392,5 +393,132 @@ export function withApiForId<TParams extends object = object>(
   ): Promise<Response> {
     const params = await ctx.params
     return handle<TParams>(req, handler, options, params)
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Utilitário exportado: checkPermission
+// ---------------------------------------------------------------------------
+
+/** Erro lançado quando não há identidade autenticada */
+export class UnauthenticatedError extends Error {
+  constructor(message = "Usuário não autenticado") {
+    super(message)
+    this.name = "UnauthenticatedError"
+  }
+}
+
+/** Erro lançado quando usuário é autenticado mas não tem permissão */
+export class ForbiddenError extends Error {
+  constructor(message = "Acesso negado") {
+    super(message)
+    this.name = "ForbiddenError"
+  }
+}
+
+/**
+ * Opções para checkPermission
+ */
+export type CheckPermissionOptions = {
+  getIdentity: IdentityResolver<Request>
+  provider: PermissionsProvider
+  permissao: { acao: Action; recurso: Resource }
+}
+
+/**
+ * Verifica permissões server-side de forma genérica.
+ * - Resolve identidade via `getIdentity`
+ * - Consulta permissões via `provider`
+ * - Lança `UnauthenticatedError` ou `ForbiddenError` conforme o caso
+ * - Retorna `{ email, userId, perms }` quando autorizado
+ *
+ * Esta função é framework-agnóstica; o caller decide como tratar os erros
+ * (ex: `redirect('/login')` ou `redirect('/acesso-negado')` no Next).
+ */
+export async function checkPermission(
+  opts: CheckPermissionOptions,
+  req?: Request
+): Promise<{ email: string; userId?: string; perms: any }> {
+  const identity = await opts.getIdentity.resolve(req)
+  const email = identity.email ?? identity.id
+  if (!email) throw new UnauthenticatedError()
+  const userId = identity.id
+  const perms = await opts.provider.getPermissionsByIdentity(email)
+  const { acao, recurso } = opts.permissao
+  if (!pode(perms, acao, recurso)) throw new ForbiddenError()
+  return { email, userId, perms }
+}
+
+/**
+ * Opções para o helper convenience `protectPage` (Next-specific).
+ */
+export type ProtectPageOptions = {
+  redirects?: { unauth?: string; forbidden?: string }
+  /**
+   * Função opcional de redirect que será invocada no servidor.
+   * Se fornecida, deverá executar o redirect (ex: `redirect` do Next).
+   */
+  redirectFn?: (url: string) => never
+}
+
+/**
+ * Helper convenience Next-specific para proteger páginas com mínimo boilerplate.
+ *
+ * Uso:
+ * ```ts
+ * // app/rbac-admin/page.tsx
+ * import ClientRbacAdminShell from '@/app/rbac-admin/ClientRbacAdminShell' // client wrapper
+ * import { protectPage } from '@anpdgovbr/rbac-next'
+ * import { getIdentity, rbacProvider } from '@/rbac/server'
+ *
+ * export default protectPage(ClientRbacAdminShell, {
+ *   getIdentity,
+ *   provider: rbacProvider,
+ *   permissao: { acao: 'Exibir', recurso: 'Permissoes' }
+ * }, { redirects: { unauth: '/login', forbidden: '/acesso-negado' } })
+ * ```
+ *
+ * Implementação:
+ * - É um wrapper Next-specific que chama `checkPermission` server-side.
+ * - Em caso de erro realiza `redirect()` para os destinos configurados.
+ * - Se autorizado, renderiza o componente cliente (que deve ser um Client Component
+ *   ou um wrapper client-side que carrega o componente real dinamicamente).
+ *
+ * Observações de segurança/mitigação:
+ * - `protectPage` usa `checkPermission` (a função agnóstica) para garantir consistência
+ *   entre usos server-side e outros ambientes.
+ * - Errors diferentes são mantidos (`UnauthenticatedError`, `ForbiddenError`) e
+ *   tratados explicitamente para evitar redirecionamentos errôneos.
+ * - O caller deve fornecer um componente client-only (ou wrapper) para evitar
+ *   a importação de componentes client-side no servidor (o que causaria erro/hydration).
+ */
+export function protectPage<ClientProps extends Record<string, unknown> = {}>(
+  ClientComponent: React.ComponentType<ClientProps>,
+  opts: CheckPermissionOptions,
+  { redirects, redirectFn }: ProtectPageOptions = {
+    redirects: { unauth: "/login", forbidden: "/acesso-negado" },
+  }
+): any {
+  const unauth = redirects?.unauth ?? "/login"
+  const forbidden = redirects?.forbidden ?? "/acesso-negado"
+
+  // Retorna um async Server Component para uso no App Router.
+  return async function ProtectedPage(props: ClientProps) {
+    try {
+      await checkPermission(opts)
+    } catch (err) {
+      if (err instanceof UnauthenticatedError) {
+        if (redirectFn) return redirectFn(unauth)
+        throw err
+      }
+      if (err instanceof ForbiddenError) {
+        if (redirectFn) return redirectFn(forbidden)
+        throw err
+      }
+      throw err
+    }
+
+    // Se autorizado, renderiza o componente cliente (deve ser Client Component).
+    return React.createElement(ClientComponent as React.ComponentType<ClientProps>, props)
   }
 }

@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        pkg: [rbac-core, rbac-provider, rbac-prisma, rbac-next, rbac-react]
+        pkg: [rbac-core, rbac-provider, rbac-prisma, rbac-next, rbac-react, rbac-admin]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
