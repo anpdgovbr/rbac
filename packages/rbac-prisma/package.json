@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-prisma",
-  "version": "0.1.1-beta.4",
+  "version": "0.1.2",
   "private": false,
   "type": "module",
   "main": "dist/src/index.js",
@@ -22,8 +22,7 @@
     "url": "git+https://github.com/anpdgovbr/rbac.git"
   },
   "publishConfig": {
-    "access": "public",
-    "tag": "beta"
+    "access": "public"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -34,8 +33,8 @@
     "ncu:update": "ncu -u"
   },
   "dependencies": {
-    "@anpdgovbr/rbac-core": "^0.1.1-beta.4",
-    "@anpdgovbr/rbac-provider": "^0.1.1-beta.4"
+    "@anpdgovbr/rbac-core": "^0.1.2",
+    "@anpdgovbr/rbac-provider": "^0.1.2"
   },
   "devDependencies": {
     "typescript": "^5.9.2"

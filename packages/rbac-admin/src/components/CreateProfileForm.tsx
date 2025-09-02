@@ -1,18 +1,20 @@
 "use client"
 import React, { useState } from "react"
 import type { AdminClient } from "../types"
+import { useI18n } from "../i18n"
 
 export function CreateProfileForm({
   client,
   onCreated,
-}: {
+}: Readonly<{
   client: AdminClient
   onCreated?: () => void
-}): React.ReactElement {
+}>): React.ReactElement {
   const [nome, setNome] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const t = useI18n()
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -36,12 +38,12 @@ export function CreateProfileForm({
   return (
     <form onSubmit={onSubmit} style={{ display: "flex", gap: 8, alignItems: "center" }}>
       <input
-        placeholder="Nome do perfil"
+        placeholder={`${t.actions.createProfile}`}
         value={nome}
         onChange={(e) => setNome(e.target?.value ?? "")}
       />
       <button type="submit" disabled={loading || !nome.trim()}>
-        Criar
+        {t.actions.create}
       </button>
       {error && <span style={{ color: "red" }}>{error}</span>}
       {success && <span style={{ color: "green" }}>{success}</span>}

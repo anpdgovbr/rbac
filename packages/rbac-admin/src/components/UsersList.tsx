@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react"
 import type { AdminClient, Profile } from "../types"
+import { useI18n } from "../i18n"
 
 type UserRow = {
   id: string
@@ -20,6 +21,7 @@ export function UsersList({
   const [users, setUsers] = useState<UserRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const t = useI18n()
 
   const refresh = useCallback(async () => {
     setLoading(true)
@@ -44,18 +46,18 @@ export function UsersList({
     await refresh()
   }
 
-  if (loading) return <div>Carregando usuários...</div>
-  if (error) return <div style={{ color: "red" }}>{`Erro: ${error}`}</div>
+  if (loading) return <div className="rbac-muted">{t.states.loading}</div>
+  if (error) return <div style={{ color: "red" }}>{`${t.states.errorPrefix}: ${error}`}</div>
 
   return (
     <div>
-      <h2>Usuários</h2>
+      <h2>{t.tabs.users}</h2>
       <table cellPadding={6} style={{ borderCollapse: "collapse", width: "100%" }}>
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>E-mail</th>
-            <th style={{ textAlign: "left" }}>Nome</th>
-            <th style={{ textAlign: "left" }}>Perfil</th>
+            <th style={{ textAlign: "left" }}>{t.tables.email}</th>
+            <th style={{ textAlign: "left" }}>{t.tables.name}</th>
+            <th style={{ textAlign: "left" }}>{t.tables.profile}</th>
           </tr>
         </thead>
         <tbody>

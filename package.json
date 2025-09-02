@@ -7,8 +7,8 @@
   "devDependencies": {
     "@eslint/js": "^9.34.0",
     "@testing-library/react": "^16.3.0",
-    "@typescript-eslint/eslint-plugin": "^8.41.0",
-    "@typescript-eslint/parser": "^8.41.0",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
     "eslint": "^9.34.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "happy-dom": "^18.0.1",
@@ -23,9 +23,9 @@
     "build:react": "npm run -w @anpdgovbr/rbac-react build",
     "build:admin": "npm run -w @anpdgovbr/rbac-admin build",
     "build": "npm run build:core && npm run build:provider && npm run build:prisma && npm run build:next && npm run build:react && npm run build:admin",
-    "typecheck": "npm run -ws --if-present typecheck",
-    "test": "npm run build && npm run -ws --if-present test",
-    "clean": "npm run -ws --if-present clean",
+    "typecheck": "npm run --workspaces --if-present typecheck",
+    "test": "npm run build && npm run --workspaces --if-present test",
+    "clean": "npm run --workspaces --if-present clean",
     "lint": "eslint .",
     "format": "prettier -w .",
     "ncu": "ncu",
@@ -34,6 +34,6 @@
     "ncu:interactive": "ncu --workspaces -i",
     "ncu:deep": "ncu --deep",
     "ncu:root": "ncu -u && npm install",
-    "ncu:packages": "npm run -ws --if-present ncu"
+    "ncu:packages": "npm run --workspaces --if-present ncu"
   }
 }

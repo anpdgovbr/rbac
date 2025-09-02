@@ -231,7 +231,7 @@ function withPermissao<TProps extends object>(
 > `withPermissao` é um HOC client-side pensado para proteger componentes e melhorar a UX.
 > Ele não executa checagem server-side nem faz redirects no servidor. Se usado diretamente como export default de uma `page.tsx` (client component), pode ocorrer mismatch/hydration quando o servidor renderiza conteúdo diferente do cliente.
 >
-> Recomendação: para proteger páginas inteiras utilize o helper server-side `checkPermission` do pacote `@anpdgovbr/rbac-next` (veja o README do `rbac-next` ou `USAGE_SERVER.md` no monorepo). O padrão é chamar `checkPermission` em um Server Component e, em caso de sucesso, renderizar um componente cliente protegido (carregado dinamicamente).
+> Recomendação: para proteger páginas inteiras utilize o helper server-side `checkPermission` do pacote `@anpdgovbr/rbac-next` (veja o README do `rbac-next`). O padrão é chamar `checkPermission` em um Server Component e, em caso de sucesso, renderizar um componente cliente protegido (carregado dinamicamente).
 
 ---
 
@@ -299,8 +299,7 @@ npm test
 
 ## 📚 Documentação Relacionada
 
-- 📖 [Documentação Completa](../../docs/)
-- 🏛️ [Arquitetura do Sistema](../../docs/architecture.md)
+- 📖 [Consolidação de Features e Roadmap](../../docs/README.md)
 - ⚛️ [Exemplos React](../../examples/react/)
 - 🚀 [Guia de Início Rápido](../../README.md)
 

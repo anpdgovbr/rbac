@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Configs
-TAG="${TAG:-beta}"
+TAG="${TAG:-latest}"
 ACCESS="${ACCESS:-public}"
 PACKAGES_DIR="${PACKAGES_DIR:-./packages}"
 
@@ -67,7 +67,13 @@ publish_pkg() {
   name="$(node -p "require('./package.json').name" 2>/dev/null || echo "$pkg")"
   ver="$(node -p "require('./package.json').version" 2>/dev/null || echo "?")"
 
-  log "Publicando $name@$ver  (tag=$TAG, access=$ACCESS)"
+  # Define tag por pacote (rbac-admin continua em beta por padrão)
+  local tag_for_pkg="$TAG"
+  if [[ "$name" == "@anpdgovbr/rbac-admin" && -z "${FORCE_LATEST_TAG:-}" ]]; then
+    tag_for_pkg="beta"
+  fi
+
+  log "Publicando $name@$ver  (tag=$tag_for_pkg, access=$ACCESS)"
 
   # build antes de publicar
   if npm run --silent build >/dev/null 2>&1; then
@@ -77,7 +83,7 @@ publish_pkg() {
   fi
 
   # tenta publicar
-  if npm publish --access "$ACCESS" --tag "$TAG"; then
+  if npm publish --access "$ACCESS" --tag "$tag_for_pkg"; then
     log "OK: $name@$ver publicado."
   else
     # Se falhar, verifica se a versão já existe; se sim, apenas informa e segue

@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react"
 import type { AdminClient, Permission } from "../types"
+import { useI18n } from "../i18n"
 
 export function PermissionsEditor({
   client,
@@ -13,6 +14,7 @@ export function PermissionsEditor({
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState<string | null>(null)
+  const t = useI18n()
 
   async function refresh() {
     setLoading(true)
@@ -48,18 +50,18 @@ export function PermissionsEditor({
     }
   }
 
-  if (loading) return <div>Carregando permissões...</div>
-  if (error) return <div style={{ color: "red" }}>{`Erro: ${error}`}</div>
+  if (loading) return <div className="rbac-muted">{t.states.loading}</div>
+  if (error) return <div style={{ color: "red" }}>{`${t.states.errorPrefix}: ${error}`}</div>
 
   return (
     <div>
-      <h2>Permissões</h2>
+      <h2>{t.tabs.permissions}</h2>
       <table cellPadding={6} style={{ borderCollapse: "collapse" }}>
         <thead>
           <tr>
-            <th style={{ textAlign: "left" }}>Ação</th>
-            <th style={{ textAlign: "left" }}>Recurso</th>
-            <th style={{ textAlign: "left" }}>Permitido</th>
+            <th style={{ textAlign: "left" }}>{t.tables.action}</th>
+            <th style={{ textAlign: "left" }}>{t.tables.resource}</th>
+            <th style={{ textAlign: "left" }}>{t.tables.allowed}</th>
           </tr>
         </thead>
         <tbody>

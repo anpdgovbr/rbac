@@ -31,8 +31,8 @@ import { pode, toPermissionsMap } from "@anpdgovbr/rbac-core"
 
 // Verificação simples
 const userPermissions = toPermissionsMap([
-  { acao: "Exibir", recurso: "Dashboard", grant: true },
-  { acao: "Criar", recurso: "Usuario", grant: false },
+  { acao: "Exibir", recurso: "Dashboard", permitido: true },
+  { acao: "Criar", recurso: "Usuario", permitido: false },
 ])
 
 const canView = pode(userPermissions, "Exibir", "Dashboard") // true
@@ -77,9 +77,10 @@ import type { IdentityResolver } from "@anpdgovbr/rbac-provider"
 import type { NextRequest } from "next/server"
 
 export const nextAuthResolver: IdentityResolver<NextRequest> = {
-  async getIdentity(req) {
+  async resolve() {
     const session = await getServerSession(authOptions)
-    return session?.user?.email || null
+    if (!session?.user?.email) throw new Error('Não autenticado')
+    return { id: session.user.id, email: session.user.email }
   },
 }
 ```
@@ -126,18 +127,12 @@ export const POST = withApi(
 // app/api/users/[id]/route.ts
 import { withApiForId } from "@anpdgovbr/rbac-next"
 
-export const GET = withApiForId<number>(
+export const GET = withApiForId<{ id: string }>(
   async (context) => {
-    // context.id é tipado como number
-    const user = await getUserById(context.id)
+    const user = await getUserById(context.params.id)
     return NextResponse.json(user)
   },
   {
-    extractId: (req) => {
-      const url = new URL(req.url)
-      const id = url.pathname.split("/").pop()
-      return parseInt(id || "0")
-    },
     provider: cachedProvider,
     getIdentity: nextAuthResolver,
     permissao: { acao: "Exibir", recurso: "Usuario" },
@@ -145,40 +140,29 @@ export const GET = withApiForId<number>(
 )
 ```
 
-### 5. Middleware Global
+### 5. Proteção de página (server-side)
 
-```typescript
-// middleware.ts
-import { withMiddleware } from "@anpdgovbr/rbac-next"
-import { cachedProvider } from "@/lib/rbac-config"
-import { nextAuthResolver } from "@/lib/identity-resolver"
+Use `checkPermission` e trate `UnauthenticatedError` / `ForbiddenError` com redirects:
 
-export default withMiddleware({
-  provider: cachedProvider,
-  getIdentity: nextAuthResolver,
+```tsx
+import { redirect } from 'next/navigation'
+import { checkPermission, UnauthenticatedError, ForbiddenError } from '@anpdgovbr/rbac-next'
+import { nextAuthResolver, cachedProvider } from '@/rbac/server'
 
-  protectedRoutes: [
-    {
-      pattern: /^\/admin/,
-      permissao: { acao: "Acessar", recurso: "PainelAdmin" },
-    },
-    {
-      pattern: /^\/relatorios/,
-      permissao: { acao: "Exibir", recurso: "Relatorios" },
-    },
-  ],
-
-  publicRoutes: ["/login", "/api/health"],
-
-  onUnauthorized: (req) => {
-    const url = req.nextUrl.clone()
-    url.pathname = "/access-denied"
-    return NextResponse.redirect(url)
-  },
-})
-
-export const config = {
-  matcher: ["/((?!api/public|_next/static|_next/image|favicon.ico).*)"],
+export default async function Page() {
+  try {
+    await checkPermission({
+      getIdentity: nextAuthResolver,
+      provider: cachedProvider,
+      permissao: { acao: 'Exibir', recurso: 'Permissoes' }
+    })
+  } catch (err) {
+    if (err instanceof UnauthenticatedError) return redirect('/login')
+    if (err instanceof ForbiddenError) return redirect('/acesso-negado')
+    throw err
+  }
+  const ClientShell = (await import('./ClientShell')).default
+  return <ClientShell />
 }
 ```
 

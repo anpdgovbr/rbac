@@ -1,107 +1,79 @@
-# 📚 Documentação RBAC ANPD — Índice Geral
+# RBAC ANPD — Consolidação de Features e Roadmap
 
-## 🎯 Documentação por Categoria
+Esta página consolida o status dos pacotes do monorepo em uma única lista, separando funcionalidades concluídas (DONE) e pendentes (TODO) por pacote. Itens pendentes estão ordenados por prioridade.
 
-### 📖 Fundamentos
+## Pacotes
 
-- [**Arquitetura**](architecture.md) — Visão geral do sistema, decisões de design e padrões arquiteturais
-- [**Estratégia de Dados**](data-strategy.md) — Modelagem do banco, schemas e estruturas de dados
-- [**FAQ**](faq.md) — Perguntas frequentes e esclarecimentos técnicos
+### @anpdgovbr/rbac-core
 
-### 🚀 Implementação e Uso
+- DONE:
+  - Tipos e utilitários principais: `PermissionsMap` (mapa aninhado), `pode`, `hasAny`, `toPermissionsMap`, `toFlatKeyMap` (legado).
+  - Testes unitários básicos cobrindo conversões e verificações.
+- TODO (prioridade):
+  1) Finalizar TSDoc e exemplos aprofundados de uso.
+  2) Helpers para composição de regras (predicados/utilitários).
+  3) Micro-benchmarks e micro-otimizações.
 
-- [**APIs Públicas**](apis.md) — Referência completa das APIs de todos os packages
-- [**Integração**](integration.md) — Guias de integração com projetos existentes
-- [**Migração**](migration-guide.md) — Como migrar sistemas legados para RBAC
+### @anpdgovbr/rbac-provider
 
-### 🛠️ Desenvolvimento
+- DONE:
+  - Interfaces `PermissionsProvider` e `IdentityResolver`.
+  - Decorator de cache: `withTTLCache(provider, ttlMs)` com invalidação seletiva/global.
+- TODO (prioridade):
+  1) Invalidação refinada (por grupos/eventos) e métricas de cache (hits/misses).
+  2) Guia prático de resolvers (NextAuth, JWT, Headers) na documentação principal.
 
-- [**Padrões de Desenvolvimento**](dev-standards.md) — Convenções, boas práticas e code style
-- [**Ambiente de Desenvolvimento**](dev-seed.md) — Setup local, seeds e dados de teste
-- [**Gerenciamento de Dependências**](NCU_GUIDE.md) — Guia completo do npm-check-updates
+### @anpdgovbr/rbac-prisma
 
-### 📋 Gestão de Projeto
+- DONE:
+  - `createPrismaPermissionsProvider` com herança (BFS) e união por grant verdadeiro (true sobrepõe false).
+  - Parametrização de tabelas (`perfil`, `permissao`, `perfilHeranca`, `user`) e `identityField` (email/id).
+  - Testes unitários com mocks de hierarquia/consulta.
+- TODO (prioridade):
+  1) Opções avançadas de performance (SP/view materializada) e índices recomendados.
+  2) Instrumentação (tempo de consulta, cache warm-up) e recomendações operacionais.
+  3) Seeds/migrações de referência (dev) para adoção rápida.
 
-- [**Checklist de Release**](CHECKLIST.md) — Lista de verificação para publicação
-- [**Roadmap**](roadmap.md) — Funcionalidades planejadas e cronograma
-- [**Tarefas dos Repositórios**](repos-tasks.md) — Organização de tarefas entre repos
+### @anpdgovbr/rbac-next
 
----
+- DONE:
+  - Wrappers `withApi`/`withApiForId`, `checkPermission`, `protectPage`, e integração de auditoria via callback.
+  - Testes de `checkPermission` e `protectPage`; exemplos no README do pacote.
+- TODO (prioridade):
+  1) Utilitários opcionais para padrões de middleware/params (se decidido manter no pacote).
+  2) Exemplos avançados (rotas aninhadas/params compostos).
+  3) Tipos utilitários para parâmetros derivados de rotas complexas.
 
-## 📦 Status dos Packages (Setembro 2025)
+### @anpdgovbr/rbac-react
 
-### ✅ Produção Estável
+- DONE:
+  - `PermissionsProvider`, hooks `usePermissions`/`usePode`, HOC `withPermissao`; integração com SWR.
+  - Exemplos de uso e padrões de UX básicos.
+- TODO (prioridade):
+  1) Exemplos/documentação de SSR + hidratação em Next.
+  2) Componentes utilitários (Guard/Placeholder) e padrões de loading/erro.
 
-| Package                                                  | Versão         | Status     | Descrição                        |
-| -------------------------------------------------------- | -------------- | ---------- | -------------------------------- |
-| [`@anpdgovbr/rbac-core`](../packages/rbac-core/)         | `0.1.0-beta.3` | ✅ Estável | Tipos fundamentais e utilitários |
-| [`@anpdgovbr/rbac-provider`](../packages/rbac-provider/) | `0.1.0-beta.3` | ✅ Estável | Contratos e cache TTL            |
-| [`@anpdgovbr/rbac-prisma`](../packages/rbac-prisma/)     | `0.1.0-beta.3` | ✅ Estável | Provider Prisma com herança      |
+### @anpdgovbr/rbac-admin
 
-### 🚧 Beta Ativo
+- DONE:
+  - Admin client configurável; `ProfilesList`, `PermissionsEditor`, `UsersList`; formulários de criação; hooks `useAdminProfiles`/`useAdminPermissions`.
+  - Tokens de texto (i18n básico) com sobrescrita opcional. Estilização delegada ao app consumidor.
+- TODO (prioridade):
+  1) Grid acessível, paginação e filtros por ação/recurso.
+  2) Ações em lote (habilitar/desabilitar múltiplas permissões).
+  3) Integração de auditoria: callbacks de change logging.
+  4) Modo somente leitura e confirmações adicionais.
+  5) Documentar personalização (tokens e integração com tema do app).
 
-| Package                                            | Versão         | Status  | Descrição              |
-| -------------------------------------------------- | -------------- | ------- | ---------------------- |
-| [`@anpdgovbr/rbac-next`](../packages/rbac-next/)   | `0.1.0-beta.3` | 🚧 Beta | Middleware Next.js API |
-| [`@anpdgovbr/rbac-react`](../packages/rbac-react/) | `0.2.0-beta.1` | 🚧 Beta | Hooks e HOCs React 19+ |
+### Monorepo/Infra
 
-### ⚠️ Desenvolvimento Ativo
-
-| Package                                            | Versão         | Status | Descrição                |
-| -------------------------------------------------- | -------------- | ------ | ------------------------ |
-| [`@anpdgovbr/rbac-admin`](../packages/rbac-admin/) | `0.2.0-beta.1` | ⚠️ WIP | Interface administrativa |
-
----
-
-## 🎯 Por Onde Começar?
-
-### 👤 **Para Desenvolvedores Novos**
-
-1. 📖 [Arquitetura](architecture.md) — Entenda os conceitos fundamentais
-2. 🚀 [APIs](apis.md) — Veja exemplos práticos de uso
-3. 🛠️ [Ambiente de Desenvolvimento](dev-seed.md) — Configure seu ambiente local
-
-### 🔧 **Para Integração Existente**
-
-1. 🔄 [Migração](migration-guide.md) — Estratégias para sistemas legados
-2. 🔌 [Integração](integration.md) — Padrões de integração
-3. 📋 [Checklist](CHECKLIST.md) — Validação antes da produção
-
-### 🏗️ **Para Contribuidores**
-
-1. 🛠️ [Padrões de Desenvolvimento](dev-standards.md) — Convenções do projeto
-2. 📦 [Gerenciamento de Dependências](NCU_GUIDE.md) — Atualizações e manutenção
-3. 🗺️ [Roadmap](roadmap.md) — Funcionalidades planejadas
-
----
-
-## 🔄 Atualizações Recentes
-
-### 📅 Setembro 2025
-
-- ✅ **React 19+ Support**: rbac-react e rbac-admin atualizados
-- ✅ **NCU Integration**: Sistema completo de gerenciamento de dependências
-- ✅ **DDSS/CGTI**: Correção da unidade organizacional
-- ✅ **TSDoc Enhancement**: Documentação inline completa
-- ✅ **README Modernization**: Todos os READMEs reformulados
-
-### 🎯 **Próximas Milestones**
-
-- 🚧 **rbac-admin GA**: Interface administrativa completa
-- 🚧 **Test Suite**: Cobertura de testes abrangente
-- 🚧 **CI/CD Pipeline**: Automatização completa
-- 🚧 **Performance Benchmarks**: Métricas de performance
+- DONE:
+  - Configuração de workspace, scripts de build/test/typecheck e CI (ESLint, format, build, tests).
+  - Exemplos `examples/next-api` e `examples/react` (básicos).
+- TODO (prioridade):
+  1) Publicação por pacote (versionamento semântico e notas de release).
+  2) Guia de migração consolidado (quando necessário) e observabilidade básica.
 
 ---
 
-## 📞 Suporte e Contribuição
-
-**Desenvolvido por**: Divisão de Desenvolvimento e Sustentação de Sistemas (DDSS/CGTI/ANPD)
-
-- 🐛 **Issues**: [GitHub Issues](https://github.com/anpdgovbr/rbac/issues)
-- 💬 **Discussões**: [GitHub Discussions](https://github.com/anpdgovbr/rbac/discussions)
-- 📧 **Contato**: DDSS/CGTI/ANPD
-
----
-
-_Última atualização: 1 de setembro de 2025_
+Observação: Documentos detalhados anteriores (arquitetura, integração, APIs, padrões de dev, estratégia de dados etc.) foram consolidados neste resumo focado em status e backlog. As instruções de uso e exemplos permanecem nos READMEs de cada pacote.

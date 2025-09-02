@@ -33,10 +33,8 @@ interface Permissao {
   recurso: Resource
 }
 
-// Mapa otimizado para consultas O(1)
-interface PermissionsMap {
-  [flatKey: string]: Grant
-}
+// Mapa otimizado para consultas O(1) em estrutura aninhada
+type PermissionsMap = Partial<Record<Action, Partial<Record<Resource, boolean>>>>
 ```
 
 ### `pode(permissoes, acao, recurso): boolean`
@@ -102,24 +100,18 @@ import { toPermissionsMap } from "@anpdgovbr/rbac-core"
 
 // Conversão de lista para mapa
 const rawPermissions = [
-  { acao: "Exibir", recurso: "Relatorios", grant: true },
-  { acao: "Criar", recurso: "Usuario", grant: false },
-  { acao: "Editar", recurso: "Usuario", grant: true },
+  { acao: "Exibir", recurso: "Relatorios", permitido: true },
+  { acao: "Criar", recurso: "Usuario", permitido: false },
+  { acao: "Editar", recurso: "Usuario", permitido: true },
 ]
 
 const permissionsMap = toPermissionsMap(rawPermissions)
-// Resultado: { "Exibir:Relatorios": true, "Editar:Usuario": true }
+// Resultado: { Exibir: { Relatorios: true }, Editar: { Usuario: true } }
 ```
 
-### `flatKey(acao, recurso): string`
+### Formato legado flat key (compatibilidade)
 
-Gera chave única para indexação.
-
-```typescript
-import { flatKey } from "@anpdgovbr/rbac-core"
-
-const key = flatKey("Exibir", "Relatorios") // "Exibir:Relatorios"
-```
+`toFlatKeyMap` converte permissões para `{ "Acao_Recurso": boolean }`. Evite em novos projetos.
 
 ---
 
@@ -133,12 +125,12 @@ Contrato principal para provedores de permissões.
 
 ```typescript
 interface PermissionsProvider {
-  getUserPermissions(identity: string): Promise<PermissionsMap>
+  getPermissionsByIdentity(identity: string): Promise<PermissionsMap>
 }
 
 // Implementação custom
 class CustomPermissionsProvider implements PermissionsProvider {
-  async getUserPermissions(identity: string): Promise<PermissionsMap> {
+  async getPermissionsByIdentity(identity: string): Promise<PermissionsMap> {
     const user = await this.userService.findByEmail(identity)
     const roles = await this.roleService.getUserRoles(user.id)
 
@@ -153,14 +145,15 @@ Extração de identidade de contextos de framework.
 
 ```typescript
 interface IdentityResolver<TRequest = unknown> {
-  getIdentity(req: TRequest): Promise<string | null>
+  resolve(req?: TRequest): Promise<{ id: string; email?: string }>
 }
 
 // Resolver NextAuth
 const nextAuthResolver: IdentityResolver<NextRequest> = {
-  async getIdentity(req) {
-    const session = await getServerSession(req)
-    return session?.user?.email || null
+  async resolve() {
+    const session = await getServerSession()
+    if (!session?.user?.email) throw new Error('Não autenticado')
+    return { id: session.user.id, email: session.user.email }
   },
 }
 

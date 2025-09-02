@@ -150,9 +150,7 @@ npm run typecheck
 
 ## 📚 Documentação Relacionada
 
-- 📖 [Documentação Completa](../../docs/)
-- 🏛️ [Arquitetura do Sistema](../../docs/architecture.md)
-- 🔌 [Referência de APIs](../../docs/apis.md)
+- 📖 [Consolidação de Features e Roadmap](../../docs/README.md)
 - 🚀 [Guia de Início Rápido](../../README.md)
 
 ## 📄 Licença

@@ -314,9 +314,7 @@ npm test
 
 ## 📚 Documentação Relacionada
 
-- 📖 [Documentação Completa](../../docs/)
-- 🏛️ [Arquitetura do Sistema](../../docs/architecture.md)
-- 💾 [Estratégia de Dados](../../docs/data-strategy.md)
+- 📖 [Consolidação de Features e Roadmap](../../docs/README.md)
 - 🔌 [Provider Contracts](../rbac-provider/)
 - 🚀 [Guia de Início Rápido](../../README.md)
 

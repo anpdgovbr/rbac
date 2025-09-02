@@ -375,8 +375,7 @@ npm test
 
 ## 📚 Documentação Relacionada
 
-- 📖 [Documentação Completa](../../docs/)
-- 🏛️ [Arquitetura do Sistema](../../docs/architecture.md)
+- 📖 [Consolidação de Features e Roadmap](../../docs/README.md)
 - 🔌 [Provider Contracts](../rbac-provider/)
 - 💻 [Exemplos Next.js](../../examples/next-api/)
 - 🚀 [Guia de Início Rápido](../../README.md)

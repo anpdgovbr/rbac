@@ -2,6 +2,7 @@
 import React, { useState } from "react"
 import type { TogglePermissionPayload } from "@anpdgovbr/shared-types"
 import type { AdminClient, Profile } from "../types"
+import { useI18n } from "../i18n"
 
 export function CreatePermissionForm({
   client,
@@ -19,6 +20,7 @@ export function CreatePermissionForm({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const t = useI18n()
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -52,7 +54,7 @@ export function CreatePermissionForm({
       style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}
     >
       <select value={perfilId} onChange={(e) => setPerfilId(e.target?.value ?? "")}>
-        <option value="">Perfil</option>
+        <option value="">{t.tables.profile}</option>
         {profiles.map((p) => (
           <option key={String(p.id)} value={String(p.id)}>
             {p.nome}
@@ -78,7 +80,7 @@ export function CreatePermissionForm({
         Permitido
       </label>
       <button type="submit" disabled={loading || !perfilId || !acao || !recurso}>
-        Criar
+        {t.actions.create}
       </button>
       {error && <span style={{ color: "red" }}>{error}</span>}
       {success && <span style={{ color: "green" }}>{success}</span>}

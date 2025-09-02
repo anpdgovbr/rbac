@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react"
 import type { AdminClient, Profile } from "../types"
+import { useI18n } from "../i18n"
 
 export function ProfilesList({
   client,
@@ -12,6 +13,7 @@ export function ProfilesList({
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const t = useI18n()
 
   useEffect(() => {
     let mounted = true
@@ -34,12 +36,12 @@ export function ProfilesList({
     }
   }, [client])
 
-  if (loading) return <div>Carregando perfis...</div>
-  if (error) return <div style={{ color: "red" }}>{`Erro: ${error}`}</div>
+  if (loading) return <div className="rbac-muted">{t.states.loading}</div>
+  if (error) return <div style={{ color: "red" }}>{`${t.states.errorPrefix}: ${error}`}</div>
 
   return (
     <div>
-      <h2>Perfis</h2>
+      <h2>{t.tabs.profiles}</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {profiles.map((p) => (
           <li key={String(p.id)} style={{ marginBottom: 8 }}>

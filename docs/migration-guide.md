@@ -1,5 +1,7 @@
 # 🔄 Guia de Migração RBAC ANPD
 
+Nota: para um panorama do que já está DONE e o que está priorizado por pacote, consulte `docs/README.md` (consolidação de features e roadmap).
+
 [![Status](https://img.shields.io/badge/Status-Estratégia_Testada-green.svg)]()
 [![Migração](https://img.shields.io/badge/Migração-Gradual_Suportada-blue.svg)]()
 [![Compatibilidade](https://img.shields.io/badge/Compatibilidade-Sistemas_Legados-orange.svg)]()

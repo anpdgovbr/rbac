@@ -66,20 +66,11 @@ npm install @anpdgovbr/rbac-core @anpdgovbr/rbac-react
 ### Dashboard Principal
 
 ```tsx
-import { RbacAdminDashboard } from "@anpdgovbr/rbac-admin"
+import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
 
 function AdminPage() {
   return (
-    <RbacAdminDashboard
-      apiEndpoint="/api/rbac"
-      permissions={{
-        users: { list: true, create: true, edit: true, delete: false },
-        profiles: { list: true, create: true, edit: true, delete: true },
-        permissions: { view: true, edit: true },
-      }}
-      onUserCreate={(user) => console.log("User created:", user)}
-      onPermissionChange={(change) => audit.log(change)}
-    />
+    <RbacAdminShell config={{ baseUrl: "/api" }} i18n={{ locale: "pt-BR" }} />
   )
 }
 ```
@@ -127,6 +118,23 @@ function CustomAdminPage() {
 - [x] Estrutura base de componentes
 - [x] Types básicos
 - [x] Setup de build
+- [x] Text tokens de i18n (pt-BR/en) via `I18nProvider` com sobrescrita opcional
+- [x] Estilização delegada ao app consumidor (sem ThemeProvider interno)
+- [x] Hooks `useAdminProfiles` e `useAdminPermissions`
+
+### I18n e estilização
+
+```tsx
+import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
+
+<RbacAdminShell
+  config={{ baseUrl: "/api" }}
+  i18n={{ locale: "en", title: "Access Control" }}
+/>
+
+// Estilos: forneça CSS no app hospedeiro
+// Ex.: escopar pelo className recebido e aplicar seu design system
+```
 
 ### 🚧 Em Desenvolvimento
 
@@ -216,10 +224,8 @@ Como este pacote está em desenvolvimento, contribuições são especialmente be
 
 ## 📚 Documentação Relacionada
 
-- 📖 [Documentação Completa](../../docs/)
-- 🏛️ [Arquitetura do Sistema](../../docs/architecture.md)
+- 📖 [Consolidação de Features e Roadmap](../../docs/README.md)
 - ⚛️ [rbac-react (client components)](../rbac-react/)
-- 🎨 [Design System Guidelines](../../docs/design-guidelines.md) (futuro)
 - 🚀 [Guia de Início Rápido](../../README.md)
 
 ## 📄 Licença

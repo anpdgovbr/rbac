@@ -126,23 +126,11 @@ const ProtectedReport = withPermissao(ReportComponent, "Exibir", "Relatorios")
 - Invalidação seletiva por identidade
 - Otimizado para alta concorrência
 
-## 📖 Documentação Completa
+## 📖 Documentação
 
-### Guias Principais
+- 📚 **[Consolidação de Features e Roadmap](docs/README.md)** — Status por pacote (DONE/TODO com prioridades)
 
-- 🏛️ **[Arquitetura](docs/architecture.md)** — Visão geral do sistema e decisões de design
-- 🔌 **[APIs Públicas](docs/apis.md)** — Referência completa das APIs de todos os pacotes
-- 🚚 **[Guia de Migração](docs/migration-guide.md)** — Como migrar sistemas existentes
-- 💾 **[Estratégia de Dados](docs/data-strategy.md)** — Modelagem do banco e estruturas
-
-### Desenvolvimento
-
-- 🛠️ **[Padrões de Desenvolvimento](docs/dev-standards.md)** — Convenções e boas práticas
-- 🌱 **[Seeds e Ambiente](docs/dev-seed.md)** — Setup do ambiente de desenvolvimento
-- ✅ **[Checklist](docs/CHECKLIST.md)** — Lista de verificação para releases
-- 🗺️ **[Roadmap](docs/roadmap.md)** — Funcionalidades planejadas e status
-
-### Exemplos Práticos
+## Exemplos Práticos
 
 - 📁 **[examples/next-api/](examples/next-api/)** — Implementação completa em Next.js
 - ⚛️ **[examples/react/](examples/react/)** — Componentes e hooks em React
@@ -227,7 +215,7 @@ npm run ncu:interactive
 ./ncu-helper.sh help
 ```
 
-Para mais detalhes, veja o [Guia do NCU](./docs/NCU_GUIDE.md).
+Para detalhes de atualização de dependências, consulte os scripts `ncu:*` definidos em `package.json`.
 
 ---
 

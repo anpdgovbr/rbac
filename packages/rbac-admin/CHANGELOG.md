@@ -1,5 +1,9 @@
 ## Unreleased
 
+- Tokens de texto (i18n básico) com sobrescrita opcional;
+- Remoção de ThemeProvider interno (estilização delegada ao app consumidor);
+- Hooks internos: `useAdminProfiles` e `useAdminPermissions`.
+
 ## 0.2.0-beta.1
 
 - **BREAKING CHANGE**: Requer React 19+ (atualização de peerDependency)
@@ -15,3 +19,6 @@
 ## 0.0.1-beta.1
 
 - Ajustes de build/tsconfig e metadados npm.
+## 0.2.1-beta.0
+
+- Bump patch beta; tokens de texto (i18n), remoção de ThemeProvider interno e hooks internos adicionados.

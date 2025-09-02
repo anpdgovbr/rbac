@@ -1,5 +1,7 @@
 # ❓ FAQ — RBAC ANPD: Perguntas Frequentes
 
+Nota: veja também `docs/README.md` para a consolidação das features DONE/TODO e prioridades por pacote.
+
 [![Status](https://img.shields.io/badge/Status-Atualizado-green.svg)]()
 [![Versão](https://img.shields.io/badge/Versão-Setembro_2025-blue.svg)]()
 
