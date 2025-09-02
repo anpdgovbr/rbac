@@ -28,7 +28,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --require ./dist/test/setup.js --test 'dist/**/*.test.js'",
+    "test": "node --require ./dist/test/setup.js --test dist/test/*.test.js",
     "ncu": "ncu",
     "ncu:check": "ncu",
     "ncu:update": "ncu -u"
