@@ -72,9 +72,7 @@ export function PermissionsEditor({
                   type="checkbox"
                   checked={!!it.permitido}
                   disabled={saving === `${it.acao}:${it.recurso}`}
-                  onChange={(e) =>
-                    onToggle(it.acao, it.recurso, !!e.target?.checked)
-                  }
+                  onChange={(e) => onToggle(it.acao, it.recurso, !!e.target?.checked)}
                 />
               </td>
             </tr>

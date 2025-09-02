@@ -2,34 +2,64 @@ name: RBAC Monorepo CI
 
 on:
   push:
-    branches: [main, migrando-rbac]
+    branches: [main]
   pull_request:
-    branches: [main, migrando-rbac]
+    branches: [main]
 
 # Least-privilege permissions: default to read-only
 permissions:
   contents: read
 
 jobs:
-  build-test:
+  lint-and-format:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        pkg: [rbac-core, rbac-provider, rbac-prisma, rbac-next, rbac-react, rbac-admin]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install workspace deps (locked)
+          cache: 'npm'
+      - name: Install dependencies
         run: npm ci --ignore-scripts
-        working-directory: ./
-      - name: Build package
+      - name: Run ESLint
+        run: npm run lint
+      - name: Check formatting
+        run: npm run format -- --check
+
+  build-and-test:
+    runs-on: ubuntu-latest
+    needs: lint-and-format
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Build all packages
         run: npm run build
-        working-directory: ./packages/${{ matrix.pkg }}
-      - name: Typecheck
-        run: npm run typecheck || npm run build --if-present
-        working-directory: ./packages/${{ matrix.pkg }}
-      - name: Tests (node --test)
-        run: npm test --if-present || true
-        working-directory: ./packages/${{ matrix.pkg }}
+      - name: Run typecheck
+        run: npm run typecheck
+      - name: Run all tests
+        run: npm test
+
+  individual-package-tests:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [rbac-core, rbac-provider, rbac-prisma, rbac-next, rbac-react, rbac-admin]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Build and test ${{ matrix.package }}
+        run: |
+          npm run -w @anpdgovbr/${{ matrix.package }} build
+          npm run -w @anpdgovbr/${{ matrix.package }} test

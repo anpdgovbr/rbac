@@ -40,10 +40,7 @@ export function RbacAdminShell({ config }: RbacAdminShellProps): React.ReactElem
           <button onClick={() => setTab("usuarios")} disabled={tab === "usuarios"}>
             Usuários
           </button>
-          <button
-            onClick={() => setTab("permissoes")}
-            disabled={tab === "permissoes"}
-          >
+          <button onClick={() => setTab("permissoes")} disabled={tab === "permissoes"}>
             Permissões
           </button>
         </div>

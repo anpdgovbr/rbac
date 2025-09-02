@@ -19,6 +19,9 @@ test("createPrismaPermissionsProvider aggregates permissions with grant preceden
         heranca: { herdaDo: { nome: "Leitor", active: true } },
       }),
     },
+    perfilHeranca: {
+      findMany: async () => [],
+    },
     permissao: {
       findMany: async () => [
         { acao: "Exibir", recurso: "Permissoes", permitido: false },

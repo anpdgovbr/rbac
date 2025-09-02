@@ -13,7 +13,7 @@
  */
 
 import React from "react"
-import type { Action, Resource } from "@anpdgovbr/rbac-core"
+import type { Action, Resource, PermissionsMap } from "@anpdgovbr/rbac-core"
 import { pode } from "@anpdgovbr/rbac-core"
 import type { PermissionsProvider, IdentityResolver } from "@anpdgovbr/rbac-provider"
 
@@ -438,8 +438,15 @@ export type CheckPermissionOptions = {
 export async function checkPermission(
   opts: CheckPermissionOptions,
   req?: Request
-): Promise<{ email: string; userId?: string; perms: any }> {
-  const identity = await opts.getIdentity.resolve(req)
+): Promise<{ email: string; userId?: string; perms: PermissionsMap }> {
+  let identity
+  try {
+    identity = await opts.getIdentity.resolve(req)
+  } catch {
+    // Qualquer erro na resolução de identidade é tratado como não autenticado
+    throw new UnauthenticatedError()
+  }
+
   const email = identity.email ?? identity.id
   if (!email) throw new UnauthenticatedError()
   const userId = identity.id
@@ -498,7 +505,8 @@ export function protectPage<ClientProps extends Record<string, unknown> = {}>(
   { redirects, redirectFn }: ProtectPageOptions = {
     redirects: { unauth: "/login", forbidden: "/acesso-negado" },
   }
-): any {
+  // Retorna um async Server Component para uso no App Router.
+): (props: ClientProps) => Promise<React.ReactElement> {
   const unauth = redirects?.unauth ?? "/login"
   const forbidden = redirects?.forbidden ?? "/acesso-negado"
 

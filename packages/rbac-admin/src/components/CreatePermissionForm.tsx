@@ -4,7 +4,7 @@ import type { TogglePermissionPayload } from "@anpdgovbr/shared-types"
 import type { AdminClient, Profile } from "../types"
 
 export function CreatePermissionForm({
-  client: _client,
+  client,
   profiles,
   onCreated,
 }: {
@@ -51,10 +51,7 @@ export function CreatePermissionForm({
       onSubmit={onSubmit}
       style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}
     >
-      <select
-        value={perfilId}
-        onChange={(e) => setPerfilId(e.target?.value ?? "")}
-      >
+      <select value={perfilId} onChange={(e) => setPerfilId(e.target?.value ?? "")}>
         <option value="">Perfil</option>
         {profiles.map((p) => (
           <option key={String(p.id)} value={String(p.id)}>

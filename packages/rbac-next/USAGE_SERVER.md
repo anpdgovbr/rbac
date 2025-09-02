@@ -24,10 +24,10 @@ import { getIdentity, rbacProvider } from "@/rbac/server"
 
 export default async function Page() {
   try {
-        await checkPermission({
+    await checkPermission({
       getIdentity,
       provider: rbacProvider,
-      permissao: { acao: 'Exibir', recurso: 'Permissoes' }
+      permissao: { acao: "Exibir", recurso: "Permissoes" },
     })
   } catch (err) {
     if (err instanceof UnauthenticatedError) return redirect("/login")

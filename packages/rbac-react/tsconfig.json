@@ -5,7 +5,7 @@
     "jsx": "react-jsx",
     "lib": ["ES2020", "DOM"],
     "moduleResolution": "nodenext",
-    "types": ["react"],
+    "types": ["react", "node"],
     "typeRoots": ["./node_modules/@types", "../../node_modules/@types"],
     "declaration": true,
     "outDir": "dist",

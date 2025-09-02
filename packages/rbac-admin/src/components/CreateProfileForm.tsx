@@ -3,7 +3,7 @@ import React, { useState } from "react"
 import type { AdminClient } from "../types"
 
 export function CreateProfileForm({
-  client: _client,
+  client,
   onCreated,
 }: {
   client: AdminClient
