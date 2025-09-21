@@ -1,6 +1,9 @@
 ## Unreleased
 
-- Exports map e correções de main/types para bundlers (pré 0.1.0-beta.2).
+## 0.1.3
+
+- **Correção**: Removido tipo desnecessário `FlatKey` para uso direto de template literal type
+- **Melhoria**: Simplificação de tipo em `toFlatKeyMap` para melhor compatibilidade TypeScript
 
 ## 0.1.2
 

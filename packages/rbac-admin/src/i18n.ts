@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useMemo } from "react"
 
+/**
+ * Tipo que define as mensagens de internacionalização para o componente RBAC Admin.
+ * Inclui locale, títulos, abas, rótulos, ações, estados, dicas e cabeçalhos de tabelas.
+ */
 export type Messages = {
   locale: string
   title: string
@@ -18,6 +22,9 @@ export type Messages = {
   }
 }
 
+/**
+ * Constantes com mensagens em português brasileiro (pt-BR) para internacionalização.
+ */
 const PT_BR: Messages = {
   locale: "pt-BR",
   title: "RBAC Admin",
@@ -40,6 +47,9 @@ const PT_BR: Messages = {
   },
 }
 
+/**
+ * Constantes com mensagens em inglês (en-US) para internacionalização.
+ */
 const EN_US: Messages = {
   locale: "en",
   title: "RBAC Admin",
@@ -62,8 +72,17 @@ const EN_US: Messages = {
   },
 }
 
+/**
+ * Contexto React para fornecer mensagens de internacionalização aos componentes filhos.
+ */
 const I18nContext = createContext<Messages>(PT_BR)
 
+/**
+ * Provedor de contexto para internacionalização.
+ * Permite sobrescrever mensagens padrão com base no locale fornecido.
+ * @param overrides - Mensagens opcionais para sobrescrever as padrão.
+ * @param children - Componentes filhos que terão acesso às mensagens.
+ */
 export function I18nProvider({
   overrides,
   children,
@@ -92,6 +111,10 @@ export function I18nProvider({
   return React.createElement(I18nContext.Provider, { value }, children)
 }
 
+/**
+ * Hook para acessar as mensagens de internacionalização do contexto.
+ * @returns As mensagens atuais de internacionalização.
+ */
 export function useI18n(): Messages {
   return useContext(I18nContext)
 }

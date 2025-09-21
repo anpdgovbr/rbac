@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react"
-import type { AdminClient } from "../types"
-import { useI18n } from "../i18n"
+import type { AdminClient } from "../types.js"
+import { useI18n } from "../i18n.js"
 
 export function CreateProfileForm({
   client,

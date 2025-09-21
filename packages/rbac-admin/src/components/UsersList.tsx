@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useEffect, useState, useCallback } from "react"
-import type { AdminClient, Profile } from "../types"
-import { useI18n } from "../i18n"
+import type { AdminClient, Profile } from "../types.js"
+import { useI18n } from "../i18n.js"
 
 type UserRow = {
   id: string
@@ -14,10 +14,10 @@ type UserRow = {
 export function UsersList({
   client,
   availableProfiles,
-}: {
+}: Readonly<{
   client: AdminClient
   availableProfiles: Profile[]
-}): React.ReactElement {
+}>): React.ReactElement {
   const [users, setUsers] = useState<UserRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

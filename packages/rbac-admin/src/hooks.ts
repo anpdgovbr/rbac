@@ -1,8 +1,14 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-import type { AdminClient, Permission, Profile } from "./types"
+import type { AdminClient, Permission, Profile } from "./types.js"
 
+/**
+ * Hook personalizado para gerenciar a lista de perfis de administração.
+ * Carrega os perfis do cliente, gerencia estados de carregamento e erro, e fornece uma função para atualizar os dados.
+ * @param client - Instância do cliente de administração RBAC.
+ * @returns Objeto contendo a lista de perfis, estados de carregamento e erro, e função de atualização.
+ */
 export function useAdminProfiles(client: AdminClient) {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
@@ -28,6 +34,13 @@ export function useAdminProfiles(client: AdminClient) {
   return { profiles, loading, error, refresh }
 }
 
+/**
+ * Hook personalizado para gerenciar as permissões de um perfil específico.
+ * Carrega as permissões do perfil fornecido, gerencia estados de carregamento e erro, e fornece uma função para atualizar os dados.
+ * @param client - Instância do cliente de administração RBAC.
+ * @param profileIdOrName - ID ou nome do perfil para o qual carregar as permissões (opcional).
+ * @returns Objeto contendo a lista de permissões, estados de carregamento e erro, e função de atualização.
+ */
 export function useAdminPermissions(
   client: AdminClient,
   profileIdOrName?: string | number

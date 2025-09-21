@@ -199,12 +199,12 @@ export type FlatKey = `${Action}_${Resource}`
  */
 export function toFlatKeyMap(
   list?: Array<PermissionDto> | null
-): Partial<Record<FlatKey, boolean>> {
-  const out: Partial<Record<FlatKey, boolean>> = {}
+): Partial<Record<`${Action}_${Resource}`, boolean>> {
+  const out: Partial<Record<`${Action}_${Resource}`, boolean>> = {}
   if (!Array.isArray(list)) return out
 
   for (const p of list) {
-    const key = `${p.acao}_${p.recurso}` as FlatKey
+    const key = `${p.acao}_${p.recurso}` as `${Action}_${Resource}`
     out[key] = !!p.permitido
   }
   return out

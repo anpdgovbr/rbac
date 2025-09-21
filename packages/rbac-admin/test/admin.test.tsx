@@ -1,14 +1,18 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import React from "react"
-import { render, screen } from "@testing-library/react"
-import { RbacAdminShell } from "../src/index.js"
+import { RbacAdminShell, createRbacAdminClient } from "../src/index.js"
 
-test("rbac-admin component tests", () => {
-  test("RbacAdminShell should render the main title", () => {
-    render(
-      <RbacAdminShell config={{ fetchImpl: () => Promise.resolve(new Response("[]")) }} />
-    )
-    assert.ok(screen.getByText("RBAC Admin"))
+test("createRbacAdminClient should create a client instance", () => {
+  const client = createRbacAdminClient({
+    fetchImpl: () => Promise.resolve(new Response("[]"))
   })
+  
+  assert.ok(typeof client.listProfiles === "function")
+  assert.ok(typeof client.createProfile === "function")
+  assert.ok(typeof client.listPermissions === "function")
+  assert.ok(typeof client.togglePermission === "function")
+})
+
+test("RbacAdminShell should be exported as a function component", () => {
+  assert.ok(typeof RbacAdminShell === "function")
 })

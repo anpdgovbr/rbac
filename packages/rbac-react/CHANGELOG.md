@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 0.2.3
+
+- **Melhoria**: Aplicação consistente de `Readonly<>` em props de PermissionsProvider para melhor type safety
+
 ## 0.2.0-beta.1
 
 - **BREAKING CHANGE**: Requer React 19+ (atualização de peerDependency)

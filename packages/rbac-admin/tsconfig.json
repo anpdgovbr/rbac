@@ -5,7 +5,7 @@
     "jsx": "react-jsx",
     "lib": ["ES2020", "DOM"],
     "moduleResolution": "Bundler",
-    "types": ["react", "react/jsx-runtime"],
+    "types": ["node", "react", "react/jsx-runtime"],
     "typeRoots": ["./node_modules/@types", "../../node_modules/@types"],
     "declaration": true,
     "outDir": "dist",

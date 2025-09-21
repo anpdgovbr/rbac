@@ -77,7 +77,10 @@ interface PermissionsProviderProps {
  * }
  * ```
  */
-export function PermissionsProvider({ children, value }: PermissionsProviderProps) {
+export function PermissionsProvider({
+  children,
+  value,
+}: Readonly<PermissionsProviderProps>) {
   return (
     <PermissionsContext.Provider value={value}>{children}</PermissionsContext.Provider>
   )

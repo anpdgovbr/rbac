@@ -1,15 +1,15 @@
 "use client"
 import React, { useEffect, useState } from "react"
-import type { AdminClient, Profile } from "../types"
-import { useI18n } from "../i18n"
+import type { AdminClient, Profile } from "../types.js"
+import { useI18n } from "../i18n.js"
 
 export function ProfilesList({
   client,
   onSelect,
-}: {
+}: Readonly<{
   client: AdminClient
   onSelect: (p: Profile) => void
-}): React.ReactElement {
+}>): React.ReactElement {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)

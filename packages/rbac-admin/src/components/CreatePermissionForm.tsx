@@ -1,18 +1,18 @@
 "use client"
 import React, { useState } from "react"
 import type { TogglePermissionPayload } from "@anpdgovbr/shared-types"
-import type { AdminClient, Profile } from "../types"
-import { useI18n } from "../i18n"
+import type { AdminClient, Profile } from "../types.js"
+import { useI18n } from "../i18n.js"
 
 export function CreatePermissionForm({
   client,
   profiles,
   onCreated,
-}: {
+}: Readonly<{
   client: AdminClient
   profiles: Profile[]
   onCreated?: () => void
-}): React.ReactElement {
+}>): React.ReactElement {
   const [perfilId, setPerfilId] = useState<string>("")
   const [acao, setAcao] = useState("")
   const [recurso, setRecurso] = useState("")

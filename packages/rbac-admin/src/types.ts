@@ -5,9 +5,20 @@ import type {
   AssignUserProfilePayload,
   TogglePermissionPayload,
 } from "@anpdgovbr/shared-types"
+
+/**
+ * Tipo que representa um perfil de usuário, baseado no DTO PerfilDto.
+ */
 export type Profile = PerfilDto
+
+/**
+ * Tipo que representa uma permissão, contendo apenas as propriedades 'acao', 'recurso' e 'permitido' do DTO PermissaoDto.
+ */
 export type Permission = Pick<PermissaoDto, "acao" | "recurso" | "permitido">
 
+/**
+ * Tipo que define os endpoints da API de administração RBAC.
+ */
 export type AdminEndpoints = {
   profiles: string
   createProfile: string
@@ -18,6 +29,9 @@ export type AdminEndpoints = {
   patchUser: (userId: string) => string
 }
 
+/**
+ * Tipo que define a configuração para o cliente de administração RBAC.
+ */
 export type AdminClientConfig = {
   baseUrl?: string
   endpoints?: Partial<AdminEndpoints>
@@ -25,6 +39,9 @@ export type AdminClientConfig = {
   headers?: Record<string, string>
 }
 
+/**
+ * Tipo que define a interface do cliente de administração RBAC, com métodos para gerenciar perfis, permissões e usuários.
+ */
 export type AdminClient = {
   listProfiles(): Promise<Profile[]>
   createProfile(data: { nome: string }): Promise<{ ok: boolean; profile: Profile }>
@@ -40,6 +57,11 @@ export type AdminClient = {
   assignUserProfile(userId: string, perfilId: number | null): Promise<{ ok: boolean }>
 }
 
+/**
+ * Cria uma instância do cliente de administração RBAC com base na configuração fornecida.
+ * @param cfg - Configuração opcional para o cliente, incluindo URL base, endpoints personalizados, implementação de fetch e cabeçalhos.
+ * @returns Uma instância do AdminClient com métodos para interagir com a API RBAC.
+ */
 export function createRbacAdminClient(cfg: AdminClientConfig = {}): AdminClient {
   const baseUrl = cfg.baseUrl ?? ""
   const endpoints: AdminEndpoints = {

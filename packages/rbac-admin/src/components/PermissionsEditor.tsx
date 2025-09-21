@@ -1,15 +1,15 @@
 "use client"
 import React, { useEffect, useState } from "react"
-import type { AdminClient, Permission } from "../types"
-import { useI18n } from "../i18n"
+import type { AdminClient, Permission } from "../types.js"
+import { useI18n } from "../i18n.js"
 
 export function PermissionsEditor({
   client,
   profileIdOrName,
-}: {
+}: Readonly<{
   client: AdminClient
   profileIdOrName: string | number
-}): React.ReactElement {
+}>): React.ReactElement {
   const [items, setItems] = useState<Permission[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -66,8 +66,8 @@ export function PermissionsEditor({
           </tr>
         </thead>
         <tbody>
-          {items.map((it, idx) => (
-            <tr key={idx}>
+          {items.map((it) => (
+            <tr key={`${it.acao}:${it.recurso}`}>
               <td>{it.acao}</td>
               <td>{it.recurso}</td>
               <td>
