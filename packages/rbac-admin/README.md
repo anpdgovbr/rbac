@@ -228,7 +228,7 @@ Como este pacote está em desenvolvimento, contribuições são especialmente be
 
 ## 📄 Licença
 
-MIT © 2024 ANPD (Autoridade Nacional de Proteção de Dados)
+MIT © 2024 ANPD (Agência Nacional de Proteção de Dados)
 
 ---
 
