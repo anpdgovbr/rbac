@@ -303,6 +303,7 @@ const tenantProvider = createPrismaPermissionsProvider({
 
 **Status**: Produção Beta | **Última Atualização**: Setembro 2025  
 **Desenvolvido por**: Divisão de Desenvolvimento e Sustentação de Sistemas (DDSS/CGTI/ANPD)
+
 # 🏛️ Arquitetura RBAC ANPD
 
 Nota: Esta visão geral permanece válida; para status de features concluídas e backlog por pacote, consulte também `docs/README.md` (consolidação de DONE/TODO).

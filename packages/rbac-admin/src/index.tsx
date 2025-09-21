@@ -67,7 +67,9 @@ function ShellContent({
             <UsersList client={client} availableProfiles={profiles} />
           ) : selected ? (
             <div className="rbac-admin-stack">
-              <h3>{t.labels.selectedProfile}: {selected.nome}</h3>
+              <h3>
+                {t.labels.selectedProfile}: {selected.nome}
+              </h3>
               <PermissionsEditor
                 client={client}
                 profileIdOrName={selected.id ?? selected.nome}
@@ -96,7 +98,11 @@ function ShellContent({
   )
 }
 
-export function RbacAdminShell({ config, i18n, className }: RbacAdminShellProps): React.ReactElement {
+export function RbacAdminShell({
+  config,
+  i18n,
+  className,
+}: RbacAdminShellProps): React.ReactElement {
   const client = useMemo(() => createRbacAdminClient(config), [config])
   return (
     <I18nProvider overrides={i18n}>

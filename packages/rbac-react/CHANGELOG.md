@@ -13,6 +13,7 @@
 ## 0.1.0-beta.1
 
 - Versão beta inicial com hooks e HOC.
+
 ## 0.2.1
 
 - Bump patch; sem mudanças de API.

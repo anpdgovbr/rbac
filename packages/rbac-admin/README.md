@@ -69,9 +69,7 @@ npm install @anpdgovbr/rbac-core @anpdgovbr/rbac-react
 import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
 
 function AdminPage() {
-  return (
-    <RbacAdminShell config={{ baseUrl: "/api" }} i18n={{ locale: "pt-BR" }} />
-  )
+  return <RbacAdminShell config={{ baseUrl: "/api" }} i18n={{ locale: "pt-BR" }} />
 }
 ```
 
@@ -127,7 +125,7 @@ function CustomAdminPage() {
 ```tsx
 import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
 
-<RbacAdminShell
+;<RbacAdminShell
   config={{ baseUrl: "/api" }}
   i18n={{ locale: "en", title: "Access Control" }}
 />

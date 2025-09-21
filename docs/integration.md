@@ -79,7 +79,7 @@ import type { NextRequest } from "next/server"
 export const nextAuthResolver: IdentityResolver<NextRequest> = {
   async resolve() {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.email) throw new Error('Não autenticado')
+    if (!session?.user?.email) throw new Error("Não autenticado")
     return { id: session.user.id, email: session.user.email }
   },
 }
@@ -145,23 +145,27 @@ export const GET = withApiForId<{ id: string }>(
 Use `checkPermission` e trate `UnauthenticatedError` / `ForbiddenError` com redirects:
 
 ```tsx
-import { redirect } from 'next/navigation'
-import { checkPermission, UnauthenticatedError, ForbiddenError } from '@anpdgovbr/rbac-next'
-import { nextAuthResolver, cachedProvider } from '@/rbac/server'
+import { redirect } from "next/navigation"
+import {
+  checkPermission,
+  UnauthenticatedError,
+  ForbiddenError,
+} from "@anpdgovbr/rbac-next"
+import { nextAuthResolver, cachedProvider } from "@/rbac/server"
 
 export default async function Page() {
   try {
     await checkPermission({
       getIdentity: nextAuthResolver,
       provider: cachedProvider,
-      permissao: { acao: 'Exibir', recurso: 'Permissoes' }
+      permissao: { acao: "Exibir", recurso: "Permissoes" },
     })
   } catch (err) {
-    if (err instanceof UnauthenticatedError) return redirect('/login')
-    if (err instanceof ForbiddenError) return redirect('/acesso-negado')
+    if (err instanceof UnauthenticatedError) return redirect("/login")
+    if (err instanceof ForbiddenError) return redirect("/acesso-negado")
     throw err
   }
-  const ClientShell = (await import('./ClientShell')).default
+  const ClientShell = (await import("./ClientShell")).default
   return <ClientShell />
 }
 ```

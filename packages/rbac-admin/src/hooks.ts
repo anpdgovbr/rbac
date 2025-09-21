@@ -28,7 +28,10 @@ export function useAdminProfiles(client: AdminClient) {
   return { profiles, loading, error, refresh }
 }
 
-export function useAdminPermissions(client: AdminClient, profileIdOrName?: string | number) {
+export function useAdminPermissions(
+  client: AdminClient,
+  profileIdOrName?: string | number
+) {
   const [items, setItems] = useState<Permission[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -53,4 +56,3 @@ export function useAdminPermissions(client: AdminClient, profileIdOrName?: strin
 
   return { permissions: items, loading, error, refresh }
 }
-

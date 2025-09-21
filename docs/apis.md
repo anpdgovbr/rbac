@@ -152,7 +152,7 @@ interface IdentityResolver<TRequest = unknown> {
 const nextAuthResolver: IdentityResolver<NextRequest> = {
   async resolve() {
     const session = await getServerSession()
-    if (!session?.user?.email) throw new Error('Não autenticado')
+    if (!session?.user?.email) throw new Error("Não autenticado")
     return { id: session.user.id, email: session.user.email }
   },
 }

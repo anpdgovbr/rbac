@@ -47,7 +47,8 @@ export function UsersList({
   }
 
   if (loading) return <div className="rbac-muted">{t.states.loading}</div>
-  if (error) return <div style={{ color: "red" }}>{`${t.states.errorPrefix}: ${error}`}</div>
+  if (error)
+    return <div style={{ color: "red" }}>{`${t.states.errorPrefix}: ${error}`}</div>
 
   return (
     <div>

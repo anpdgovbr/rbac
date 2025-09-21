@@ -37,7 +37,7 @@
     "react": ">=19"
   },
   "dependencies": {
-    "@anpdgovbr/shared-types": "^0.1.6-beta-0"
+    "@anpdgovbr/shared-types": "^0.2.0-beta-0"
   },
   "devDependencies": {
     "typescript": "^5.9.2",

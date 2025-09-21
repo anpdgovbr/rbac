@@ -10,9 +10,9 @@ Esta página consolida o status dos pacotes do monorepo em uma única lista, sep
   - Tipos e utilitários principais: `PermissionsMap` (mapa aninhado), `pode`, `hasAny`, `toPermissionsMap`, `toFlatKeyMap` (legado).
   - Testes unitários básicos cobrindo conversões e verificações.
 - TODO (prioridade):
-  1) Finalizar TSDoc e exemplos aprofundados de uso.
-  2) Helpers para composição de regras (predicados/utilitários).
-  3) Micro-benchmarks e micro-otimizações.
+  1. Finalizar TSDoc e exemplos aprofundados de uso.
+  2. Helpers para composição de regras (predicados/utilitários).
+  3. Micro-benchmarks e micro-otimizações.
 
 ### @anpdgovbr/rbac-provider
 
@@ -20,8 +20,8 @@ Esta página consolida o status dos pacotes do monorepo em uma única lista, sep
   - Interfaces `PermissionsProvider` e `IdentityResolver`.
   - Decorator de cache: `withTTLCache(provider, ttlMs)` com invalidação seletiva/global.
 - TODO (prioridade):
-  1) Invalidação refinada (por grupos/eventos) e métricas de cache (hits/misses).
-  2) Guia prático de resolvers (NextAuth, JWT, Headers) na documentação principal.
+  1. Invalidação refinada (por grupos/eventos) e métricas de cache (hits/misses).
+  2. Guia prático de resolvers (NextAuth, JWT, Headers) na documentação principal.
 
 ### @anpdgovbr/rbac-prisma
 
@@ -30,9 +30,9 @@ Esta página consolida o status dos pacotes do monorepo em uma única lista, sep
   - Parametrização de tabelas (`perfil`, `permissao`, `perfilHeranca`, `user`) e `identityField` (email/id).
   - Testes unitários com mocks de hierarquia/consulta.
 - TODO (prioridade):
-  1) Opções avançadas de performance (SP/view materializada) e índices recomendados.
-  2) Instrumentação (tempo de consulta, cache warm-up) e recomendações operacionais.
-  3) Seeds/migrações de referência (dev) para adoção rápida.
+  1. Opções avançadas de performance (SP/view materializada) e índices recomendados.
+  2. Instrumentação (tempo de consulta, cache warm-up) e recomendações operacionais.
+  3. Seeds/migrações de referência (dev) para adoção rápida.
 
 ### @anpdgovbr/rbac-next
 
@@ -40,9 +40,9 @@ Esta página consolida o status dos pacotes do monorepo em uma única lista, sep
   - Wrappers `withApi`/`withApiForId`, `checkPermission`, `protectPage`, e integração de auditoria via callback.
   - Testes de `checkPermission` e `protectPage`; exemplos no README do pacote.
 - TODO (prioridade):
-  1) Utilitários opcionais para padrões de middleware/params (se decidido manter no pacote).
-  2) Exemplos avançados (rotas aninhadas/params compostos).
-  3) Tipos utilitários para parâmetros derivados de rotas complexas.
+  1. Utilitários opcionais para padrões de middleware/params (se decidido manter no pacote).
+  2. Exemplos avançados (rotas aninhadas/params compostos).
+  3. Tipos utilitários para parâmetros derivados de rotas complexas.
 
 ### @anpdgovbr/rbac-react
 
@@ -50,8 +50,8 @@ Esta página consolida o status dos pacotes do monorepo em uma única lista, sep
   - `PermissionsProvider`, hooks `usePermissions`/`usePode`, HOC `withPermissao`; integração com SWR.
   - Exemplos de uso e padrões de UX básicos.
 - TODO (prioridade):
-  1) Exemplos/documentação de SSR + hidratação em Next.
-  2) Componentes utilitários (Guard/Placeholder) e padrões de loading/erro.
+  1. Exemplos/documentação de SSR + hidratação em Next.
+  2. Componentes utilitários (Guard/Placeholder) e padrões de loading/erro.
 
 ### @anpdgovbr/rbac-admin
 
@@ -59,11 +59,11 @@ Esta página consolida o status dos pacotes do monorepo em uma única lista, sep
   - Admin client configurável; `ProfilesList`, `PermissionsEditor`, `UsersList`; formulários de criação; hooks `useAdminProfiles`/`useAdminPermissions`.
   - Tokens de texto (i18n básico) com sobrescrita opcional. Estilização delegada ao app consumidor.
 - TODO (prioridade):
-  1) Grid acessível, paginação e filtros por ação/recurso.
-  2) Ações em lote (habilitar/desabilitar múltiplas permissões).
-  3) Integração de auditoria: callbacks de change logging.
-  4) Modo somente leitura e confirmações adicionais.
-  5) Documentar personalização (tokens e integração com tema do app).
+  1. Grid acessível, paginação e filtros por ação/recurso.
+  2. Ações em lote (habilitar/desabilitar múltiplas permissões).
+  3. Integração de auditoria: callbacks de change logging.
+  4. Modo somente leitura e confirmações adicionais.
+  5. Documentar personalização (tokens e integração com tema do app).
 
 ### Monorepo/Infra
 
@@ -71,8 +71,8 @@ Esta página consolida o status dos pacotes do monorepo em uma única lista, sep
   - Configuração de workspace, scripts de build/test/typecheck e CI (ESLint, format, build, tests).
   - Exemplos `examples/next-api` e `examples/react` (básicos).
 - TODO (prioridade):
-  1) Publicação por pacote (versionamento semântico e notas de release).
-  2) Guia de migração consolidado (quando necessário) e observabilidade básica.
+  1. Publicação por pacote (versionamento semântico e notas de release).
+  2. Guia de migração consolidado (quando necessário) e observabilidade básica.
 
 ---
 

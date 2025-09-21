@@ -19,6 +19,7 @@
 ## 0.0.1-beta.1
 
 - Ajustes de build/tsconfig e metadados npm.
+
 ## 0.2.1-beta.0
 
 - Bump patch beta; tokens de texto (i18n), remoção de ThemeProvider interno e hooks internos adicionados.
