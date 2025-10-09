@@ -37,6 +37,25 @@ fi
 if ! npm whoami >/dev/null 2>&1; then
   log "Você não está logado no npm. Abrindo login via web para 2FA..."
   # Isto vai pausar para você autenticar no navegador (o mesmo comportamento do seu primeiro publish)
+  # Detecta WSL / macOS / Linux e define BROWSER automaticamente (zsh/WSL friendly)
+  if grep -qi microsoft /proc/version 2>/dev/null || [ -n "${WSL_INTEROP-}" ]; then
+    # Estamos em WSL
+    if command -v wslview >/dev/null 2>&1; then
+      BROWSER="${BROWSER:-wslview}"
+    else
+      # Fallback para abrir pelo Windows se wslview não estiver instalado
+      BROWSER="${BROWSER:-cmd.exe /C start ""}"
+    fi
+  elif command -v xdg-open >/dev/null 2>&1; then
+    BROWSER="${BROWSER:-xdg-open}"
+  elif command -v open >/dev/null 2>&1; then
+    # macOS
+    BROWSER="${BROWSER:-open}"
+  else
+    # último recurso: tente abrir com PowerShell/Windows start
+    BROWSER="${BROWSER:-cmd.exe /C start ""}"
+  fi
+  export BROWSER
   npm login --auth-type=web
   log "Login concluído."
 else
