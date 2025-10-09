@@ -33,7 +33,7 @@
     "ncu:update": "ncu -u"
   },
   "dependencies": {
-    "@anpdgovbr/rbac-core": "^0.1.2"
+    "@anpdgovbr/rbac-core": "^0.1.3"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

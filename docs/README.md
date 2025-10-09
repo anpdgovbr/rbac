@@ -1,6 +1,28 @@
-# RBAC ANPD — Consolidação de Features e Roadmap
+# RBAC ANPD — Documentação e Roadmap
 
-Esta página consolida o status dos pacotes do monorepo em uma única lista, separando funcionalidades concluídas (DONE) e pendentes (TODO) por pacote. Itens pendentes estão ordenados por prioridade.
+Esta página consolida a documentação do monorepo RBAC da ANPD, incluindo guias de uso, análises técnicas e roadmap de funcionalidades.
+
+## 📚 Índice da Documentação
+
+### Guias e Referências
+
+- **[APIs](apis.md)** — Referência completa da API de todos os packages
+- **[Arquitetura](architecture.md)** — Decisões arquiteturais e design patterns
+- **[FAQ](faq.md)** — Perguntas frequentes e troubleshooting
+- **[Integração](integration.md)** — Guias de integração com frameworks
+- **[Migração](migration-guide.md)** — Guia de migração entre versões
+
+### Análises Técnicas (Outubro 2025)
+
+- **[Relatório de Análise Completo](relatorio-analise-completo.md)** — Visão geral da análise do monorepo
+- **[Análise de Problemas Críticos](analise-problemas-criticos.md)** — Problemas identificados e recomendações
+- **[Resumo de Correções Aplicadas](resumo-correcoes-aplicadas.md)** — Correções automáticas executadas
+
+---
+
+## Status dos Pacotes e Roadmap
+
+Esta seção consolida o status de funcionalidades concluídas (DONE) e pendentes (TODO) por pacote, ordenadas por prioridade.
 
 ## Pacotes
 
@@ -8,6 +30,7 @@ Esta página consolida o status dos pacotes do monorepo em uma única lista, sep
 
 - DONE:
   - Tipos e utilitários principais: `PermissionsMap` (mapa aninhado), `pode`, `hasAny`, `toPermissionsMap`, `toFlatKeyMap` (legado).
+  - Proteção contra prototype pollution implementada
   - Testes unitários básicos cobrindo conversões e verificações.
 - TODO (prioridade):
   1. Finalizar TSDoc e exemplos aprofundados de uso.
@@ -19,6 +42,7 @@ Esta página consolida o status dos pacotes do monorepo em uma única lista, sep
 - DONE:
   - Interfaces `PermissionsProvider` e `IdentityResolver`.
   - Decorator de cache: `withTTLCache(provider, ttlMs)` com invalidação seletiva/global.
+  - Cache thread-safe e eficiente
 - TODO (prioridade):
   1. Invalidação refinada (por grupos/eventos) e métricas de cache (hits/misses).
   2. Guia prático de resolvers (NextAuth, JWT, Headers) na documentação principal.

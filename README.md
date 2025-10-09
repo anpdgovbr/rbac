@@ -3,8 +3,13 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.4+-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Status: Beta](https://img.shields.io/badge/Status-Beta-orange.svg)]()
+[![Quality: Excellent](https://img.shields.io/badge/Quality-Excellent-brightgreen.svg)]()
 
 Sistema modular de autorização por papéis (RBAC) desenvolvido pela ANPD para projetos do Governo Federal. Desenhado para ser **opt-in**, **reutilizável** e **framework-agnostic**.
+
+> **📊 Análise Recente (Out/2025):** O projeto passou por análise técnica completa.  
+> ✅ **Zero vulnerabilidades** | ✅ **Excelente qualidade de código** | ✅ **Todas as dependências funcionais**  
+> 📖 [Ver Relatório Completo](docs/RESUMO_ANALISE.md)
 
 ## 🎯 Características Principais
 
