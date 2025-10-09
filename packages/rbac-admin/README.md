@@ -124,7 +124,6 @@ function CustomAdminPage() {
 
 ```tsx
 import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
-
 ;<RbacAdminShell
   config={{ baseUrl: "/api" }}
   i18n={{ locale: "en", title: "Access Control" }}

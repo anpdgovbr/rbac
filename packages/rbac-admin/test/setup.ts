@@ -8,7 +8,9 @@ if (typeof globalThis.window === "undefined") {
   // Mock mais completo do HTMLElement
   class MockHTMLElement {
     setAttribute(_name: string, _value: string) {}
-    getAttribute(_name: string) { return null }
+    getAttribute(_name: string) {
+      return null
+    }
     addEventListener() {}
     removeEventListener() {}
     appendChild() {}
@@ -25,14 +27,18 @@ if (typeof globalThis.window === "undefined") {
     }
     addEventListener() {}
     removeEventListener() {}
-    querySelector() { return null }
-    querySelectorAll() { return [] }
+    querySelector() {
+      return null
+    }
+    querySelectorAll() {
+      return []
+    }
     body = new MockHTMLElement()
     head = new MockHTMLElement()
   }
 
   const mockDocument = new MockDocument()
-  
+
   ;(globalThis as unknown as { window: unknown }).window = {
     addEventListener: () => {},
     removeEventListener: () => {},

@@ -4,9 +4,9 @@ import { RbacAdminShell, createRbacAdminClient } from "../src/index.js"
 
 test("createRbacAdminClient should create a client instance", () => {
   const client = createRbacAdminClient({
-    fetchImpl: () => Promise.resolve(new Response("[]"))
+    fetchImpl: () => Promise.resolve(new Response("[]")),
   })
-  
+
   assert.ok(typeof client.listProfiles === "function")
   assert.ok(typeof client.createProfile === "function")
   assert.ok(typeof client.listPermissions === "function")
