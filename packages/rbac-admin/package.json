@@ -26,8 +26,8 @@
     "tag": "beta"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc --build",
+    "typecheck": "tsc --build --noEmit",
     "test": "node --require ./dist/test/setup.js --test dist/test/*.test.js",
     "ncu": "ncu",
     "ncu:check": "ncu",
