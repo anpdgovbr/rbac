@@ -35,80 +35,117 @@ function ShellContent({
 
   const [selected, setSelected] = useState<Profile | null>(null)
   const [profiles, setProfiles] = useState<Profile[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<Error | null>(null)
   const [tab, setTab] = useState<"perfis" | "usuarios" | "permissoes">("perfis")
 
   useEffect(() => {
+    setLoading(true)
+    setError(null)
+
     client
       .listProfiles()
-      .then(setProfiles)
-      .catch(() => setProfiles([])) // TODO: melhorar error handling
+      .then((data) => {
+        setProfiles(data)
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.error("Falha ao carregar perfis:", err)
+        setError(err instanceof Error ? err : new Error(String(err)))
+        setProfiles([])
+        setLoading(false)
+      })
   }, [client])
 
   return (
     <div className={className} data-rbac-admin-root="">
-      <div className="rbac-admin-grid">
-        <div className="rbac-admin-sidebar">
-          <h1>{t.title}</h1>
+      {loading ? (
+        <div className="rbac-admin-loading">
+          <p>{t.states.loading}</p>
+        </div>
+      ) : error ? (
+        <div className="rbac-admin-error">
+          <h3>{t.states.error}</h3>
+          <p>{error.message}</p>
+          <button
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                // eslint-disable-next-line no-undef -- window é global do browser, checado para SSR
+                window.location.reload()
+              }
+            }}
+          >
+            {t.states.retry}
+          </button>
+        </div>
+      ) : (
+        <div className="rbac-admin-grid">
+          <div className="rbac-admin-sidebar">
+            <h1>{t.title}</h1>
 
-          <div className="rbac-admin-tabs">
-            <button onClick={() => setTab("perfis")} disabled={tab === "perfis"}>
-              {t.tabs.profiles}
-            </button>
-            <button onClick={() => setTab("usuarios")} disabled={tab === "usuarios"}>
-              {t.tabs.users}
-            </button>
-            <button onClick={() => setTab("permissoes")} disabled={tab === "permissoes"}>
-              {t.tabs.permissions}
-            </button>
+            <div className="rbac-admin-tabs">
+              <button onClick={() => setTab("perfis")} disabled={tab === "perfis"}>
+                {t.tabs.profiles}
+              </button>
+              <button onClick={() => setTab("usuarios")} disabled={tab === "usuarios"}>
+                {t.tabs.users}
+              </button>
+              <button
+                onClick={() => setTab("permissoes")}
+                disabled={tab === "permissoes"}
+              >
+                {t.tabs.permissions}
+              </button>
+            </div>
+
+            <ProfilesList
+              client={client}
+              onSelect={(p: Profile) => {
+                setSelected(p)
+                setTab("permissoes")
+              }}
+            />
           </div>
 
-          <ProfilesList
-            client={client}
-            onSelect={(p: Profile) => {
-              setSelected(p)
-              setTab("permissoes")
-            }}
-          />
-        </div>
-
-        <div className="rbac-admin-content">
-          {(() => {
-            if (tab === "usuarios") {
-              return <UsersList client={client} availableProfiles={profiles} />
-            } else if (selected) {
-              return (
-                <div className="rbac-admin-stack">
-                  <h3>
-                    {t.labels.selectedProfile}: {selected.nome}
-                  </h3>
-                  <PermissionsEditor
-                    client={client}
-                    profileIdOrName={selected.id ?? selected.nome}
-                  />
-                  <div>
-                    <h4>{t.actions.createPermission}</h4>
-                    <CreatePermissionForm
+          <div className="rbac-admin-content">
+            {(() => {
+              if (tab === "usuarios") {
+                return <UsersList client={client} availableProfiles={profiles} />
+              } else if (selected) {
+                return (
+                  <div className="rbac-admin-stack">
+                    <h3>
+                      {t.labels.selectedProfile}: {selected.nome}
+                    </h3>
+                    <PermissionsEditor
                       client={client}
-                      profiles={profiles}
-                      onCreated={() => {}}
+                      profileIdOrName={selected.id ?? selected.nome}
                     />
+                    <div>
+                      <h4>{t.actions.createPermission}</h4>
+                      <CreatePermissionForm
+                        client={client}
+                        profiles={profiles}
+                        onCreated={() => {}}
+                      />
+                    </div>
                   </div>
-                </div>
-              )
-            } else {
-              return (
-                <div className="rbac-admin-stack">
-                  <div>{t.hints.selectProfile}</div>
-                  <div>
-                    <h4>{t.actions.createProfile}</h4>
-                    <CreateProfileForm client={client} onCreated={() => {}} />
+                )
+              } else {
+                return (
+                  <div className="rbac-admin-stack">
+                    <div>{t.hints.selectProfile}</div>
+                    <div>
+                      <h4>{t.actions.createProfile}</h4>
+                      <CreateProfileForm client={client} onCreated={() => {}} />
+                    </div>
                   </div>
-                </div>
-              )
-            }
-          })()}
+                )
+              }
+            })()}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

@@ -10,7 +10,7 @@ export type Messages = {
   tabs: { profiles: string; users: string; permissions: string }
   labels: { selectedProfile: string }
   actions: { createProfile: string; createPermission: string; create: string }
-  states: { loading: string; errorPrefix: string }
+  states: { loading: string; errorPrefix: string; error: string; retry: string }
   hints: { selectProfile: string }
   tables: {
     action: string
@@ -35,7 +35,12 @@ const PT_BR: Messages = {
     createPermission: "Criar permissão",
     create: "Criar",
   },
-  states: { loading: "Carregando...", errorPrefix: "Erro" },
+  states: {
+    loading: "Carregando...",
+    errorPrefix: "Erro",
+    error: "Erro ao carregar dados",
+    retry: "Tentar novamente",
+  },
   hints: { selectProfile: "Selecione um perfil à esquerda" },
   tables: {
     action: "Ação",
@@ -60,7 +65,12 @@ const EN_US: Messages = {
     createPermission: "Create permission",
     create: "Create",
   },
-  states: { loading: "Loading...", errorPrefix: "Error" },
+  states: {
+    loading: "Loading...",
+    errorPrefix: "Error",
+    error: "Error loading data",
+    retry: "Retry",
+  },
   hints: { selectProfile: "Select a profile on the left" },
   tables: {
     action: "Action",

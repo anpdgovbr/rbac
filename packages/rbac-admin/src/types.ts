@@ -5,6 +5,31 @@ import type {
   AssignUserProfilePayload,
   TogglePermissionPayload,
 } from "@anpdgovbr/shared-types"
+import { z } from "zod"
+
+// Schemas de validação
+const CreateProfileSchema = z.object({
+  nome: z.string().min(1, "Nome do perfil é obrigatório").max(100, "Nome muito longo"),
+})
+
+const TogglePermissionSchema = z.object({
+  profileIdOrName: z.union([z.string().min(1), z.number().int().positive()]),
+  acao: z.string().min(1, "Ação é obrigatória"),
+  recurso: z.string().min(1, "Recurso é obrigatório"),
+  permitido: z.boolean(),
+})
+
+const CreatePermissionSchema = z.object({
+  perfilId: z.number().int().positive("ID do perfil inválido"),
+  acao: z.string().min(1, "Ação é obrigatória"),
+  recurso: z.string().min(1, "Recurso é obrigatório"),
+  permitido: z.boolean(),
+})
+
+const AssignUserProfileSchema = z.object({
+  userId: z.string().min(1, "ID do usuário é obrigatório"),
+  perfilId: z.number().int().positive("ID do perfil inválido").nullable(),
+})
 
 /**
  * Tipo que representa um perfil de usuário, baseado no DTO PerfilDto.
@@ -86,33 +111,46 @@ export function createRbacAdminClient(cfg: AdminClientConfig = {}): AdminClient 
       return (await r.json()) as Profile[]
     },
     async createProfile(data) {
+      // Validação de input
+      const validated = CreateProfileSchema.parse(data)
       const r = await doFetch(withBase(endpoints.createProfile), {
         method: "POST",
         headers,
-        body: JSON.stringify(data),
+        body: JSON.stringify(validated),
       })
       const profile = await r.json()
       return { ok: r.ok, profile }
     },
     async listPermissions(profileIdOrName) {
+      // Validação básica
+      if (typeof profileIdOrName === "string" && !profileIdOrName.trim()) {
+        throw new Error("ID ou nome do perfil inválido")
+      }
+      if (typeof profileIdOrName === "number" && profileIdOrName <= 0) {
+        throw new Error("ID do perfil deve ser positivo")
+      }
       const path = endpoints.permissions(profileIdOrName)
       const r = await doFetch(withBase(path), { headers })
       if (!r.ok) throw new Error("Falha ao listar permissões")
       return (await r.json()) as Permission[]
     },
     async togglePermission(input) {
+      // Validação de input
+      const validated = TogglePermissionSchema.parse(input)
       const r = await doFetch(withBase(endpoints.toggle), {
         method: "POST",
         headers,
-        body: JSON.stringify(input),
+        body: JSON.stringify(validated),
       })
       return { ok: r.ok }
     },
     async createPermission(payload) {
+      // Validação de input
+      const validated = CreatePermissionSchema.parse(payload)
       const r = await doFetch(withBase(endpoints.createPermission), {
         method: "POST",
         headers,
-        body: JSON.stringify(payload),
+        body: JSON.stringify(validated),
       })
       return { ok: r.ok }
     },
@@ -124,8 +162,10 @@ export function createRbacAdminClient(cfg: AdminClientConfig = {}): AdminClient 
       >
     },
     async assignUserProfile(userId, perfilId) {
-      const payload: AssignUserProfilePayload = { userId, perfilId }
-      const r = await doFetch(withBase(endpoints.patchUser(userId)), {
+      // Validação de input
+      const validated = AssignUserProfileSchema.parse({ userId, perfilId })
+      const payload: AssignUserProfilePayload = validated
+      const r = await doFetch(withBase(endpoints.patchUser(validated.userId)), {
         method: "PATCH",
         headers,
         body: JSON.stringify(payload),
