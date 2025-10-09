@@ -118,6 +118,7 @@ _\* rbac-admin: 1 warning ESLint sobre window não definido (SSR-safe com verifi
 - [ ] **Testes de Integração**: Adicionar testes end-to-end com banco de dados
 - [ ] **CI/CD**: Configurar GitHub Actions para automação de testes e publicação
 - [ ] **Monitoramento**: Configurar tracking de uso e performance em produção
+- [x] **Normalizar script de publicação**: `scripts/publish-rbac.sh` - shebang/CRLF corrigidos (LF) e checado com `bash -n`
 
 ### 📋 **Comandos de Publicação**
 
