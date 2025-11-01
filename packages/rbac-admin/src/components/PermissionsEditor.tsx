@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Editor de permissões RBAC por perfil
+ * @version 0.4.0-beta.0
+ * @author DDSS/CGTI/ANPD
+ * @license MIT
+ */
+
 "use client"
 import React, { useEffect, useState } from "react"
 import Box from "@mui/material/Box"
@@ -15,13 +22,55 @@ import CircularProgress from "@mui/material/CircularProgress"
 import type { AdminClient, Permission } from "../types.js"
 import { useI18n } from "../i18n.js"
 
+/**
+ * Propriedades do componente PermissionsEditor.
+ */
+export interface PermissionsEditorProps {
+  /** Instância do cliente de administração RBAC */
+  client: AdminClient
+  /** ID ou nome do perfil cujas permissões serão editadas */
+  profileIdOrName: string | number
+}
+
+/**
+ * Componente que permite visualizar e editar permissões de um perfil RBAC.
+ *
+ * Exibe uma tabela com todas as permissões do perfil, permitindo ativar/desativar
+ * cada permissão individualmente através de checkboxes.
+ *
+ * **Funcionalidades:**
+ * - Carregamento automático de permissões ao montar ou quando profileIdOrName muda
+ * - Toggle otimista com feedback visual (checkbox disabled durante save)
+ * - Recarregamento automático após cada alteração
+ * - Estados de loading e error com feedback visual
+ *
+ * **Performance:**
+ * - Recarrega todas as permissões após cada toggle (simplificado)
+ * - Para alta performance, considere implementar optimistic updates
+ *
+ * @example
+ * ```tsx
+ * function ProfilePermissions() {
+ *   const client = createRbacAdminClient({ baseUrl: '/api' })
+ *   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null)
+ *
+ *   if (!selectedProfile) {
+ *     return <div>Selecione um perfil</div>
+ *   }
+ *
+ *   return (
+ *     <PermissionsEditor
+ *       client={client}
+ *       profileIdOrName={selectedProfile.id}
+ *     />
+ *   )
+ * }
+ * ```
+ */
 export function PermissionsEditor({
   client,
   profileIdOrName,
-}: Readonly<{
-  client: AdminClient
-  profileIdOrName: string | number
-}>): React.ReactElement {
+}: Readonly<PermissionsEditorProps>): React.ReactElement {
   const [items, setItems] = useState<Permission[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)

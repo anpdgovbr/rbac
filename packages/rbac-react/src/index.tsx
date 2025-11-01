@@ -1,7 +1,7 @@
 /**
  * @fileoverview Hooks e HOCs React para integração client-side do RBAC
  * @version 0.1.0-beta.3
- * @author ANPD/DDSS/CGTI
+ * @author DDSS/CGTI/ANPD
  * @license MIT
  *
  * Este módulo fornece:

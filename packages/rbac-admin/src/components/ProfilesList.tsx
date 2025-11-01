@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Componente de lista de perfis RBAC
+ * @version 0.4.0-beta.0
+ * @author DDSS/CGTI/ANPD
+ * @license MIT
+ */
+
 "use client"
 import React, { useEffect, useState } from "react"
 import Box from "@mui/material/Box"
@@ -13,13 +20,49 @@ import CircularProgress from "@mui/material/CircularProgress"
 import type { AdminClient, Profile } from "../types.js"
 import { useI18n } from "../i18n.js"
 
+/**
+ * Propriedades do componente ProfilesList.
+ */
+export interface ProfilesListProps {
+  /** Instância do cliente de administração RBAC */
+  client: AdminClient
+  /** Callback chamado quando um perfil é selecionado */
+  onSelect: (p: Profile) => void
+}
+
+/**
+ * Componente que exibe uma lista de perfis RBAC disponíveis.
+ *
+ * Carrega automaticamente a lista de perfis do servidor e permite
+ * que o usuário selecione um perfil para visualizar/editar suas permissões.
+ *
+ * **Estados:**
+ * - Loading: Exibe um spinner durante o carregamento
+ * - Error: Exibe mensagem de erro se falhar ao carregar
+ * - Success: Exibe lista clicável de perfis
+ *
+ * @example
+ * ```tsx
+ * function RbacAdmin() {
+ *   const client = createRbacAdminClient({ baseUrl: '/api' })
+ *   const [selected, setSelected] = useState<Profile | null>(null)
+ *
+ *   return (
+ *     <ProfilesList
+ *       client={client}
+ *       onSelect={(profile) => {
+ *         setSelected(profile)
+ *         console.log('Perfil selecionado:', profile.nome)
+ *       }}
+ *     />
+ *   )
+ * }
+ * ```
+ */
 export function ProfilesList({
   client,
   onSelect,
-}: Readonly<{
-  client: AdminClient
-  onSelect: (p: Profile) => void
-}>): React.ReactElement {
+}: Readonly<ProfilesListProps>): React.ReactElement {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)

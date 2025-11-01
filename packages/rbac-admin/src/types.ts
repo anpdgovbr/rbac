@@ -1,3 +1,16 @@
+/**
+ * @fileoverview Tipos e cliente HTTP para administração RBAC
+ * @version 0.4.0-beta.0
+ * @author DDSS/CGTI/ANPD
+ * @license MIT
+ *
+ * Este módulo fornece:
+ * - Tipos TypeScript para entidades RBAC (Profile, Permission, User)
+ * - Cliente HTTP tipado (AdminClient) para APIs RBAC
+ * - Schemas de validação Zod para inputs
+ * - Configuração de endpoints customizáveis
+ */
+
 import type {
   PerfilDto,
   PermissaoDto,

@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Hooks React customizados para gerenciamento de estado RBAC
+ * @version 0.4.0-beta.0
+ * @author DDSS/CGTI/ANPD
+ * @license MIT
+ *
+ * Este módulo fornece:
+ * - useAdminProfiles: Hook para gerenciar lista de perfis
+ * - useAdminPermissions: Hook para gerenciar permissões de um perfil
+ * - Gerenciamento automático de loading, error e refresh
+ */
+
 "use client"
 
 import { useCallback, useEffect, useState } from "react"

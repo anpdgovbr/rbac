@@ -1,3 +1,18 @@
+/**
+ * @fileoverview UI administrativa React para gerenciamento RBAC
+ * @version 0.4.0-beta.0
+ * @author DDSS/CGTI/ANPD
+ * @license MIT
+ *
+ * Este módulo fornece:
+ * - Componente shell completo para administração RBAC (RbacAdminShell)
+ * - Componentes individuais reutilizáveis (ProfilesList, PermissionsEditor, UsersList, etc.)
+ * - Sistema de internacionalização (pt-BR e en-US)
+ * - Hooks para gerenciamento de estado
+ * - Cliente HTTP tipado para APIs RBAC
+ * - Integração com Material-UI v7 e temas customizáveis
+ */
+
 "use client"
 
 import React, { useMemo, useState, useEffect } from "react"
@@ -325,10 +340,16 @@ export function RbacAdminShell({
   )
 }
 
+// Re-exportação de tipos e utilitários
 export * from "./types.js"
-export * from "./components/ProfilesList.js"
-export * from "./components/PermissionsEditor.js"
 export * from "./i18n.js"
 export * from "./hooks.js"
+
+// Re-exportação de componentes
+export * from "./components/ProfilesList.js"
+export * from "./components/PermissionsEditor.js"
+export * from "./components/CreateProfileForm.js"
+export * from "./components/CreatePermissionForm.js"
+export * from "./components/UsersList.js"
 
 export default RbacAdminShell

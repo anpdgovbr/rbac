@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Formulário de criação de perfis RBAC
+ * @version 0.4.0-beta.0
+ * @author ANPD/DDSS/CGTI
+ * @license MIT
+ */
+
 "use client"
 import React, { useState } from "react"
 import Box from "@mui/material/Box"
@@ -8,13 +15,59 @@ import Stack from "@mui/material/Stack"
 import type { AdminClient } from "../types.js"
 import { useI18n } from "../i18n.js"
 
+/**
+ * Propriedades do componente CreateProfileForm.
+ */
+export interface CreateProfileFormProps {
+  /** Instância do cliente de administração RBAC */
+  client: AdminClient
+  /** Callback opcional chamado quando um perfil é criado com sucesso */
+  onCreated?: () => void
+}
+
+/**
+ * Formulário para criação de novos perfis RBAC.
+ *
+ * Fornece uma interface simples com validação de input para criar
+ * novos perfis no sistema de controle de acesso.
+ *
+ * **Funcionalidades:**
+ * - Validação client-side (nome não vazio)
+ * - Estados de loading com botão disabled
+ * - Feedback de sucesso/erro com alerts dismissíveis
+ * - Limpa o formulário após criação bem-sucedida
+ * - Callback opcional para notificar componente pai
+ *
+ * **Validação:**
+ * - Nome é obrigatório (validado via Zod no AdminClient)
+ * - Tamanho máximo: 100 caracteres
+ *
+ * @example
+ * ```tsx
+ * function ProfilesAdmin() {
+ *   const client = createRbacAdminClient({ baseUrl: '/api' })
+ *   const [profiles, setProfiles] = useState<Profile[]>([])
+ *
+ *   return (
+ *     <div>
+ *       <ProfilesList profiles={profiles} />
+ *       <CreateProfileForm
+ *         client={client}
+ *         onCreated={async () => {
+ *           // Recarrega lista de perfis após criar novo
+ *           const updated = await client.listProfiles()
+ *           setProfiles(updated)
+ *         }}
+ *       />
+ *     </div>
+ *   )
+ * }
+ * ```
+ */
 export function CreateProfileForm({
   client,
   onCreated,
-}: Readonly<{
-  client: AdminClient
-  onCreated?: () => void
-}>): React.ReactElement {
+}: Readonly<CreateProfileFormProps>): React.ReactElement {
   const [nome, setNome] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)

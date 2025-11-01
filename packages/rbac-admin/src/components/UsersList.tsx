@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Lista de usuários com atribuição de perfis RBAC
+ * @version 0.4.0-beta.0
+ * @author ANPD/DDSS/CGTI
+ * @license MIT
+ */
+
 "use client"
 
 import React, { useEffect, useState, useCallback } from "react"
@@ -18,20 +25,75 @@ import CircularProgress from "@mui/material/CircularProgress"
 import type { AdminClient, Profile } from "../types.js"
 import { useI18n } from "../i18n.js"
 
+/**
+ * Tipo interno que representa uma linha de usuário na tabela.
+ */
 type UserRow = {
+  /** ID único do usuário */
   id: string
+  /** Email do usuário */
   email: string
+  /** Nome do usuário (opcional) */
   nome?: string | null
+  /** ID do perfil associado ao usuário (opcional) */
   perfilId?: number | null
 }
 
+/**
+ * Propriedades do componente UsersList.
+ */
+export interface UsersListProps {
+  /** Instância do cliente de administração RBAC */
+  client: AdminClient
+  /** Lista de perfis disponíveis para atribuição aos usuários */
+  availableProfiles: Profile[]
+}
+
+/**
+ * Componente que exibe e gerencia a lista de usuários do sistema RBAC.
+ *
+ * Fornece uma tabela interativa onde administradores podem visualizar usuários
+ * e atribuir/remover perfis através de dropdowns inline.
+ *
+ * **Funcionalidades:**
+ * - Carregamento automático da lista de usuários
+ * - Atribuição de perfil via dropdown por usuário
+ * - Opção de remover perfil (selecionar "— sem perfil —")
+ * - Atualização automática após cada alteração
+ * - Estados de loading e error com feedback visual
+ *
+ * **Colunas da tabela:**
+ * - Email: Identificador principal do usuário
+ * - Nome: Nome completo (exibe "—" se não disponível)
+ * - Perfil: Dropdown para selecionar perfil RBAC
+ *
+ * **Performance:**
+ * - Recarrega todos os usuários após cada atribuição
+ * - Para listas grandes, considere paginação ou virtual scrolling
+ *
+ * @example
+ * ```tsx
+ * function UsersAdmin() {
+ *   const client = createRbacAdminClient({ baseUrl: '/api' })
+ *   const [profiles, setProfiles] = useState<Profile[]>([])
+ *
+ *   useEffect(() => {
+ *     client.listProfiles().then(setProfiles)
+ *   }, [])
+ *
+ *   return (
+ *     <UsersList
+ *       client={client}
+ *       availableProfiles={profiles}
+ *     />
+ *   )
+ * }
+ * ```
+ */
 export function UsersList({
   client,
   availableProfiles,
-}: Readonly<{
-  client: AdminClient
-  availableProfiles: Profile[]
-}>): React.ReactElement {
+}: Readonly<UsersListProps>): React.ReactElement {
   const [users, setUsers] = useState<UserRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -89,10 +151,7 @@ export function UsersList({
           </TableHead>
           <TableBody>
             {users.map((u) => (
-              <TableRow
-                key={u.id}
-                sx={{ "&:hover": { backgroundColor: "#fafafa" } }}
-              >
+              <TableRow key={u.id} sx={{ "&:hover": { backgroundColor: "#fafafa" } }}>
                 <TableCell>{u.email}</TableCell>
                 <TableCell>{u.nome ?? "—"}</TableCell>
                 <TableCell>

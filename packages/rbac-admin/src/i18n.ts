@@ -1,3 +1,16 @@
+/**
+ * @fileoverview Sistema de internacionalização (i18n) para RBAC Admin
+ * @version 0.4.0-beta.0
+ * @author DDSS/CGTI/ANPD
+ * @license MIT
+ *
+ * Este módulo fornece:
+ * - Traduções para pt-BR e en-US
+ * - Context provider para injeção de mensagens
+ * - Hook useI18n para consumir mensagens
+ * - Suporte a override parcial de mensagens
+ */
+
 import React, { createContext, useContext, useMemo } from "react"
 
 /**

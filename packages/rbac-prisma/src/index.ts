@@ -1,7 +1,7 @@
 /**
  * @fileoverview Adapter Prisma para RBAC com hierarquia de perfis e resolução de permissões
  * @version 0.1.0-beta.3
- * @author ANPD/DDSS/CGTI
+ * @author DDSS/CGTI/ANPD
  * @license MIT
  *
  * Este módulo fornece:

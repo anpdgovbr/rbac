@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Formulário de criação de permissões RBAC
+ * @version 0.4.0-beta.0
+ * @author ANPD/DDSS/CGTI
+ * @license MIT
+ */
+
 "use client"
 import React, { useState } from "react"
 import Box from "@mui/material/Box"
@@ -15,15 +22,69 @@ import type { TogglePermissionPayload } from "@anpdgovbr/shared-types"
 import type { AdminClient, Profile } from "../types.js"
 import { useI18n } from "../i18n.js"
 
+/**
+ * Propriedades do componente CreatePermissionForm.
+ */
+export interface CreatePermissionFormProps {
+  /** Instância do cliente de administração RBAC */
+  client: AdminClient
+  /** Lista de perfis disponíveis para seleção */
+  profiles: Profile[]
+  /** Callback opcional chamado quando uma permissão é criada com sucesso */
+  onCreated?: () => void
+}
+
+/**
+ * Formulário para criação de novas permissões RBAC.
+ *
+ * Permite criar ou atualizar permissões associadas a um perfil específico.
+ * O formulário inclui seleção de perfil, campos de ação e recurso, e toggle
+ * para permitir/negar a permissão.
+ *
+ * **Funcionalidades:**
+ * - Seleção de perfil via dropdown
+ * - Campos de texto para ação e recurso
+ * - Checkbox para permitir/negar permissão
+ * - Validação client-side (todos os campos obrigatórios)
+ * - Estados de loading e feedback visual
+ * - Limpa campos após criação bem-sucedida (exceto perfil)
+ *
+ * **Validação:**
+ * - Perfil: obrigatório, deve ser ID válido
+ * - Ação: obrigatória, string não vazia
+ * - Recurso: obrigatório, string não vazia
+ * - Permitido: boolean, default = true
+ *
+ * **Nota:** Se a permissão já existir para o perfil, será atualizada.
+ *
+ * @example
+ * ```tsx
+ * function PermissionsAdmin() {
+ *   const client = createRbacAdminClient({ baseUrl: '/api' })
+ *   const [profiles, setProfiles] = useState<Profile[]>([])
+ *
+ *   useEffect(() => {
+ *     client.listProfiles().then(setProfiles)
+ *   }, [])
+ *
+ *   return (
+ *     <CreatePermissionForm
+ *       client={client}
+ *       profiles={profiles}
+ *       onCreated={() => {
+ *         console.log('Permissão criada/atualizada')
+ *         // Opcionalmente recarregar lista de permissões
+ *       }}
+ *     />
+ *   )
+ * }
+ * ```
+ */
 export function CreatePermissionForm({
   client,
   profiles,
   onCreated,
-}: Readonly<{
-  client: AdminClient
-  profiles: Profile[]
-  onCreated?: () => void
-}>): React.ReactElement {
+}: Readonly<CreatePermissionFormProps>): React.ReactElement {
   const [perfilId, setPerfilId] = useState<string>("")
   const [acao, setAcao] = useState("")
   const [recurso, setRecurso] = useState("")
