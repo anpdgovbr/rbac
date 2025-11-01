@@ -25,7 +25,7 @@ require_cmd() {
 }
 
 # 1) Pré-checagens
-require_cmd npm
+require_cmd pnpm
 require_cmd node
 
 if [[ ! -d "$PACKAGES_DIR" ]]; then
@@ -34,7 +34,7 @@ if [[ ! -d "$PACKAGES_DIR" ]]; then
 fi
 
 # 2) Autenticação/2FA (faz login via web se necessário)
-if ! npm whoami >/dev/null 2>&1; then
+if ! pnpm whoami >/dev/null 2>&1; then
   log "Você não está logado no npm. Abrindo login via web para 2FA..."
   # Isto vai pausar para você autenticar no navegador (o mesmo comportamento do seu primeiro publish)
   # Detecta WSL / macOS / Linux e define BROWSER automaticamente (zsh/WSL friendly)
@@ -56,10 +56,10 @@ if ! npm whoami >/dev/null 2>&1; then
     BROWSER="${BROWSER:-cmd.exe /C start ""}"
   fi
   export BROWSER
-  npm login --auth-type=web
+  pnpm login
   log "Login concluído."
 else
-  log "Já autenticado no npm como: $(npm whoami)"
+  log "Já autenticado no npm como: $(pnpm whoami)"
 fi
 
 # 3) Função de publish com tolerância a 'já publicado'
@@ -95,18 +95,18 @@ publish_pkg() {
   log "Publicando $name@$ver  (tag=$tag_for_pkg, access=$ACCESS)"
 
   # build antes de publicar
-  if npm run --silent build >/dev/null 2>&1; then
+  if pnpm run --silent build >/dev/null 2>&1; then
     :
   else
     warn "Build falhou em $name@$ver. Tentando prosseguir mesmo assim."
   fi
 
   # tenta publicar
-  if npm publish --access "$ACCESS" --tag "$tag_for_pkg"; then
+  if pnpm publish --access "$ACCESS" --tag "$tag_for_pkg" --no-git-checks; then
     log "OK: $name@$ver publicado."
   else
     # Se falhar, verifica se a versão já existe; se sim, apenas informa e segue
-    if npm view "$name@$ver" version >/dev/null 2>&1; then
+    if pnpm view "$name@$ver" version >/dev/null 2>&1; then
       warn "Já publicado no registry: $name@$ver. Pulando."
     else
       err "Falha ao publicar $name@$ver."

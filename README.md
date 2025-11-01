@@ -45,19 +45,19 @@ Instale apenas os pacotes necessários para seu projeto:
 
 ```bash
 # Core (obrigatório)
-npm install @anpdgovbr/rbac-core@beta
+pnpm add @anpdgovbr/rbac-core@beta
 
 # Provider contracts e cache
-npm install @anpdgovbr/rbac-provider@beta
+pnpm add @anpdgovbr/rbac-provider@beta
 
 # Para projetos com Prisma
-npm install @anpdgovbr/rbac-prisma@beta
+pnpm add @anpdgovbr/rbac-prisma@beta
 
 # Para APIs Next.js
-npm install @anpdgovbr/rbac-next@beta
+pnpm add @anpdgovbr/rbac-next@beta
 
 # Para componentes React
-npm install @anpdgovbr/rbac-react@beta
+pnpm add @anpdgovbr/rbac-react@beta
 ```
 
 ### Configuração Básica
@@ -184,22 +184,22 @@ git clone https://github.com/anpdgovbr/rbac.git
 cd rbac
 
 # Instale dependências
-npm install
+pnpm install
 
 # Build todos os pacotes
-npm run build
+pnpm run build
 
 # Execute testes
-npm test
+pnpm test
 
 # Verificar atualizações de dependências
-npm run ncu:check
+pnpm run ncu:check
 
 # Atualizar dependências (modo interativo)
-npm run ncu:interactive
+pnpm run ncu:interactive
 
 # Usar script helper
-./ncu-helper.sh interactive
+./scripts/ncu-helper.sh interactive
 ```
 
 ### Gerenciamento de Dependências
@@ -208,16 +208,16 @@ O projeto usa `npm-check-updates` (ncu) para gerenciar atualizações:
 
 ```bash
 # Verificar atualizações em todo o monorepo
-npm run ncu:check
+pnpm run ncu:check
 
 # Atualizar dependências
-npm run ncu:update
+pnpm run ncu:update
 
 # Modo interativo (recomendado)
-npm run ncu:interactive
+pnpm run ncu:interactive
 
 # Script helper com comandos adicionais
-./ncu-helper.sh help
+./scripts/ncu-helper.sh help
 ```
 
 Para detalhes de atualização de dependências, consulte os scripts `ncu:*` definidos em `package.json`.

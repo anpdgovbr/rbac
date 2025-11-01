@@ -23,12 +23,12 @@ echo ""
 
 # Verificar se está logado no npm
 print_info "Verificando login no npm..."
-if ! npm whoami &> /dev/null; then
-    print_error "Você não está logado no npm. Execute 'npm login' primeiro."
+if ! pnpm whoami &> /dev/null; then
+    print_error "Você não está logado no npm. Execute 'pnpm login' primeiro."
     exit 1
 fi
 
-current_user=$(npm whoami)
+current_user=$(pnpm whoami)
 print_success "Logado como: $current_user"
 echo ""
 
@@ -82,7 +82,7 @@ for package_info in "${packages[@]}"; do
   package_name="${package_info%@*}"
   version="${package_info#*@}"
   
-  if npm view "$package_info" version &> /dev/null; then
+  if pnpm view "$package_info" version &> /dev/null; then
     print_success "$package_info existe no registry"
   else
     print_error "$package_info NÃO existe no registry. Publique primeiro!"
@@ -111,7 +111,7 @@ echo ""
 print_info "Promovendo versões para latest..."
 for package_info in "${packages[@]}"; do
   echo -n "📦 Promovendo $package_info para latest... "
-  if npm dist-tag add "$package_info" latest &> /dev/null; then
+  if pnpm dist-tag add "$package_info" latest &> /dev/null; then
     print_success "OK"
   else
     print_error "FALHOU"
@@ -129,7 +129,7 @@ print_info "Verificando tags atuais:"
 echo ""
 for package_name in "${package_names[@]}"; do
   echo -e "${BLUE}📋 Tags para $package_name:${NC}"
-  npm dist-tag ls "$package_name"
+  pnpm dist-tag ls "$package_name"
   echo ""
 done
 

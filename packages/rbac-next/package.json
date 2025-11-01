@@ -27,7 +27,7 @@
   "scripts": {
     "build": "tsc --build",
     "typecheck": "tsc --build --noEmit",
-    "pretest": "npm run build",
+    "pretest": "pnpm run build",
     "test": "node --test dist/test/*.test.js dist/src/test/*.test.js",
     "ncu": "ncu",
     "ncu:check": "ncu",
@@ -37,7 +37,13 @@
     "@anpdgovbr/rbac-core": "^0.1.4",
     "@anpdgovbr/rbac-provider": "^0.1.3"
   },
+  "peerDependencies": {
+    "react": ">=19"
+  },
   "devDependencies": {
+    "@types/node": "^20.19.24",
+    "@types/react": "^18.3.26",
+    "react": "^19.2.0",
     "typescript": "^5.9.3"
   }
 }

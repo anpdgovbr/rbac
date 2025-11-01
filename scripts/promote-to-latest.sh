@@ -52,7 +52,7 @@ fi
 # Promover cada pacote
 for package in "${packages[@]}"; do
   echo "📦 Promovendo $package para latest..."
-  npm dist-tag add "$package" latest
+  pnpm dist-tag add "$package" latest
   echo "✅ $package agora é latest"
   echo ""
 done
@@ -66,6 +66,6 @@ echo ""
 for package_info in "${packages[@]}"; do
   package_name="${package_info%@*}"  # Remove @version da string
   echo "📋 Tags para $package_name:"
-  npm dist-tag ls "$package_name"
+  pnpm dist-tag ls "$package_name"
   echo ""
 done

@@ -17,40 +17,40 @@ echo -e "${BLUE}🔍 RBAC NCU Helper${NC}"
 case "${1:-check}" in
   "check"|"c")
     echo -e "${YELLOW}📋 Verificando atualizações disponíveis...${NC}"
-    npm run ncu:check
+    pnpm run ncu:check
     ;;
     
   "update"|"u")
     echo -e "${GREEN}⬆️  Atualizando todas as dependências (latest)...${NC}"
-    npm run ncu:update
+    pnpm run ncu:update
     echo -e "${BLUE}🔨 Executando build para verificar compatibilidade...${NC}"
-    npm run build
-    echo -e "${GREEN}✅ Atualização concluída! Rode 'npm test' para verificação completa.${NC}"
+    pnpm run build
+    echo -e "${GREEN}✅ Atualização concluída! Rode 'pnpm test' para verificação completa.${NC}"
     ;;
     
   "interactive"|"i")
     echo -e "${YELLOW}🎮 Modo interativo...${NC}"
-    npm run ncu:interactive
+    pnpm run ncu:interactive
     ;;
     
   "deep"|"d")
     echo -e "${YELLOW}🔍 Verificação profunda (dependências transitivas)...${NC}"
-    npm run ncu:deep
+    pnpm run ncu:deep
     ;;
     
   "typescript"|"ts")
     echo -e "${YELLOW}📝 Atualizando apenas TypeScript...${NC}"
     ncu typescript --workspaces -u
-    npm install
-    npm run typecheck
+    pnpm install
+    pnpm run typecheck
     ;;
     
   "safe"|"s")
     echo -e "${GREEN}🛡️ Atualizações seguras (patch only)...${NC}"
     ncu --target patch --workspaces -u
-    npm install
-    npm run build
-    npm run test
+    pnpm install
+    pnpm run build
+    pnpm run test
     ;;
     
   "help"|"h"|*)

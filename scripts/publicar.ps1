@@ -23,17 +23,17 @@ function Warn { param($m); Write-Host $m -ForegroundColor Yellow }
 function Err { param($m); Write-Host $m -ForegroundColor Red; exit 1 }
 
 # checa comandos
-if (-not (Get-Command npm -ErrorAction SilentlyContinue)) { Err "Comando 'npm' não encontrado." }
+if (-not (Get-Command pnpm -ErrorAction SilentlyContinue)) { Err "Comando 'pnpm' não encontrado." }
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) { Err "Comando 'node' não encontrado." }
 
 if (-not (Test-Path $PackagesDir)) { Err "Diretório $PackagesDir não existe. Rode da raiz do monorepo ou ajuste PackagesDir." }
 
 # login npm (web auth) se necessário
 try {
-  npm whoami > $null 2>&1
+  pnpm whoami > $null 2>&1
 } catch {
   Write-Host "Você não está logado no npm. Abrindo login via web para 2FA..."
-  npm login --auth-type=web
+  pnpm login
   Write-Host "Login concluído."
 }
 
@@ -68,19 +68,19 @@ function Publish-Pkg {
   # build (tenta, mas prossegue se falhar)
   $buildOk = $true
   try {
-    npm run --silent build > $null 2>&1
+    pnpm run --silent build > $null 2>&1
   } catch {
     $buildOk = $false
     Warn "Build falhou em $name@$ver. Tentando prosseguir mesmo assim."
   }
 
   # tenta publicar
-  npm publish --access $Access --tag $tagForPkg
+  pnpm publish --access $Access --tag $tagForPkg --no-git-checks
   if ($LASTEXITCODE -eq 0) {
     Write-Host "OK: $name@$ver publicado."
   } else {
     # checa se versão já existe
-    npm view "$name@$ver" version > $null 2>&1
+    pnpm view "$name@$ver" version > $null 2>&1
     if ($LASTEXITCODE -eq 0) {
       Warn "Já publicado no registry: $name@$ver. Pulando."
     } else {

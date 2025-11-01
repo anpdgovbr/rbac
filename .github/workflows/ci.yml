@@ -15,34 +15,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v5
         with:
           node-version: 20
-          cache: "npm"
+          cache: "pnpm"
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: pnpm install --frozen-lockfile
       - name: Run ESLint
-        run: npm run lint
+        run: pnpm run lint
       - name: Check formatting
-        run: npm run format -- --check
+        run: pnpm run format -- --check
 
   build-and-test:
     runs-on: ubuntu-latest
     needs: lint-and-format
     steps:
       - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v5
         with:
           node-version: 20
-          cache: "npm"
+          cache: "pnpm"
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: pnpm install --frozen-lockfile
       - name: Build all packages
-        run: npm run build
+        run: pnpm run build
       - name: Run typecheck
-        run: npm run typecheck
+        run: pnpm run typecheck
       - name: Run all tests
-        run: npm test
+        run: pnpm test
 
   individual-package-tests:
     runs-on: ubuntu-latest
@@ -54,13 +60,16 @@ jobs:
           [rbac-core, rbac-provider, rbac-prisma, rbac-next, rbac-react, rbac-admin]
     steps:
       - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v5
         with:
           node-version: 20
-          cache: "npm"
+          cache: "pnpm"
       - name: Install dependencies
-        run: npm ci --ignore-scripts
+        run: pnpm install --frozen-lockfile
       - name: Build all packages (ensure dependencies are available)
-        run: npm run build
+        run: pnpm run build
       - name: Test ${{ matrix.package }}
-        run: npm run -w @anpdgovbr/${{ matrix.package }} test
+        run: pnpm --filter @anpdgovbr/${{ matrix.package }} test

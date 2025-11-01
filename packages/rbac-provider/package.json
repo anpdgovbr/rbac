@@ -36,6 +36,7 @@
     "@anpdgovbr/rbac-core": "^0.1.4"
   },
   "devDependencies": {
+    "@types/node": "^20.19.24",
     "typescript": "^5.9.3"
   }
 }

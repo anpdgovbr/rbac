@@ -37,6 +37,7 @@
     "@anpdgovbr/rbac-provider": "^0.1.3"
   },
   "devDependencies": {
+    "@types/node": "^20.19.24",
     "typescript": "^5.9.3"
   }
 }

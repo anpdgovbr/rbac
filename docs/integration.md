@@ -23,7 +23,7 @@
 
 ```bash
 # Para projetos que só precisam da lógica de verificação
-npm install @anpdgovbr/rbac-core
+pnpm add @anpdgovbr/rbac-core
 ```
 
 ```typescript
@@ -43,7 +43,7 @@ const canCreate = pode(userPermissions, "Criar", "Usuario") // false
 
 ```bash
 # Instalação completa para projetos Next.js
-npm install @anpdgovbr/rbac-core @anpdgovbr/rbac-provider @anpdgovbr/rbac-prisma @anpdgovbr/rbac-next @anpdgovbr/rbac-react
+pnpm add @anpdgovbr/rbac-core @anpdgovbr/rbac-provider @anpdgovbr/rbac-prisma @anpdgovbr/rbac-next @anpdgovbr/rbac-react
 ```
 
 ---

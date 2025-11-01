@@ -40,7 +40,8 @@
     "swr": ">=2"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
-    "@types/react": "^18.3.26"
+    "@types/node": "^20.19.24",
+    "@types/react": "^18.3.26",
+    "typescript": "^5.9.3"
   }
 }
