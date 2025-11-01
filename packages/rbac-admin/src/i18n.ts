@@ -20,7 +20,7 @@ import React, { createContext, useContext, useMemo } from "react"
 export type Messages = {
   locale: string
   title: string
-  tabs: { profiles: string; users: string; permissions: string }
+  tabs: { profiles: string; users: string; permissions: string; createProfile: string }
   labels: { selectedProfile: string }
   actions: { createProfile: string; createPermission: string; create: string }
   states: { loading: string; errorPrefix: string; error: string; retry: string }
@@ -41,7 +41,12 @@ export type Messages = {
 const PT_BR: Messages = {
   locale: "pt-BR",
   title: "RBAC Admin",
-  tabs: { profiles: "Perfis", users: "Usuários", permissions: "Permissões" },
+  tabs: {
+    profiles: "Perfis",
+    users: "Usuários",
+    permissions: "Permissões",
+    createProfile: "Criar Perfil",
+  },
   labels: { selectedProfile: "Perfil selecionado" },
   actions: {
     createProfile: "Criar perfil",
@@ -71,7 +76,12 @@ const PT_BR: Messages = {
 const EN_US: Messages = {
   locale: "en",
   title: "RBAC Admin",
-  tabs: { profiles: "Profiles", users: "Users", permissions: "Permissions" },
+  tabs: {
+    profiles: "Profiles",
+    users: "Users",
+    permissions: "Permissions",
+    createProfile: "Create Profile",
+  },
   labels: { selectedProfile: "Selected profile" },
   actions: {
     createProfile: "Create profile",

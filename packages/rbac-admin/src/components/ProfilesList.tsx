@@ -28,6 +28,8 @@ export interface ProfilesListProps {
   client: AdminClient
   /** Callback chamado quando um perfil é selecionado */
   onSelect: (p: Profile) => void
+  /** ID do perfil selecionado atualmente (opcional) */
+  selectedProfileId?: number | string | null
 }
 
 /**
@@ -62,6 +64,7 @@ export interface ProfilesListProps {
 export function ProfilesList({
   client,
   onSelect,
+  selectedProfileId,
 }: Readonly<ProfilesListProps>): React.ReactElement {
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState<boolean>(true)
@@ -104,35 +107,46 @@ export function ProfilesList({
 
   return (
     <Box>
-      <Typography variant="h5" gutterBottom sx={{ px: 2, pt: 2, fontWeight: 600 }}>
+      <Typography variant="h6" gutterBottom sx={{ px: 2, pt: 2, fontWeight: 600 }}>
         {t.tabs.profiles}
       </Typography>
       <Paper elevation={1} sx={{ mt: 2 }}>
         <List sx={{ p: 0 }}>
-          {profiles.map((p, index) => (
-            <React.Fragment key={String(p.id)}>
-              {index > 0 && <Divider />}
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => onSelect(p)}
-                  sx={{
-                    py: 1.5,
-                    px: 2,
-                    "&:hover": {
-                      backgroundColor: "action.hover",
-                    },
-                  }}
-                >
-                  <ListItemText
-                    primary={p.nome}
-                    primaryTypographyProps={{
-                      fontWeight: 500,
+          {profiles.map((p, index) => {
+            const isSelected = selectedProfileId != null && p.id === selectedProfileId
+            return (
+              <React.Fragment key={String(p.id)}>
+                {index > 0 && <Divider />}
+                <ListItem disablePadding>
+                  <ListItemButton
+                    onClick={() => onSelect(p)}
+                    selected={isSelected}
+                    sx={{
+                      py: 1.5,
+                      px: 2,
+                      "&:hover": {
+                        backgroundColor: "action.hover",
+                      },
+                      "&.Mui-selected": {
+                        backgroundColor: "primary.light",
+                        color: "primary.contrastText",
+                        "&:hover": {
+                          backgroundColor: "primary.main",
+                        },
+                      },
                     }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            </React.Fragment>
-          ))}
+                  >
+                    <ListItemText
+                      primary={p.nome}
+                      primaryTypographyProps={{
+                        fontWeight: isSelected ? 600 : 500,
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </React.Fragment>
+            )
+          })}
         </List>
       </Paper>
     </Box>

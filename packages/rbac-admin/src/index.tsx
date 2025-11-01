@@ -219,22 +219,36 @@ function ShellContent({
                 ...sx.tabs,
               }}
             >
-              <Tab label={t.tabs.profiles} />
+              <Tab label={t.tabs.createProfile} />
               <Tab label={t.tabs.users} />
               <Tab label={t.tabs.permissions} />
             </Tabs>
 
-            <Box sx={{ p: 3 }}>
-              {tab === 0 && (
-                <Box>
-                  <ProfilesList
-                    client={client}
-                    onSelect={(p: Profile) => {
-                      setSelected(p)
-                      setTab(2)
-                    }}
-                  />
-                  <Divider sx={{ my: 3 }} />
+            <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}>
+              {/* Sidebar com lista de perfis - sempre visível em telas médias+ */}
+              <Box
+                sx={{
+                  width: { xs: "100%", md: 280 },
+                  flexShrink: 0,
+                  borderRight: { md: 1 },
+                  borderColor: { md: "divider" },
+                  p: 2,
+                }}
+              >
+                <ProfilesList
+                  client={client}
+                  selectedProfileId={selected?.id}
+                  onSelect={(p: Profile) => {
+                    setSelected(p)
+                    // Navega para tab de permissões após selecionar
+                    setTab(2)
+                  }}
+                />
+              </Box>
+
+              {/* Conteúdo principal com tabs */}
+              <Box sx={{ flex: 1, p: 3 }}>
+                {tab === 0 && (
                   <Box>
                     <Typography variant="h6" gutterBottom>
                       {t.actions.createProfile}
@@ -246,39 +260,39 @@ function ShellContent({
                       }}
                     />
                   </Box>
-                </Box>
-              )}
+                )}
 
-              {tab === 1 && <UsersList client={client} availableProfiles={profiles} />}
+                {tab === 1 && <UsersList client={client} availableProfiles={profiles} />}
 
-              {tab === 2 && (
-                <Box>
-                  {selected ? (
-                    <Box>
-                      <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                        {t.labels.selectedProfile}: {selected.nome}
-                      </Typography>
-                      <PermissionsEditor
-                        client={client}
-                        profileIdOrName={selected.id ?? selected.nome}
-                      />
-                      <Divider sx={{ my: 3 }} />
+                {tab === 2 && (
+                  <Box>
+                    {selected ? (
                       <Box>
-                        <Typography variant="h6" gutterBottom>
-                          {t.actions.createPermission}
+                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                          {t.labels.selectedProfile}: {selected.nome}
                         </Typography>
-                        <CreatePermissionForm
+                        <PermissionsEditor
                           client={client}
-                          profiles={profiles}
-                          onCreated={() => {}}
+                          profileIdOrName={selected.id ?? selected.nome}
                         />
+                        <Divider sx={{ my: 3 }} />
+                        <Box>
+                          <Typography variant="h6" gutterBottom>
+                            {t.actions.createPermission}
+                          </Typography>
+                          <CreatePermissionForm
+                            client={client}
+                            profiles={profiles}
+                            onCreated={() => {}}
+                          />
+                        </Box>
                       </Box>
-                    </Box>
-                  ) : (
-                    <Alert severity="info">{t.hints.selectProfile}</Alert>
-                  )}
-                </Box>
-              )}
+                    ) : (
+                      <Alert severity="info">{t.hints.selectProfile}</Alert>
+                    )}
+                  </Box>
+                )}
+              </Box>
             </Box>
           </Paper>
         </Box>
