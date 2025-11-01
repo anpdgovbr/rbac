@@ -1,5 +1,17 @@
 "use client"
 import React, { useEffect, useState } from "react"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import Table from "@mui/material/Table"
+import TableBody from "@mui/material/TableBody"
+import TableCell from "@mui/material/TableCell"
+import TableContainer from "@mui/material/TableContainer"
+import TableHead from "@mui/material/TableHead"
+import TableRow from "@mui/material/TableRow"
+import Paper from "@mui/material/Paper"
+import Alert from "@mui/material/Alert"
+import Checkbox from "@mui/material/Checkbox"
+import CircularProgress from "@mui/material/CircularProgress"
 import type { AdminClient, Permission } from "../types.js"
 import { useI18n } from "../i18n.js"
 
@@ -50,38 +62,54 @@ export function PermissionsEditor({
     }
   }
 
-  if (loading) return <div className="rbac-muted">{t.states.loading}</div>
+  if (loading)
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <CircularProgress />
+      </Box>
+    )
   if (error)
-    return <div style={{ color: "red" }}>{`${t.states.errorPrefix}: ${error}`}</div>
+    return (
+      <Alert severity="error">
+        {t.states.errorPrefix}: {error}
+      </Alert>
+    )
 
   return (
-    <div>
-      <h2>{t.tabs.permissions}</h2>
-      <table cellPadding={6} style={{ borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            <th style={{ textAlign: "left" }}>{t.tables.action}</th>
-            <th style={{ textAlign: "left" }}>{t.tables.resource}</th>
-            <th style={{ textAlign: "left" }}>{t.tables.allowed}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((it) => (
-            <tr key={`${it.acao}:${it.recurso}`}>
-              <td>{it.acao}</td>
-              <td>{it.recurso}</td>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={!!it.permitido}
-                  disabled={saving === `${it.acao}:${it.recurso}`}
-                  onChange={(e) => onToggle(it.acao, it.recurso, !!e.target?.checked)}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Box>
+      <Typography variant="h5" gutterBottom sx={{ mb: 3, fontWeight: 600 }}>
+        {t.tabs.permissions}
+      </Typography>
+      <TableContainer component={Paper} elevation={2}>
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell sx={{ fontWeight: 600 }}>{t.tables.action}</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>{t.tables.resource}</TableCell>
+              <TableCell sx={{ fontWeight: 600 }}>{t.tables.allowed}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {items.map((it) => (
+              <TableRow
+                key={`${it.acao}:${it.recurso}`}
+                sx={{ "&:hover": { backgroundColor: "#fafafa" } }}
+              >
+                <TableCell>{it.acao}</TableCell>
+                <TableCell>{it.recurso}</TableCell>
+                <TableCell>
+                  <Checkbox
+                    checked={!!it.permitido}
+                    disabled={saving === `${it.acao}:${it.recurso}`}
+                    onChange={(e) => onToggle(it.acao, it.recurso, e.target.checked)}
+                    color="primary"
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   )
 }

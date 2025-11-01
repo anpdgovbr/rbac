@@ -1,5 +1,10 @@
 "use client"
 import React, { useState } from "react"
+import Box from "@mui/material/Box"
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
+import Alert from "@mui/material/Alert"
+import Stack from "@mui/material/Stack"
 import type { AdminClient } from "../types.js"
 import { useI18n } from "../i18n.js"
 
@@ -36,17 +41,38 @@ export function CreateProfileForm({
   }
 
   return (
-    <form onSubmit={onSubmit} style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <input
-        placeholder={`${t.actions.createProfile}`}
-        value={nome}
-        onChange={(e) => setNome(e.target?.value ?? "")}
-      />
-      <button type="submit" disabled={loading || !nome.trim()}>
-        {t.actions.create}
-      </button>
-      {error && <span style={{ color: "red" }}>{error}</span>}
-      {success && <span style={{ color: "green" }}>{success}</span>}
-    </form>
+    <Box component="form" onSubmit={onSubmit}>
+      <Stack spacing={2}>
+        <TextField
+          placeholder={t.actions.createProfile}
+          label={t.tables.profile}
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+          disabled={loading}
+          fullWidth
+          size="small"
+          variant="outlined"
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={loading || !nome.trim()}
+          fullWidth
+        >
+          {loading ? "Criando..." : t.actions.create}
+        </Button>
+        {error && (
+          <Alert severity="error" onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert severity="success" onClose={() => setSuccess(null)}>
+            {success}
+          </Alert>
+        )}
+      </Stack>
+    </Box>
   )
 }

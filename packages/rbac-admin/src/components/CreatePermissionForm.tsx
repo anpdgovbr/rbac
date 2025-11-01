@@ -1,5 +1,16 @@
 "use client"
 import React, { useState } from "react"
+import Box from "@mui/material/Box"
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
+import Alert from "@mui/material/Alert"
+import Stack from "@mui/material/Stack"
+import MenuItem from "@mui/material/MenuItem"
+import Select from "@mui/material/Select"
+import FormControl from "@mui/material/FormControl"
+import InputLabel from "@mui/material/InputLabel"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import Checkbox from "@mui/material/Checkbox"
 import type { TogglePermissionPayload } from "@anpdgovbr/shared-types"
 import type { AdminClient, Profile } from "../types.js"
 import { useI18n } from "../i18n.js"
@@ -49,41 +60,76 @@ export function CreatePermissionForm({
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}
-    >
-      <select value={perfilId} onChange={(e) => setPerfilId(e.target?.value ?? "")}>
-        <option value="">{t.tables.profile}</option>
-        {profiles.map((p) => (
-          <option key={String(p.id)} value={String(p.id)}>
-            {p.nome}
-          </option>
-        ))}
-      </select>
-      <input
-        placeholder="Ação"
-        value={acao}
-        onChange={(e) => setAcao(e.target?.value ?? "")}
-      />
-      <input
-        placeholder="Recurso"
-        value={recurso}
-        onChange={(e) => setRecurso(e.target?.value ?? "")}
-      />
-      <label style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-        <input
-          type="checkbox"
-          checked={permitido}
-          onChange={(e) => setPermitido(!!e.target?.checked)}
+    <Box component="form" onSubmit={onSubmit}>
+      <Stack spacing={2}>
+        <FormControl fullWidth size="small" required>
+          <InputLabel>{t.tables.profile}</InputLabel>
+          <Select
+            value={perfilId}
+            onChange={(e) => setPerfilId(e.target.value)}
+            label={t.tables.profile}
+            disabled={loading}
+          >
+            <MenuItem value="">
+              <em>Selecione um perfil</em>
+            </MenuItem>
+            {profiles.map((p) => (
+              <MenuItem key={String(p.id)} value={String(p.id)}>
+                {p.nome}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <TextField
+          placeholder="Ação"
+          label={t.tables.action}
+          value={acao}
+          onChange={(e) => setAcao(e.target.value)}
+          disabled={loading}
+          fullWidth
+          size="small"
+          required
         />
-        Permitido
-      </label>
-      <button type="submit" disabled={loading || !perfilId || !acao || !recurso}>
-        {t.actions.create}
-      </button>
-      {error && <span style={{ color: "red" }}>{error}</span>}
-      {success && <span style={{ color: "green" }}>{success}</span>}
-    </form>
+        <TextField
+          placeholder="Recurso"
+          label={t.tables.resource}
+          value={recurso}
+          onChange={(e) => setRecurso(e.target.value)}
+          disabled={loading}
+          fullWidth
+          size="small"
+          required
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={permitido}
+              onChange={(e) => setPermitido(e.target.checked)}
+              disabled={loading}
+            />
+          }
+          label="Permitido"
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={loading || !perfilId || !acao || !recurso}
+          fullWidth
+        >
+          {loading ? "Criando..." : t.actions.create}
+        </Button>
+        {error && (
+          <Alert severity="error" onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert severity="success" onClose={() => setSuccess(null)}>
+            {success}
+          </Alert>
+        )}
+      </Stack>
+    </Box>
   )
 }

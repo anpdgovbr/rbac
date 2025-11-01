@@ -54,11 +54,12 @@ rbac-admin/
 npm install @anpdgovbr/rbac-admin@stable
 ```
 
-**Dependencies Planejadas:**
+**Dependencies:**
 
 ```bash
-npm install react@^18 @mui/material @mui/icons-material
+npm install react@^19 @mui/material
 npm install @anpdgovbr/rbac-core @anpdgovbr/rbac-react
+npm install @anpdgovbr/shared-ui @anpdgovbr/shared-types
 ```
 
 ## 🎯 Uso Previsto
@@ -111,35 +112,54 @@ function CustomAdminPage() {
 
 ## 🎨 Features Planejadas
 
-### ✅ Implementado (Skeleton)
+### ✅ Implementado
 
 - [x] Estrutura base de componentes
 - [x] Types básicos
 - [x] Setup de build
 - [x] Text tokens de i18n (pt-BR/en) via `I18nProvider` com sobrescrita opcional
-- [x] Estilização delegada ao app consumidor (sem ThemeProvider interno)
+- [x] **Interface moderna com Material-UI** — Todos os componentes migrados para MUI
+- [x] **Integração com @anpdgovbr/shared-ui** — Compatível com design system ANPD
+- [x] **Compatibilidade com shared-types ^0.3.1-beta.0** — Types atualizados
 - [x] Hooks `useAdminProfiles` e `useAdminPermissions`
+- [x] **UsersList component** — Lista de usuários com atribuição de perfis (MUI Table + Select)
+- [x] **ProfilesList component** — Lista de perfis para seleção (MUI List)
+- [x] **CreateProfileForm component** — Formulário de criação de perfis (MUI TextField + Button)
+- [x] **CreatePermissionForm component** — Formulário de permissões (MUI Select + Checkbox)
+- [x] **PermissionsEditor component** — Editor de permissões por perfil (MUI Table + Checkbox)
+- [x] **RbacAdminShell** — Shell principal com interface em abas (MUI Tabs + Container)
 
-### I18n e estilização
+### I18n, estilização e UI
+
+O `rbac-admin` agora utiliza **Material-UI (MUI) v7** com **imports individuais** para otimizar o tree shaking e reduzir o tamanho do bundle. A integração com `@anpdgovbr/shared-ui` garante compatibilidade com o design system da ANPD.
 
 ```tsx
 import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
-;<RbacAdminShell
-  config={{ baseUrl: "/api" }}
-  i18n={{ locale: "en", title: "Access Control" }}
-/>
 
-// Estilos: forneça CSS no app hospedeiro
-// Ex.: escopar pelo className recebido e aplicar seu design system
+// Interface completa com tabs para gerenciar Perfis, Usuários e Permissões
+<RbacAdminShell
+  config={{ baseUrl: "/api" }}
+  i18n={{ locale: "pt-BR", title: "Administração RBAC" }}
+/>
+```
+
+**Todos os imports MUI são individuais** para melhor tree shaking:
+```tsx
+// ✅ Correto - imports individuais
+import Button from "@mui/material/Button"
+import TextField from "@mui/material/TextField"
+
+// ❌ Evitado - import agrupado
+import { Button, TextField } from "@mui/material"
 ```
 
 ### 🚧 Em Desenvolvimento
 
-- [ ] UsersList component
-- [ ] CreateUserForm component
-- [ ] ProfilesList component
-- [ ] CreateProfileForm component
-- [ ] PermissionsEditor component
+- [ ] Dashboard com métricas
+- [ ] Gestão de hierarquia de perfis com drag & drop
+- [ ] Auditoria e logs de atividade
+- [ ] Bulk operations para usuários
+- [ ] Export/Import de configurações
 
 ### 📋 Roadmap
 
@@ -214,10 +234,10 @@ Como este pacote está em desenvolvimento, contribuições são especialmente be
 
 ### Discussões em Aberto
 
-- **Design System** — Usar MUI, Ant Design, ou componentes customizados?
 - **State Management** — Context API, Zustand, ou Redux Toolkit?
 - **Data Fetching** — SWR, React Query, ou fetch nativo?
 - **Validação** — Zod, Yup, ou validação customizada?
+- **Hierarquia Visual** — Biblioteca para drag & drop de perfis?
 
 ## 📚 Documentação Relacionada
 

@@ -34,15 +34,20 @@
     "ncu:update": "ncu -u"
   },
   "peerDependencies": {
-    "react": ">=19"
+    "react": ">=19",
+    "@anpdgovbr/shared-ui": ">=0.3.10-beta.0",
+    "@mui/material": ">=7.0.0"
   },
   "dependencies": {
     "@anpdgovbr/shared-types": "^0.3.1-beta.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@anpdgovbr/shared-ui": "^0.3.10-beta.0",
+    "@mui/material": "^7.3.4",
     "@types/node": "^20.19.24",
     "@types/react": "^18.3.26",
+    "react": "^19.2.0",
     "typescript": "^5.9.3"
   }
 }

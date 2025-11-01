@@ -1,5 +1,36 @@
 ## Unreleased
 
+## 0.3.0-beta.0
+
+- **BREAKING CHANGE**: Migração completa para Material-UI v7
+- **Melhoria**: Todos os imports MUI agora são individuais para melhor tree shaking
+- **Melhoria**: Interface moderna com componentes MUI (Table, Select, Button, TextField, etc)
+- **Melhoria**: Navegação por abas no shell principal (Perfis, Usuários, Permissões)
+- **Melhoria**: Feedback visual aprimorado com CircularProgress e Alert do MUI
+- **Melhoria**: Adicionado @anpdgovbr/shared-ui como peer dependency
+- **Correção**: Corrigido erro de tipo em UsersList (String conversion no Select value)
+- **Melhoria**: Layout responsivo com Container, Paper e Stack do MUI
+
+## 0.2.2-beta.0
+
+- **BREAKING CHANGE**: Migração completa para Material-UI (MUI) v7
+- **Nova Dependência**: Adicionado `@anpdgovbr/shared-ui ^0.3.10-beta.0` como peerDependency
+- **Nova Dependência**: Adicionado `@mui/material ^7.3.4` como peerDependency
+- **Atualização**: Compatibilidade com `@anpdgovbr/shared-types ^0.3.1-beta.0`
+- **Melhoria**: Interface completamente redesenhada com componentes MUI
+  - **RbacAdminShell**: Agora usa `Container`, `Tabs`, `Paper` para layout moderno em abas
+  - **UsersList**: Migrado para MUI `Table`, `Select`, `FormControl`, `Alert`, `CircularProgress`
+  - **ProfilesList**: Migrado para MUI `List`, `ListItem`, `ListItemButton`, `Paper`
+  - **PermissionsEditor**: Migrado para MUI `Table`, `Checkbox` com estilização consistente
+  - **CreateProfileForm**: Migrado para MUI `TextField`, `Button`, `Alert`, `Stack`
+  - **CreatePermissionForm**: Migrado para MUI `Select`, `TextField`, `Checkbox`, `FormControl`, `Stack`
+- **Melhoria**: Navegação intuitiva por abas (Perfis, Usuários, Permissões)
+- **Melhoria**: Estados de loading e erro aprimorados com componentes MUI
+- **Melhoria**: Formulários com layout vertical responsivo usando `Stack`
+- **Correção**: Resolvido erro de tipo em `UsersList.tsx` (Select value comparison)
+- **Melhoria**: Experiência de usuário aprimorada com feedback visual consistente
+- **Melhoria**: Acessibilidade melhorada com componentes MUI nativos
+
 ## 0.2.2-beta.0
 
 - **Melhoria**: Adicionada documentação JSDoc completa para todas as funções e componentes

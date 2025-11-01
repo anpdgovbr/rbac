@@ -1,6 +1,16 @@
 "use client"
 
 import React, { useMemo, useState, useEffect } from "react"
+import Box from "@mui/material/Box"
+import Container from "@mui/material/Container"
+import Typography from "@mui/material/Typography"
+import Tabs from "@mui/material/Tabs"
+import Tab from "@mui/material/Tab"
+import Paper from "@mui/material/Paper"
+import CircularProgress from "@mui/material/CircularProgress"
+import Alert from "@mui/material/Alert"
+import Button from "@mui/material/Button"
+import Divider from "@mui/material/Divider"
 import { createRbacAdminClient, type AdminClientConfig, type Profile } from "./types.js"
 import { ProfilesList } from "./components/ProfilesList.js"
 import { UsersList } from "./components/UsersList.js"
@@ -37,7 +47,7 @@ function ShellContent({
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-  const [tab, setTab] = useState<"perfis" | "usuarios" | "permissoes">("perfis")
+  const [tab, setTab] = useState<number>(0)
 
   useEffect(() => {
     setLoading(true)
@@ -58,95 +68,116 @@ function ShellContent({
   }, [client])
 
   return (
-    <div className={className} data-rbac-admin-root="">
+    <Container maxWidth="xl" className={className} sx={{ py: 4 }}>
       {loading ? (
-        <div className="rbac-admin-loading">
-          <p>{t.states.loading}</p>
-        </div>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="400px"
+        >
+          <CircularProgress size={60} />
+        </Box>
       ) : error ? (
-        <div className="rbac-admin-error">
-          <h3>{t.states.error}</h3>
-          <p>{error.message}</p>
-          <button
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                // eslint-disable-next-line no-undef -- window é global do browser, checado para SSR
-                window.location.reload()
-              }
-            }}
-          >
-            {t.states.retry}
-          </button>
-        </div>
-      ) : (
-        <div className="rbac-admin-grid">
-          <div className="rbac-admin-sidebar">
-            <h1>{t.title}</h1>
-
-            <div className="rbac-admin-tabs">
-              <button onClick={() => setTab("perfis")} disabled={tab === "perfis"}>
-                {t.tabs.profiles}
-              </button>
-              <button onClick={() => setTab("usuarios")} disabled={tab === "usuarios"}>
-                {t.tabs.users}
-              </button>
-              <button
-                onClick={() => setTab("permissoes")}
-                disabled={tab === "permissoes"}
-              >
-                {t.tabs.permissions}
-              </button>
-            </div>
-
-            <ProfilesList
-              client={client}
-              onSelect={(p: Profile) => {
-                setSelected(p)
-                setTab("permissoes")
+        <Alert
+          severity="error"
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  // eslint-disable-next-line no-undef -- window é global do browser, checado para SSR
+                  window.location.reload()
+                }
               }}
-            />
-          </div>
+            >
+              {t.states.retry}
+            </Button>
+          }
+        >
+          <strong>{t.states.error}</strong>
+          <br />
+          {error.message}
+        </Alert>
+      ) : (
+        <Box>
+          <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 700 }}>
+            {t.title}
+          </Typography>
 
-          <div className="rbac-admin-content">
-            {(() => {
-              if (tab === "usuarios") {
-                return <UsersList client={client} availableProfiles={profiles} />
-              } else if (selected) {
-                return (
-                  <div className="rbac-admin-stack">
-                    <h3>
-                      {t.labels.selectedProfile}: {selected.nome}
-                    </h3>
-                    <PermissionsEditor
+          <Paper elevation={3} sx={{ mt: 3 }}>
+            <Tabs
+              value={tab}
+              onChange={(_, newValue) => setTab(newValue)}
+              variant="fullWidth"
+              sx={{ borderBottom: 1, borderColor: "divider" }}
+            >
+              <Tab label={t.tabs.profiles} />
+              <Tab label={t.tabs.users} />
+              <Tab label={t.tabs.permissions} />
+            </Tabs>
+
+            <Box sx={{ p: 3 }}>
+              {tab === 0 && (
+                <Box>
+                  <ProfilesList
+                    client={client}
+                    onSelect={(p: Profile) => {
+                      setSelected(p)
+                      setTab(2)
+                    }}
+                  />
+                  <Divider sx={{ my: 3 }} />
+                  <Box>
+                    <Typography variant="h6" gutterBottom>
+                      {t.actions.createProfile}
+                    </Typography>
+                    <CreateProfileForm
                       client={client}
-                      profileIdOrName={selected.id ?? selected.nome}
+                      onCreated={() => {
+                        client.listProfiles().then(setProfiles)
+                      }}
                     />
-                    <div>
-                      <h4>{t.actions.createPermission}</h4>
-                      <CreatePermissionForm
+                  </Box>
+                </Box>
+              )}
+
+              {tab === 1 && <UsersList client={client} availableProfiles={profiles} />}
+
+              {tab === 2 && (
+                <Box>
+                  {selected ? (
+                    <Box>
+                      <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
+                        {t.labels.selectedProfile}: {selected.nome}
+                      </Typography>
+                      <PermissionsEditor
                         client={client}
-                        profiles={profiles}
-                        onCreated={() => {}}
+                        profileIdOrName={selected.id ?? selected.nome}
                       />
-                    </div>
-                  </div>
-                )
-              } else {
-                return (
-                  <div className="rbac-admin-stack">
-                    <div>{t.hints.selectProfile}</div>
-                    <div>
-                      <h4>{t.actions.createProfile}</h4>
-                      <CreateProfileForm client={client} onCreated={() => {}} />
-                    </div>
-                  </div>
-                )
-              }
-            })()}
-          </div>
-        </div>
+                      <Divider sx={{ my: 3 }} />
+                      <Box>
+                        <Typography variant="h6" gutterBottom>
+                          {t.actions.createPermission}
+                        </Typography>
+                        <CreatePermissionForm
+                          client={client}
+                          profiles={profiles}
+                          onCreated={() => {}}
+                        />
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Alert severity="info">{t.hints.selectProfile}</Alert>
+                  )}
+                </Box>
+              )}
+            </Box>
+          </Paper>
+        </Box>
       )}
-    </div>
+    </Container>
   )
 }
 
