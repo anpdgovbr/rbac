@@ -35,6 +35,13 @@
     "ncu:interactive": "ncu --workspaces -i",
     "ncu:deep": "ncu --deep",
     "ncu:root": "ncu -u && pnpm install",
-    "ncu:packages": "pnpm -r --if-present ncu"
+    "ncu:packages": "pnpm -r --if-present ncu",
+    "publish:all": "pnpm -r --filter '!rbac-monorepo' publish --access public",
+    "publish:core": "pnpm --filter @anpdgovbr/rbac-core publish --access public",
+    "publish:provider": "pnpm --filter @anpdgovbr/rbac-provider publish --access public",
+    "publish:prisma": "pnpm --filter @anpdgovbr/rbac-prisma publish --access public",
+    "publish:next": "pnpm --filter @anpdgovbr/rbac-next publish --access public",
+    "publish:react": "pnpm --filter @anpdgovbr/rbac-react publish --access public",
+    "publish:admin": "pnpm --filter @anpdgovbr/rbac-admin publish --access public"
   }
 }
