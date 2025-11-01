@@ -109,7 +109,7 @@ function ShellContent({
 
   // Extrair configurações de estilo com defaults
   const {
-    containerMaxWidth = "lg",
+    containerMaxWidth = "xl",
     containerPadding = 4,
     paperElevation = 1,
     primaryColor,
@@ -225,26 +225,28 @@ function ShellContent({
             </Tabs>
 
             <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}>
-              {/* Sidebar com lista de perfis - sempre visível em telas médias+ */}
-              <Box
-                sx={{
-                  width: { xs: "100%", md: 280 },
-                  flexShrink: 0,
-                  borderRight: { md: 1 },
-                  borderColor: { md: "divider" },
-                  p: 2,
-                }}
-              >
-                <ProfilesList
-                  client={client}
-                  selectedProfileId={selected?.id}
-                  onSelect={(p: Profile) => {
-                    setSelected(p)
-                    // Navega para tab de permissões após selecionar
-                    setTab(2)
+              {/* Sidebar com lista de perfis - visível apenas na aba de Permissões */}
+              {tab === 2 && (
+                <Box
+                  sx={{
+                    width: { xs: "100%", md: 280 },
+                    flexShrink: 0,
+                    borderRight: { md: 1 },
+                    borderColor: { md: "divider" },
+                    p: 2,
                   }}
-                />
-              </Box>
+                >
+                  <ProfilesList
+                    client={client}
+                    selectedProfileId={selected?.id}
+                    onSelect={(p: Profile) => {
+                      setSelected(p)
+                      // Navega para tab de permissões após selecionar
+                      setTab(2)
+                    }}
+                  />
+                </Box>
+              )}
 
               {/* Conteúdo principal com tabs */}
               <Box sx={{ flex: 1, p: 3 }}>
