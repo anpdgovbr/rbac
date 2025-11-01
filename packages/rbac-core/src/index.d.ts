@@ -20,7 +20,7 @@
  * const outraAcao: Action = "Criar"
  * ```
  */
-export type Action = string;
+export type Action = string
 /**
  * Representa um recurso genérico no sistema RBAC.
  * Usar string permite total desacoplamento de enums específicos do domínio.
@@ -31,7 +31,7 @@ export type Action = string;
  * const outroRecurso: Resource = "Usuarios"
  * ```
  */
-export type Resource = string;
+export type Resource = string
 /**
  * Mapa otimizado de permissões para consulta O(1).
  * Estrutura: { [acao]: { [recurso]: boolean } }
@@ -49,7 +49,7 @@ export type Resource = string;
  * }
  * ```
  */
-export type PermissionsMap = Partial<Record<Action, Partial<Record<Resource, boolean>>>>;
+export type PermissionsMap = Partial<Record<Action, Partial<Record<Resource, boolean>>>>
 /**
  * DTO padrão para representar uma permissão individual.
  * Usado como entrada para funções de conversão.
@@ -64,13 +64,13 @@ export type PermissionsMap = Partial<Record<Action, Partial<Record<Resource, boo
  * ```
  */
 export type PermissionDto = {
-    /** Ação a ser executada */
-    acao: Action;
-    /** Recurso sobre o qual a ação será executada */
-    recurso: Resource;
-    /** Se a ação é permitida (true) ou negada (false) */
-    permitido: boolean;
-};
+  /** Ação a ser executada */
+  acao: Action
+  /** Recurso sobre o qual a ação será executada */
+  recurso: Resource
+  /** Se a ação é permitida (true) ou negada (false) */
+  permitido: boolean
+}
 /**
  * Converte uma lista de permissões em PermissionsMap otimizado.
  *
@@ -87,7 +87,9 @@ export type PermissionDto = {
  * // Resultado: { "Exibir": { "Relatorios": true }, "Editar": { "Relatorios": false } }
  * ```
  */
-export declare function toPermissionsMap(list?: Array<PermissionDto> | null): PermissionsMap;
+export declare function toPermissionsMap(
+  list?: Array<PermissionDto> | null
+): PermissionsMap
 /**
  * Verifica se uma ação específica é permitida em um recurso.
  * Operação O(1) usando o PermissionsMap.
@@ -105,7 +107,11 @@ export declare function toPermissionsMap(list?: Array<PermissionDto> | null): Pe
  * }
  * ```
  */
-export declare function pode(perms: PermissionsMap, acao: Action, recurso: Resource): boolean;
+export declare function pode(
+  perms: PermissionsMap,
+  acao: Action,
+  recurso: Resource
+): boolean
 /**
  * Verifica se QUALQUER dos pares ação/recurso informados está permitido.
  * Útil para verificações de acesso onde múltiplas permissões podem dar acesso.
@@ -125,7 +131,10 @@ export declare function pode(perms: PermissionsMap, acao: Action, recurso: Resou
  * // true se o usuário tiver qualquer uma dessas permissões
  * ```
  */
-export declare function hasAny(perms: PermissionsMap, pairs: Array<readonly [Action, Resource]>): boolean;
+export declare function hasAny(
+  perms: PermissionsMap,
+  pairs: Array<readonly [Action, Resource]>
+): boolean
 /**
  * @deprecated Formato legado para compatibilidade com sistemas antigos.
  * Usar PermissionsMap em novos projetos.
@@ -137,7 +146,7 @@ export declare function hasAny(perms: PermissionsMap, pairs: Array<readonly [Act
  * const chave: FlatKey = "Exibir_Relatorios"
  * ```
  */
-export type FlatKey = `${Action}_${Resource}`;
+export type FlatKey = `${Action}_${Resource}`
 /**
  * @deprecated Função de compatibilidade para sistemas legados.
  * Converte lista de permissões em mapa com chaves concatenadas.
@@ -156,4 +165,6 @@ export type FlatKey = `${Action}_${Resource}`;
  * // { "Exibir_Relatorios": true }
  * ```
  */
-export declare function toFlatKeyMap(list?: Array<PermissionDto> | null): Partial<Record<`${Action}_${Resource}`, boolean>>;
+export declare function toFlatKeyMap(
+  list?: Array<PermissionDto> | null
+): Partial<Record<`${Action}_${Resource}`, boolean>>

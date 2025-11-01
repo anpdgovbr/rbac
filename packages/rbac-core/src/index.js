@@ -27,24 +27,23 @@
  * ```
  */
 export function toPermissionsMap(list) {
-    var _a;
-    // Prevent prototype-polluting keys
-    function isSafeKey(key) {
-        return key !== "__proto__" && key !== "constructor" && key !== "prototype";
+  var _a
+  // Prevent prototype-polluting keys
+  function isSafeKey(key) {
+    return key !== "__proto__" && key !== "constructor" && key !== "prototype"
+  }
+  const map = {}
+  if (!Array.isArray(list)) return map
+  for (const p of list) {
+    if (!isSafeKey(p.acao) || !isSafeKey(p.recurso)) {
+      continue // skip dangerous keys
     }
-    const map = {};
-    if (!Array.isArray(list))
-        return map;
-    for (const p of list) {
-        if (!isSafeKey(p.acao) || !isSafeKey(p.recurso)) {
-            continue; // skip dangerous keys
-        }
-        // Inicializa o objeto da ação se não existir
-        map[_a = p.acao] ?? (map[_a] = {});
-        // Define a permissão para o recurso (garante boolean)
-        map[p.acao][p.recurso] = !!p.permitido;
-    }
-    return map;
+    // Inicializa o objeto da ação se não existir
+    map[(_a = p.acao)] ?? (map[_a] = {})
+    // Define a permissão para o recurso (garante boolean)
+    map[p.acao][p.recurso] = !!p.permitido
+  }
+  return map
 }
 /**
  * Verifica se uma ação específica é permitida em um recurso.
@@ -64,7 +63,7 @@ export function toPermissionsMap(list) {
  * ```
  */
 export function pode(perms, acao, recurso) {
-    return !!perms?.[acao]?.[recurso];
+  return !!perms?.[acao]?.[recurso]
 }
 /**
  * Verifica se QUALQUER dos pares ação/recurso informados está permitido.
@@ -86,11 +85,10 @@ export function pode(perms, acao, recurso) {
  * ```
  */
 export function hasAny(perms, pairs) {
-    for (const [acao, recurso] of pairs) {
-        if (pode(perms, acao, recurso))
-            return true;
-    }
-    return false;
+  for (const [acao, recurso] of pairs) {
+    if (pode(perms, acao, recurso)) return true
+  }
+  return false
 }
 /**
  * @deprecated Função de compatibilidade para sistemas legados.
@@ -111,12 +109,11 @@ export function hasAny(perms, pairs) {
  * ```
  */
 export function toFlatKeyMap(list) {
-    const out = {};
-    if (!Array.isArray(list))
-        return out;
-    for (const p of list) {
-        const key = `${p.acao}_${p.recurso}`;
-        out[key] = !!p.permitido;
-    }
-    return out;
+  const out = {}
+  if (!Array.isArray(list)) return out
+  for (const p of list) {
+    const key = `${p.acao}_${p.recurso}`
+    out[key] = !!p.permitido
+  }
+  return out
 }
