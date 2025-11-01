@@ -28,6 +28,7 @@
     "clean": "pnpm -r --if-present clean",
     "lint": "eslint .",
     "format": "prettier -w .",
+    "format:check": "prettier --check .",
     "ncu": "ncu",
     "ncu:check": "ncu --workspaces",
     "ncu:update": "ncu --workspaces -u && pnpm install",

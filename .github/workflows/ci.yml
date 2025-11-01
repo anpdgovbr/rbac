@@ -27,7 +27,7 @@ jobs:
       - name: Run ESLint
         run: pnpm run lint
       - name: Check formatting
-        run: pnpm run format -- --check
+        run: pnpm run format:check
 
   build-and-test:
     runs-on: ubuntu-latest

@@ -69,12 +69,12 @@ npm install @anpdgovbr/shared-ui @anpdgovbr/shared-types
 O RbacAdminShell se adapta automaticamente ao tema MUI do contexto:
 
 ```tsx
-import { ThemeProvider, createTheme } from '@mui/material/styles'
+import { ThemeProvider, createTheme } from "@mui/material/styles"
 import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
 
 const theme = createTheme({
   palette: {
-    primary: { main: '#1976d2' },
+    primary: { main: "#1976d2" },
   },
 })
 
@@ -82,10 +82,7 @@ function AdminPage() {
   return (
     <ThemeProvider theme={theme}>
       {/* Usa automaticamente o tema acima */}
-      <RbacAdminShell 
-        config={{ baseUrl: "/api" }} 
-        i18n={{ locale: "pt-BR" }} 
-      />
+      <RbacAdminShell config={{ baseUrl: "/api" }} i18n={{ locale: "pt-BR" }} />
     </ThemeProvider>
   )
 }
@@ -98,16 +95,16 @@ import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
 
 function CustomAdminPage() {
   return (
-    <RbacAdminShell 
+    <RbacAdminShell
       config={{ baseUrl: "/api" }}
       styleConfig={{
-        primaryColor: '#00796b',
+        primaryColor: "#00796b",
         paperElevation: 2,
-        containerMaxWidth: 'xl',
+        containerMaxWidth: "xl",
         sx: {
-          container: { backgroundColor: 'background.default' },
+          container: { backgroundColor: "background.default" },
           paper: { borderRadius: 2 },
-          tabs: { '& .MuiTab-root': { textTransform: 'none' } },
+          tabs: { "& .MuiTab-root": { textTransform: "none" } },
         },
       }}
     />
@@ -126,11 +123,7 @@ function DashboardPage() {
       <MyHeader />
       <MyContent>
         {/* Sem container próprio - usa o layout existente */}
-        <RbacAdminShell 
-          config={{ baseUrl: "/api" }}
-          disableContainer
-          disableTitle
-        />
+        <RbacAdminShell config={{ baseUrl: "/api" }} disableContainer disableTitle />
       </MyContent>
     </MyCustomLayout>
   )
@@ -140,19 +133,19 @@ function DashboardPage() {
 ### Controle de Tab e Callbacks
 
 ```tsx
-import { useState } from 'react'
+import { useState } from "react"
 import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
 
 function AdminPage() {
   const [currentTab, setCurrentTab] = useState(0)
 
   return (
-    <RbacAdminShell 
+    <RbacAdminShell
       config={{ baseUrl: "/api" }}
       initialTab={currentTab}
       onTabChange={(tab) => {
         setCurrentTab(tab)
-        console.log('Tab mudou para:', tab)
+        console.log("Tab mudou para:", tab)
       }}
     />
   )
@@ -224,13 +217,14 @@ O `rbac-admin` agora utiliza **Material-UI (MUI) v7** com **imports individuais*
 import { RbacAdminShell } from "@anpdgovbr/rbac-admin"
 
 // Interface completa com tabs para gerenciar Perfis, Usuários e Permissões
-<RbacAdminShell
+;<RbacAdminShell
   config={{ baseUrl: "/api" }}
   i18n={{ locale: "pt-BR", title: "Administração RBAC" }}
 />
 ```
 
 **Todos os imports MUI são individuais** para melhor tree shaking:
+
 ```tsx
 // ✅ Correto - imports individuais
 import Button from "@mui/material/Button"
