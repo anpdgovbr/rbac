@@ -1,6 +1,13 @@
 ## Unreleased
 
-## 0.1.3
+### Added
+- **Nova função `hasAll`**: Verifica se TODAS as permissões informadas estão permitidas
+- **Testes expandidos**: Adicionados 13 novos testes cobrindo casos complexos e edge cases
+
+### Fixed
+- Melhorada documentação JSDoc da função `hasAny`
+
+## 0.1.4
 
 - **Correção**: Removido tipo desnecessário `FlatKey` para uso direto de template literal type
 - **Melhoria**: Simplificação de tipo em `toFlatKeyMap` para melhor compatibilidade TypeScript

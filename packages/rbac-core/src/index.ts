@@ -162,6 +162,34 @@ export function hasAny(
   return false
 }
 
+/**
+ * Verifica se TODAS as permissões informadas estão permitidas.
+ * Útil para verificações de acesso que exigem múltiplas permissões simultaneamente.
+ *
+ * @param perms - Mapa de permissões
+ * @param pairs - Array de tuplas [acao, recurso] para verificar
+ * @returns true se todas as permissões estiverem permitidas, false caso contrário
+ *
+ * @example
+ * ```typescript
+ * const podeEditar = hasAll(permissoes, [
+ *   ["Exibir", "Relatorios"],
+ *   ["Editar", "Relatorios"]
+ * ])
+ *
+ * // true somente se o usuário tiver TODAS essas permissões
+ * ```
+ */
+export function hasAll(
+  perms: PermissionsMap,
+  pairs: Array<readonly [Action, Resource]>
+): boolean {
+  for (const [acao, recurso] of pairs) {
+    if (!pode(perms, acao, recurso)) return false
+  }
+  return true
+}
+
 // =============================================================================
 // COMPATIBILIDADE LEGADA - Evitar uso em novos projetos
 // =============================================================================

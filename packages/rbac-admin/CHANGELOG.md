@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Added
+- **Testes abrangentes**: 18 novos testes cobrindo validação, error handling, custom configs
+
+### Improved
+- **Validação de inputs**: Todos os métodos do AdminClient agora validam entrada com Zod
+- **Error messages**: Mensagens de erro mais descritivas e específicas
+
 ## 0.3.0-beta.0
 
 - **BREAKING CHANGE**: Migração completa para Material-UI v7
