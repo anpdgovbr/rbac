@@ -2,10 +2,24 @@
 
 ### Added
 - **Testes abrangentes**: 18 novos testes cobrindo validação, error handling, custom configs
+- **Adaptação ao tema**: RbacAdminShell agora se adapta automaticamente ao ThemeProvider do MUI
+- **Customização avançada**: Nova prop `styleConfig` para customizar cores, elevação, maxWidth e estilos sx
+- **Controle de layout**: Props `disableContainer` e `disableTitle` para embedding em layouts existentes
+- **Controle de tab**: Props `initialTab` e `onTabChange` para controle programático das tabs
+- **Suporte a cores customizadas**: `primaryColor` sobrescreve cor primária sem alterar tema global
+- **Estilos sx granulares**: Customização de container, paper, tabs e content via sx props
+- **TypeScript**: Tipos exportados `RbacAdminShellProps` e `RbacAdminStyleConfig`
+- **Documentação**: Novo arquivo `USAGE-EXAMPLES.md` com 10 exemplos de uso
 
 ### Improved
 - **Validação de inputs**: Todos os métodos do AdminClient agora validam entrada com Zod
 - **Error messages**: Mensagens de erro mais descritivas e específicas
+- **Flexibilidade**: Componente pode ser usado standalone ou embedded em layouts complexos
+- **Developer Experience**: Autocomplete completo no TypeScript para todas as props
+
+### Dependencies
+- **Updated**: @anpdgovbr/shared-ui ^0.3.10-beta.0 → ^0.3.11-beta.0
+  - Correção crítica de exports de componentes TypeScript
 
 ## 0.3.0-beta.0
 
