@@ -152,7 +152,7 @@ Total: 53 testes
 
 ## 📦 Atualizações de Dependências
 
-### shared-ui: 0.3.10 → 0.3.11-beta.0
+### shared-ui: 0.3.10 → 0.3.12-beta.0
 
 **Correção Crítica de Exports:**
 
@@ -190,8 +190,8 @@ export {
 ```json
 {
   "peerDependencies": {
-    "@anpdgovbr/shared-ui": ">=0.3.11-beta.0",
-    "@anpdgovbr/shared-types": "^0.3.1-beta.0",
+    "@anpdgovbr/shared-ui": ">=0.3.12-beta.0",
+    "@anpdgovbr/shared-types": "^0.3.1-beta.1",
     "@mui/material": "^7.3.4",
     "react": "^18.3.1 || ^19.0.0"
   }

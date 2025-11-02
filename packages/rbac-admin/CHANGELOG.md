@@ -21,8 +21,9 @@
 
 ### Dependencies
 
-- **Updated**: @anpdgovbr/shared-ui ^0.3.10-beta.0 → ^0.3.11-beta.0
-  - Correção crítica de exports de componentes TypeScript
+- **Updated**: @anpdgovbr/shared-ui ^0.3.11-beta.1 → ^0.3.12-beta.0
+  - Novo layout `Homepage` e helpers de tipagem
+- **Updated**: @anpdgovbr/shared-types ^0.3.1-beta.0 → ^0.3.1-beta.1
 
 ## 0.3.0-beta.0
 
