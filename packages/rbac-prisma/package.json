@@ -22,7 +22,8 @@
     "url": "git+https://github.com/anpdgovbr/rbac.git"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.anpd.gov.br"
   },
   "scripts": {
     "build": "tsc --build",
