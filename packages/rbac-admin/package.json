@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-admin",
-  "version": "0.4.4",
+  "version": "0.4.1-beta.0",
   "private": false,
   "type": "module",
   "main": "dist/src/index.js",
@@ -49,5 +49,37 @@
     "@types/react": "^18.3.26",
     "react": "^19.2.0",
     "typescript": "^5.9.3"
-  }
+  },
+  "author": {
+    "name": "Luciano Édipo Pereira da Silva",
+    "email": "luciano.psilva@anpd.gov.br",
+    "url": "https://github.com/lucianoedipo"
+  },
+  "contributors": [
+    {
+      "name": "Eduardo Henrique Anjos",
+      "url": "https://github.com/eduHanjos0411"
+    },
+    {
+      "name": "Gustavo Fernandes Lima",
+      "url": "https://github.com/gustavolimaf"
+    }
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "rbac",
+    "admin",
+    "ui",
+    "react",
+    "authorization",
+    "anpd",
+    "typescript"
+  ],
+  "bugs": {
+    "url": "https://github.com/anpdgovbr/rbac/issues",
+    "email": "desenvolvimento@anpd.gov.br"
+  },
+  "homepage": "https://github.com/anpdgovbr/rbac#readme"
 }
