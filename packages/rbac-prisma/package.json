@@ -34,12 +34,12 @@
     "ncu:update": "ncu -u"
   },
   "dependencies": {
-    "@anpdgovbr/rbac-core": "0.2.2",
-    "@anpdgovbr/rbac-provider": "0.2.2"
+    "@anpdgovbr/rbac-core": "^0.2.2",
+    "@anpdgovbr/rbac-provider": "^0.2.2"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
-    "typescript": "^6.0.0-dev.20251111"
+    "typescript": "^5.9.3"
   },
   "author": {
     "name": "Luciano Édipo Pereira da Silva",

@@ -23,6 +23,8 @@ export default [
         React: "readonly",
         HTMLInputElement: "readonly",
         HTMLSelectElement: "readonly",
+        window: "readonly",
+        document: "readonly",
       },
     },
     rules: {
