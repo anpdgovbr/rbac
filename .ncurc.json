@@ -1,7 +1,7 @@
 {
   "$schema": "https://github.com/raineorshine/npm-check-updates/raw/main/src/types/RunOptions.json",
   "target": "latest",
-  "upgrade": false,
+  "upgrade": true,
   "workspaces": true,
   "peer": true,
   "dep": "prod,dev,peer,optional"
