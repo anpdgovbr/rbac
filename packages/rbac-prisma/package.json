@@ -34,8 +34,8 @@
     "ncu:update": "ncu -u"
   },
   "dependencies": {
-    "@anpdgovbr/rbac-core": "^0.2.2",
-    "@anpdgovbr/rbac-provider": "^0.2.2"
+    "@anpdgovbr/rbac-core": "0.2.2",
+    "@anpdgovbr/rbac-provider": "0.2.2"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

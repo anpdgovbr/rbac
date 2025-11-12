@@ -15,26 +15,27 @@
 
 "use client"
 
-import React, { useMemo, useState, useEffect } from "react"
-import Box from "@mui/material/Box"
-import Container from "@mui/material/Container"
-import Typography from "@mui/material/Typography"
-import Tabs from "@mui/material/Tabs"
-import Tab from "@mui/material/Tab"
-import Paper from "@mui/material/Paper"
-import CircularProgress from "@mui/material/CircularProgress"
 import Alert from "@mui/material/Alert"
+import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
+import Container from "@mui/material/Container"
 import Divider from "@mui/material/Divider"
+import Paper from "@mui/material/Paper"
+import type { SxProps, Theme } from "@mui/material/styles"
 import { useTheme } from "@mui/material/styles"
-import type { Theme, SxProps } from "@mui/material/styles"
-import { createRbacAdminClient, type AdminClientConfig, type Profile } from "./types.js"
+import Tab from "@mui/material/Tab"
+import Tabs from "@mui/material/Tabs"
+import Typography from "@mui/material/Typography"
+import React, { useEffect, useMemo, useState } from "react"
+
+import { CreatePermissionForm } from "./components/CreatePermissionForm.js"
+import { CreateProfileForm } from "./components/CreateProfileForm.js"
+import { PermissionsEditor } from "./components/PermissionsEditor.js"
 import { ProfilesList } from "./components/ProfilesList.js"
 import { UsersList } from "./components/UsersList.js"
-import { PermissionsEditor } from "./components/PermissionsEditor.js"
-import { CreateProfileForm } from "./components/CreateProfileForm.js"
-import { CreatePermissionForm } from "./components/CreatePermissionForm.js"
 import { I18nProvider, type Messages, useI18n } from "./i18n.js"
+import { type AdminClientConfig, createRbacAdminClient, type Profile } from "./types.js"
 
 /**
  * Configuração de estilo customizável para o RbacAdminShell.
@@ -78,6 +79,29 @@ export interface RbacAdminShellProps {
   onTabChange?: (tab: number) => void
 }
 
+// Componentes wrapper declarados fora para evitar recriação
+const PassthroughWrapper = ({ children }: { children: React.ReactNode }) => (
+  <>{children}</>
+)
+
+const ContainerWrapperFactory = (
+  containerMaxWidth: "xs" | "sm" | "md" | "lg" | "xl" | false,
+  className: string | undefined,
+  containerPadding: number,
+  containerSx?: SxProps<Theme>
+) => {
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
+    <Container
+      maxWidth={containerMaxWidth}
+      className={className}
+      sx={{ py: containerPadding, ...containerSx }}
+    >
+      {children}
+    </Container>
+  )
+  return Wrapper
+}
+
 /**
  * Componente interno que renderiza o conteúdo do shell de administração RBAC.
  */
@@ -103,9 +127,13 @@ function ShellContent({
 
   const [selected, setSelected] = useState<Profile | null>(null)
   const [profiles, setProfiles] = useState<Profile[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
   const [tab, setTab] = useState<number>(initialTab)
+
+  // Estado de loading/error gerenciado de forma reativa
+  const [loadState, setLoadState] = useState<{
+    loading: boolean
+    error: Error | null
+  }>({ loading: true, error: null })
 
   // Extrair configurações de estilo com defaults
   const {
@@ -122,36 +150,50 @@ function ShellContent({
     onTabChange?.(newValue)
   }
 
+  // Carregar perfis - sem setState síncrono no effect
   useEffect(() => {
-    setLoading(true)
-    setError(null)
+    let mounted = true
 
-    client
-      .listProfiles()
-      .then((data) => {
-        setProfiles(data)
-        setLoading(false)
-      })
-      .catch((err) => {
+    const loadProfiles = async () => {
+      try {
+        const data = await client.listProfiles()
+        if (mounted) {
+          setProfiles(data)
+          setLoadState({ loading: false, error: null })
+        }
+      } catch (err) {
         console.error("Falha ao carregar perfis:", err)
-        setError(err instanceof Error ? err : new Error(String(err)))
-        setProfiles([])
-        setLoading(false)
-      })
+        if (mounted) {
+          setLoadState({
+            loading: false,
+            error: err instanceof Error ? err : new Error(String(err)),
+          })
+          setProfiles([])
+        }
+      }
+    }
+
+    loadProfiles()
+
+    return () => {
+      mounted = false
+    }
   }, [client])
 
-  // Wrapper condicional para Container
-  const ContentWrapper = disableContainer
-    ? ({ children }: { children: React.ReactNode }) => <>{children}</>
-    : ({ children }: { children: React.ReactNode }) => (
-        <Container
-          maxWidth={containerMaxWidth}
-          className={className}
-          sx={{ py: containerPadding, ...sx.container }}
-        >
-          {children}
-        </Container>
-      )
+  // Escolher o wrapper apropriado
+  const ContentWrapper = useMemo(() => {
+    if (disableContainer) {
+      return PassthroughWrapper
+    }
+    return ContainerWrapperFactory(
+      containerMaxWidth,
+      className,
+      containerPadding,
+      sx.container
+    )
+  }, [disableContainer, containerMaxWidth, className, containerPadding, sx.container])
+
+  const { loading, error } = loadState
 
   return (
     <ContentWrapper>
@@ -168,7 +210,6 @@ function ShellContent({
               size="small"
               onClick={() => {
                 if (typeof window !== "undefined") {
-                  // eslint-disable-next-line no-undef -- window é global do browser, checado para SSR
                   window.location.reload()
                 }
               }}
@@ -357,15 +398,15 @@ export function RbacAdminShell({
 }
 
 // Re-exportação de tipos e utilitários
-export * from "./types.js"
-export * from "./i18n.js"
 export * from "./hooks.js"
+export * from "./i18n.js"
+export * from "./types.js"
 
 // Re-exportação de componentes
-export * from "./components/ProfilesList.js"
-export * from "./components/PermissionsEditor.js"
-export * from "./components/CreateProfileForm.js"
 export * from "./components/CreatePermissionForm.js"
+export * from "./components/CreateProfileForm.js"
+export * from "./components/PermissionsEditor.js"
+export * from "./components/ProfilesList.js"
 export * from "./components/UsersList.js"
 
 export default RbacAdminShell
