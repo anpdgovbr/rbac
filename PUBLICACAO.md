@@ -4,11 +4,27 @@
 
 Antes de publicar, certifique-se de:
 
-1. ✅ Estar autenticado no npm: `npm login`
+1. ✅ Estar autenticado no registry interno: `npm login --registry=https://npm.anpd.gov.br`
 2. ✅ Ter permissões para publicar no escopo `@anpdgovbr`
 3. ✅ Ter feito build de todos os pacotes: `pnpm run build`
 4. ✅ Todos os testes passando: `pnpm test`
 5. ✅ Versões atualizadas nos package.json
+
+## 🔧 Configuração do Registry Interno
+
+Todos os pacotes já estão configurados para publicar em `https://npm.anpd.gov.br`.
+
+### Autenticação
+
+```bash
+npm login --registry=https://npm.anpd.gov.br
+```
+
+### Verificação
+
+```bash
+npm whoami --registry=https://npm.anpd.gov.br
+```
 
 ## 🚀 Comandos de Publicação
 
@@ -83,12 +99,28 @@ Após publicar, verifique:
 
 ```bash
 # Verificar versão publicada
-npm view @anpdgovbr/rbac-core version
-npm view @anpdgovbr/rbac-admin version
+npm view @anpdgovbr/rbac-core version --registry=https://npm.anpd.gov.br
+npm view @anpdgovbr/rbac-admin version --registry=https://npm.anpd.gov.br
 
 # Verificar dist-tags
-npm dist-tag ls @anpdgovbr/rbac-core
-npm dist-tag ls @anpdgovbr/rbac-admin
+npm dist-tag ls @anpdgovbr/rbac-core --registry=https://npm.anpd.gov.br
+npm dist-tag ls @anpdgovbr/rbac-admin --registry=https://npm.anpd.gov.br
+```
+
+## 🌐 Consumindo os Pacotes
+
+Nos projetos que usam RBAC, garanta que o `.npmrc` esteja configurado:
+
+```properties
+registry=https://npm.anpd.gov.br
+@anpdgovbr:registry=https://npm.anpd.gov.br
+```
+
+Então instale normalmente:
+
+```bash
+pnpm add @anpdgovbr/rbac-core@latest
+pnpm add @anpdgovbr/rbac-react@latest
 ```
 
 ## ⚠️ IMPORTANTE
@@ -145,7 +177,7 @@ pnpm test
 pnpm run format:check
 
 # 2. Fazer login no npm (se necessário)
-npm login
+npm login --registry=https://npm.anpd.gov.br
 
 # 3. Publicar na ordem correta
 pnpm run publish:core
@@ -156,8 +188,8 @@ pnpm run publish:react
 pnpm run publish:admin
 
 # 4. Verificar publicação
-npm view @anpdgovbr/rbac-core
-npm view @anpdgovbr/rbac-admin
+npm view @anpdgovbr/rbac-core --registry=https://npm.anpd.gov.br
+npm view @anpdgovbr/rbac-admin --registry=https://npm.anpd.gov.br
 
 # 5. Criar tag git
 git tag -a v0.2.0 -m "Release v0.2.0"

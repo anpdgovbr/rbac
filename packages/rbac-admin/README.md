@@ -200,7 +200,7 @@ function CustomAdminPage() {
 - [x] Text tokens de i18n (pt-BR/en) via `I18nProvider` com sobrescrita opcional
 - [x] **Interface moderna com Material-UI** — Todos os componentes migrados para MUI
 - [x] **Integração com @anpdgovbr/shared-ui** — Compatível com design system ANPD
-- [x] **Compatibilidade com shared-types ^0.3.1-beta.0** — Types atualizados
+- [x] **Compatibilidade com shared-types ^0.3.1-beta.1** — Types atualizados
 - [x] Hooks `useAdminProfiles` e `useAdminPermissions`
 - [x] **UsersList component** — Lista de usuários com atribuição de perfis (MUI Table + Select)
 - [x] **ProfilesList component** — Lista de perfis para seleção (MUI List)

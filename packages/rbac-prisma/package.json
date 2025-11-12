@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-prisma",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "private": false,
   "type": "module",
   "main": "dist/src/index.js",
@@ -22,22 +22,54 @@
     "url": "git+https://github.com/anpdgovbr/rbac.git"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.anpd.gov.br"
   },
   "scripts": {
     "build": "tsc --build",
-    "typecheck": "tsc --build --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "node --test dist/test/*.test.js",
     "ncu": "ncu",
     "ncu:check": "ncu",
     "ncu:update": "ncu -u"
   },
   "dependencies": {
-    "@anpdgovbr/rbac-core": "^0.1.4",
-    "@anpdgovbr/rbac-provider": "^0.1.3"
+    "@anpdgovbr/rbac-core": "^0.2.2",
+    "@anpdgovbr/rbac-provider": "^0.2.2"
   },
   "devDependencies": {
-    "@types/node": "^20.19.24",
-    "typescript": "^5.9.3"
-  }
+    "@types/node": "^24.10.1",
+    "typescript": "^6.0.0-dev.20251111"
+  },
+  "author": {
+    "name": "Luciano Édipo Pereira da Silva",
+    "email": "luciano.psilva@anpd.gov.br",
+    "url": "https://github.com/lucianoedipo"
+  },
+  "contributors": [
+    {
+      "name": "Eduardo Henrique Anjos",
+      "url": "https://github.com/eduHanjos0411"
+    },
+    {
+      "name": "Gustavo Fernandes Lima",
+      "url": "https://github.com/gustavolimaf"
+    }
+  ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "rbac",
+    "prisma",
+    "database",
+    "authorization",
+    "anpd",
+    "typescript"
+  ],
+  "bugs": {
+    "url": "https://github.com/anpdgovbr/rbac/issues",
+    "email": "desenvolvimento@anpd.gov.br"
+  },
+  "homepage": "https://github.com/anpdgovbr/rbac#readme"
 }
