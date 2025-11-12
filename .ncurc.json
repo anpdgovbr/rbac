@@ -1,5 +1,26 @@
 {
   "target": "latest",
   "upgrade": false,
-  "workspaces": true
+  "workspaces": true,
+  "registry": "https://npm.anpd.gov.br",
+  "reject": [
+    "@anpdgovbr/rbac-core",
+    "@anpdgovbr/rbac-admin",
+    "@anpdgovbr/rbac-next",
+    "@anpdgovbr/rbac-prisma",
+    "@anpdgovbr/rbac-provider",
+    "@anpdgovbr/rbac-react",
+    "@anpdgovbr/shared-auth",
+    "@anpdgovbr/shared-components",
+    "@anpdgovbr/shared-config",
+    "@anpdgovbr/shared-context",
+    "@anpdgovbr/shared-http",
+    "@anpdgovbr/shared-logger",
+    "@anpdgovbr/shared-prisma",
+    "@anpdgovbr/shared-session",
+    "@anpdgovbr/shared-types",
+    "@anpdgovbr/shared-ui",
+    "@anpdgovbr/shared-utils",
+    "@anpdgovbr/shared-validation"
+  ]
 }

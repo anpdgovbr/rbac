@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "typecheck": "tsc --build --noEmit",
+    "typecheck": "tsc --noEmit",
     "pretest": "pnpm run build",
     "test": "node --test dist/test/*.test.js dist/src/test/*.test.js",
     "ncu": "ncu",

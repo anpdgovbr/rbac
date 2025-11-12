@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   lint-and-format:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -30,7 +30,7 @@ jobs:
         run: pnpm run format:check
 
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: lint-and-format
     steps:
       - uses: actions/checkout@v5
@@ -51,7 +51,7 @@ jobs:
         run: pnpm test
 
   individual-package-tests:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build-and-test
     strategy:
       fail-fast: false

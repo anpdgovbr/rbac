@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "typecheck": "tsc --build --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "node --test dist/test/*.test.js",
     "ncu": "ncu",
     "ncu:check": "ncu",
