@@ -40,15 +40,15 @@
   },
   "dependencies": {
     "@anpdgovbr/shared-types": "^0.3.1-beta.1",
-    "zod": "^3.25.76"
+    "zod": "^4.2.0-canary.20251106T231624"
   },
   "devDependencies": {
-    "@anpdgovbr/shared-ui": "0.3.12-beta.0",
-    "@mui/material": "^7.3.4",
-    "@types/node": "^20.19.24",
-    "@types/react": "^18.3.26",
-    "react": "^19.2.0",
-    "typescript": "^5.9.3"
+    "@anpdgovbr/shared-ui": "0.3.13-beta.1",
+    "@mui/material": "^7.3.5",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.3",
+    "react": "^19.3.0-canary-fa50caf5-20251107",
+    "typescript": "^6.0.0-dev.20251111"
   },
   "author": {
     "name": "Luciano Édipo Pereira da Silva",

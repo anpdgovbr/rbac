@@ -1,5 +1,5 @@
 {
-  "target": "minor",
-  "upgrade": true,
+  "target": "latest",
+  "upgrade": false,
   "workspaces": true
 }

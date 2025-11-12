@@ -37,8 +37,8 @@
     "@anpdgovbr/rbac-core": "^0.2.2"
   },
   "devDependencies": {
-    "@types/node": "^20.19.24",
-    "typescript": "^5.9.3"
+    "@types/node": "^24.10.1",
+    "typescript": "^6.0.0-dev.20251111"
   },
   "author": {
     "name": "Luciano Édipo Pereira da Silva",
