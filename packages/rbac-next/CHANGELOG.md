@@ -1,5 +1,17 @@
 ## Unreleased
 
+## 0.3.0
+
+### Minor Changes
+
+- feat: novas funcionalidades
+
+### Patch Changes
+
+- Updated dependencies
+  - @anpdgovbr/rbac-core@0.3.0
+  - @anpdgovbr/rbac-provider@0.3.0
+
 - Exports map e correções de main/types para bundlers (pré 0.1.0-beta.2).
 
 ## 0.1.2

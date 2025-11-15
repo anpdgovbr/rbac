@@ -1,5 +1,11 @@
 ## Unreleased
 
+## 0.3.0
+
+### Minor Changes
+
+- feat: novas funcionalidades
+
 ### Added
 
 - **Nova função `hasAll`**: Verifica se TODAS as permissões informadas estão permitidas

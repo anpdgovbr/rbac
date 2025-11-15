@@ -1,5 +1,11 @@
 ## Unreleased
 
+## 0.5.0
+
+### Minor Changes
+
+- feat: novas funcionalidades
+
 ### Added
 
 - **Testes abrangentes**: 18 novos testes cobrindo validação, error handling, custom configs
