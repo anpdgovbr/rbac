@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-admin",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": false,
   "type": "module",
   "main": "dist/src/index.js",
@@ -34,16 +34,16 @@
     "ncu:update": "ncu -u"
   },
   "peerDependencies": {
-    "@anpdgovbr/shared-ui": "0.3.13-beta.1",
+    "@anpdgovbr/shared-ui": "0.3.13",
     "@mui/material": "^7.3.5",
     "react": "^19.2.0"
   },
   "dependencies": {
-    "@anpdgovbr/shared-types": "0.3.1-beta.1",
+    "@anpdgovbr/shared-types": "0.3.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@anpdgovbr/shared-ui": "0.3.13-beta.1",
+    "@anpdgovbr/shared-ui": "0.3.13",
     "@mui/material": "^7.3.5",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",

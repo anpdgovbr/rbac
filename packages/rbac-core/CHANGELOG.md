@@ -1,5 +1,11 @@
 ## Unreleased
 
+## 0.3.1
+
+### Patch Changes
+
+- chore: manutenção e correções
+
 ## 0.3.0
 
 ### Minor Changes

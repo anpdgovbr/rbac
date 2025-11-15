@@ -1,6 +1,6 @@
 {
   "name": "@anpdgovbr/rbac-next",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": false,
   "type": "module",
   "main": "dist/src/index.js",
@@ -35,8 +35,8 @@
     "ncu:update": "ncu -u"
   },
   "dependencies": {
-    "@anpdgovbr/rbac-core": "^0.3.0",
-    "@anpdgovbr/rbac-provider": "^0.3.0"
+    "@anpdgovbr/rbac-core": "^0.3.1",
+    "@anpdgovbr/rbac-provider": "^0.3.1"
   },
   "peerDependencies": {
     "react": "^19.2.0"

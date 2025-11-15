@@ -1,5 +1,14 @@
 ## Unreleased
 
+## 0.3.1
+
+### Patch Changes
+
+- chore: manutenção e correções
+- Updated dependencies
+  - @anpdgovbr/rbac-core@0.3.1
+  - @anpdgovbr/rbac-provider@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

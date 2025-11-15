@@ -1,5 +1,14 @@
 ## Unreleased
 
+## 0.5.1
+
+### Patch Changes
+
+- chore: manutenção e correções
+- Updated dependencies
+  - @anpdgovbr/shared-types@0.3.1
+  - @anpdgovbr/shared-ui@0.3.13
+
 ## 0.5.0
 
 ### Minor Changes
