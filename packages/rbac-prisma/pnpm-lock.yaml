@@ -9,10 +9,10 @@ importers:
   .:
     dependencies:
       '@anpdgovbr/rbac-core':
-        specifier: ^0.2.2
+        specifier: ^0.3.1
         version: link:../rbac-core
       '@anpdgovbr/rbac-provider':
-        specifier: ^0.2.2
+        specifier: ^0.3.1
         version: link:../rbac-provider
     devDependencies:
       '@types/node':
