@@ -1,0 +1,294 @@
+# GitLab CI/CD Pipeline para rbac-monorepo
+# Biblioteca modular de RBAC para aplicações da ANPD
+# GitLab v18.5.2 - Otimizado e resiliente
+
+# ==========================================
+# CONFIGURAÇÕES GLOBAIS
+# ==========================================
+default:
+  image: 'harbor.anpd.gov.br/library/node-pnpm:22-ca2'
+  
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - scheduler_failure
+
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+      prefix: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .pnpm-store
+      - node_modules/
+      - packages/*/node_modules/
+    policy: pull
+    when: on_success
+
+variables:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10.23.0'
+  PNPM_HOME: '/root/.local/share/pnpm'
+  COREPACK_NPM_REGISTRY: 'https://npm.anpd.gov.br'
+  NPM_CONFIG_LOCKFILE: 'true'
+  DISABLE_TELEMETRY: 'true'
+  CI: 'true'
+  GIT_DEPTH: '5'
+  GIT_STRATEGY: 'fetch'
+  FF_USE_FASTZIP: 'true'
+  CACHE_COMPRESSION_LEVEL: 'fast'
+  TRANSFER_METER_FREQUENCY: '5s'
+
+stages:
+  - install
+  - lint
+  - test
+  - build
+  - deploy
+
+# ==========================================
+# STAGE: INSTALL
+# ==========================================
+install:
+  stage: install
+  timeout: 15m
+  interruptible: true
+
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+      prefix: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .pnpm-store
+      - node_modules/
+      - packages/*/node_modules/
+    policy: push
+    when: on_success
+
+  before_script:
+    - node --version
+    - corepack enable
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - pnpm --version
+
+  script:
+    - echo "📦 Instalando dependências do monorepo..."
+    - pnpm install --frozen-lockfile
+    - |
+      if [ ! -d "node_modules" ]; then
+        echo "❌ Falha na instalação"
+        exit 1
+      fi
+    - echo "✅ Instalação concluída"
+
+# ==========================================
+# STAGE: LINT
+# ==========================================
+lint:
+  stage: lint
+  timeout: 10m
+  needs: []
+  interruptible: true
+
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - |
+      if [ ! -d "node_modules" ] || [ ! -f "node_modules/.modules.yaml" ]; then
+        echo "⚠️ Instalando dependências..."
+        pnpm install --frozen-lockfile
+      else
+        echo "✅ Usando cache"
+      fi
+
+  script:
+    - pnpm run lint
+
+  artifacts:
+    when: on_failure
+    reports:
+      codequality: gl-code-quality-report.json
+    expire_in: 1 week
+
+type-check:
+  stage: lint
+  timeout: 10m
+  needs: []
+  interruptible: true
+
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - |
+      if [ ! -d "node_modules" ] || [ ! -f "node_modules/.modules.yaml" ]; then
+        echo "⚠️ Instalando dependências..."
+        pnpm install --frozen-lockfile
+      else
+        echo "✅ Usando cache"
+      fi
+
+  script:
+    - pnpm run typecheck
+
+# ==========================================
+# STAGE: TEST
+# ==========================================
+test:
+  stage: test
+  timeout: 20m
+  needs: []
+  interruptible: true
+
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - |
+      if [ ! -d "node_modules" ] || [ ! -f "node_modules/.modules.yaml" ]; then
+        echo "⚠️ Instalando dependências..."
+        pnpm install --frozen-lockfile
+      else
+        echo "✅ Usando cache"
+      fi
+
+  script:
+    - pnpm run test
+
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    when: always
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+      junit: coverage/junit.xml
+    paths:
+      - coverage/
+    expire_in: 1 week
+
+security-check:
+  stage: test
+  timeout: 10m
+  needs: []
+  interruptible: true
+  allow_failure: true
+
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - |
+      if [ ! -d "node_modules" ] || [ ! -f "node_modules/.modules.yaml" ]; then
+        echo "⚠️ Instalando dependências..."
+        pnpm install --frozen-lockfile
+      else
+        echo "✅ Usando cache"
+      fi
+
+  script:
+    - pnpm audit --audit-level=moderate || echo "⚠️ Vulnerabilidades encontradas"
+
+# ==========================================
+# STAGE: BUILD
+# ==========================================
+build:
+  stage: build
+  timeout: 20m
+  needs: []
+  interruptible: false
+
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - |
+      if [ ! -d "node_modules" ] || [ ! -f "node_modules/.modules.yaml" ]; then
+        echo "⚠️ Instalando dependências..."
+        pnpm install --frozen-lockfile
+      else
+        echo "✅ Usando cache"
+      fi
+
+  script:
+    - echo "🏗️ Build de todos os pacotes..."
+    - pnpm run build
+    - |
+      # Validar builds individuais
+      for pkg in packages/*/; do
+        if [ -f "$pkg/package.json" ]; then
+          PKG_NAME=$(node -p "require('./$pkg/package.json').name")
+          if [ ! -d "$pkg/dist" ]; then
+            echo "❌ Build falhou para $PKG_NAME"
+            exit 1
+          fi
+          echo "✅ Build OK: $PKG_NAME"
+        fi
+      done
+
+  artifacts:
+    paths:
+      - packages/*/dist/
+    expire_in: 30 days
+    when: on_success
+
+# ==========================================
+# STAGE: DEPLOY
+# ==========================================
+publish-all:
+  stage: deploy
+  timeout: 15m
+  needs: ['build']
+  interruptible: false
+
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+\.\d+$/ && $CI_COMMIT_REF_PROTECTED == "true"'
+      when: on_success
+    - when: never
+
+  variables:
+    NPM_REGISTRY: 'https://npm.anpd.gov.br'
+    NPM_SCOPE: '@anpdgovbr'
+
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - |
+      if [ -z "${NPM_TOKEN}" ]; then
+        echo "❌ NPM_TOKEN não definido"
+        exit 1
+      fi
+    - mkdir -p ~/.npm
+    - echo "${NPM_SCOPE}:registry=${NPM_REGISTRY}" > ~/.npmrc
+    - echo "//$(echo ${NPM_REGISTRY} | sed 's|https\?://||')/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
+    - echo "always-auth=true" >> ~/.npmrc
+    - echo "strict-ssl=true" >> ~/.npmrc
+    - pnpm config set registry ${NPM_REGISTRY}
+    - npm whoami --registry ${NPM_REGISTRY}
+
+  script:
+    - echo "📦 Publicando pacotes do monorepo..."
+    - pnpm run publish:all
+    - echo "🎉 Publicação concluída"
+
+  artifacts:
+    when: on_failure
+    paths:
+      - npm-debug.log
+    expire_in: 1 week
+
+# ==========================================
+# WORKFLOW RULES
+# ==========================================
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: never
