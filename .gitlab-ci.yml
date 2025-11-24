@@ -6,8 +6,8 @@
 # CONFIGURAÇÕES GLOBAIS
 # ==========================================
 default:
-  image: 'harbor.anpd.gov.br/library/node-pnpm:22-ca2'
-  
+  image: "harbor.anpd.gov.br/library/node-pnpm:22-ca2"
+
   retry:
     max: 2
     when:
@@ -28,18 +28,18 @@ default:
     when: on_success
 
 variables:
-  NODE_VERSION: '22'
-  PNPM_VERSION: '10.23.0'
-  PNPM_HOME: '/root/.local/share/pnpm'
-  COREPACK_NPM_REGISTRY: 'https://npm.anpd.gov.br'
-  NPM_CONFIG_LOCKFILE: 'true'
-  DISABLE_TELEMETRY: 'true'
-  CI: 'true'
-  GIT_DEPTH: '5'
-  GIT_STRATEGY: 'fetch'
-  FF_USE_FASTZIP: 'true'
-  CACHE_COMPRESSION_LEVEL: 'fast'
-  TRANSFER_METER_FREQUENCY: '5s'
+  NODE_VERSION: "22"
+  PNPM_VERSION: "10.23.0"
+  PNPM_HOME: "/root/.local/share/pnpm"
+  COREPACK_NPM_REGISTRY: "https://npm.anpd.gov.br"
+  NPM_CONFIG_LOCKFILE: "true"
+  DISABLE_TELEMETRY: "true"
+  CI: "true"
+  GIT_DEPTH: "5"
+  GIT_STRATEGY: "fetch"
+  FF_USE_FASTZIP: "true"
+  CACHE_COMPRESSION_LEVEL: "fast"
+  TRANSFER_METER_FREQUENCY: "5s"
 
 stages:
   - install
@@ -241,7 +241,7 @@ build:
 publish-all:
   stage: deploy
   timeout: 15m
-  needs: ['build']
+  needs: ["build"]
   interruptible: false
 
   rules:
@@ -250,8 +250,8 @@ publish-all:
     - when: never
 
   variables:
-    NPM_REGISTRY: 'https://npm.anpd.gov.br'
-    NPM_SCOPE: '@anpdgovbr'
+    NPM_REGISTRY: "https://npm.anpd.gov.br"
+    NPM_SCOPE: "@anpdgovbr"
 
   before_script:
     - corepack enable
